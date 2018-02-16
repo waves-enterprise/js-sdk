@@ -5,3 +5,5 @@ raw/
 tmp-browser/
 tmp-node/
 waves-api.iml
+*.js
+*.js.map

@@ -7,8 +7,7 @@ import logger from '../utils/logger';
 import config from '../config';
 import dictionary from '../seedDictionary';
 
-
-function generateNewSeed(length): string {
+export function generateNewSeed(length): string {
 
     const random = crypto.generateRandomUint32Array(length);
     const wordCount = dictionary.length;
@@ -83,15 +82,14 @@ class Seed implements ISeed {
         const keys = crypto.buildKeyPair(phrase);
 
         this.phrase = phrase;
-        this.address = crypto.buildRawAddress(keys.publicKey);
         this.keyPair = {
             privateKey: base58.encode(keys.privateKey),
             publicKey: base58.encode(keys.publicKey)
         };
+        this.address = crypto.buildRawAddress(keys.publicKey);
 
         Object.freeze(this);
         Object.freeze(this.keyPair);
-
     }
 
     public encrypt(password: string, encryptionRounds?: number) {

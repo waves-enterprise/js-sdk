@@ -36,7 +36,7 @@ export const CANCEL_LEASING_TX_NAME = 'cancelLeasing';
 export const CREATE_ALIAS_TX_NAME = 'createAlias';
 
 export const PRIVATE_KEY_LENGTH = 32;
-export const PUBLIC_KEY_LENGTH = 32;
+export const PUBLIC_KEY_LENGTH = 64;
 
 export const MINIMUM_FEE = 100000;
 export const MINIMUM_ISSUE_FEE = 100000000;
@@ -86,3 +86,5 @@ export const WAVES_V1_ISSUE_TX = {
     timestamp: 1460419200000,
     type: ISSUE_TX
 };
+
+
