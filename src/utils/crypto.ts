@@ -1,5 +1,4 @@
 import {IKeyPairBytes} from '../../interfaces';
-import * as CryptoJS from 'crypto-js';
 import base58 from '../libs/base58';
 import converters from '../libs/converters';
 import secureRandom from '../libs/secure-random';
@@ -13,13 +12,6 @@ function buildSeedHash(seedBytes: Uint8Array): Uint8Array {
     const nonce = new Uint8Array(converters.int32ToBytes(constants.INITIAL_NONCE, true));
     const seedBytesWithNonce = concatUint8Arrays(nonce, seedBytes);
     return cryptoGost.streebog256(seedBytesWithNonce);
-}
-
-
-function strengthenPassword(password: string, rounds: number = 5000): string {
-    const pass = Uint8Array.from(converters.stringToByteArray(password));
-    while (rounds--) password = converters.byteArrayToHexString(cryptoGost.streebog256(pass));
-    return password;
 }
 
 export default {
@@ -51,7 +43,7 @@ export default {
         const publicKeyBytes = base58.decode(publicKey);
         const signatureBytes = base58.decode(signature);
 
-        return cryptoGost.verify(publicKeyBytes,signatureBytes,dataBytes);
+        return cryptoGost.verify(publicKeyBytes, signatureBytes, dataBytes);
     },
 
     buildTransactionId(dataBytes: Uint8Array): string {
@@ -130,7 +122,7 @@ export default {
 
     },
 
-    encryptSeed(seed: string, password: string, encryptionRounds?: number): string {
+    encryptSeed(seed: string, password: string, address: string): string {
 
         if (!seed || typeof seed !== 'string') {
             throw new Error('Seed is required');
@@ -140,12 +132,15 @@ export default {
             throw new Error('Password is required');
         }
 
-        password = strengthenPassword(password, encryptionRounds);
-        return CryptoJS.AES.encrypt(seed, password).toString();
+        if (!address || typeof address !== 'string') {
+            throw new Error('Address is required');
+        }
+
+        return cryptoGost.encrypt(password, seed, address);
 
     },
 
-    decryptSeed(encryptedSeed: string, password: string, encryptionRounds?: number): string {
+    decryptSeed(encryptedSeed: string, password: string, address: string): string {
 
         if (!encryptedSeed || typeof encryptedSeed !== 'string') {
             throw new Error('Encrypted seed is required');
@@ -155,10 +150,7 @@ export default {
             throw new Error('Password is required');
         }
 
-        password = strengthenPassword(password, encryptionRounds);
-        const hexSeed = CryptoJS.AES.decrypt(encryptedSeed, password);
-        return converters.hexStringToString(hexSeed.toString());
-
+        return cryptoGost.decrypt(password, encryptedSeed, address);
     },
 
     generateRandomUint32Array(length: number): Uint32Array {
@@ -172,7 +164,7 @@ export default {
         const result = new Uint32Array(length);
 
         for (let i = 0; i < length; i++) {
-            const hash = converters.byteArrayToHexString(cryptoGost.streebog256(`${a[i]}${b[i]}`));
+            const hash = cryptoGost.encodeHex((cryptoGost.streebog256(`${a[i]}${b[i]}`)));
             const randomValue = parseInt(hash.slice(0, 13), 16);
             result.set([randomValue], i);
         }
