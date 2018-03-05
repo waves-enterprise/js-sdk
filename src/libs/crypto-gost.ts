@@ -1,18 +1,20 @@
 import * as Crypto from 'crypto-gost';
 import converters from '../libs/converters';
 import {IKeyPairBytes} from "../../interfaces";
+import base58 from "./base58";
+
 
 const gostEngine = (Crypto as any).GostEngine;
 const gostCrypto = (Crypto as any).CryptoGost;
-const { coding } = gostCrypto;
+const {coding} = gostCrypto;
 
 const algoritmKey = {
-    keySize:32,
-    length:256,
-    mode:'SIGN',
-    name:'GOST R 34.10',
-    procreator:'CP',
-    version:2012,
+    keySize: 32,
+    length: 256,
+    mode: 'SIGN',
+    name: 'GOST R 34.10',
+    procreator: 'CP',
+    version: 2012,
 };
 
 const algorithmGostSign = {
@@ -37,7 +39,7 @@ const algorithmGostSign = {
 
 
 export default {
-    streebog256 (data: Uint8Array | string): Uint8Array {
+    streebog256(data: Uint8Array | string): Uint8Array {
         if (typeof data === 'string') {
             data = Uint8Array.from(converters.stringToByteArray(data));
         }
@@ -47,18 +49,18 @@ export default {
         return new Uint8Array(GostDigest.digest(data));
     },
 
-    generateKey (ukm: Uint8Array): IKeyPairBytes {
-        const GostSign = gostEngine.getGostSign({...algorithmGostSign,ukm});
-        const keys =  GostSign.generateKey();
+    generateKey(ukm: Uint8Array): IKeyPairBytes {
+        const GostSign = gostEngine.getGostSign({...algorithmGostSign, ukm});
+        const keys = GostSign.generateKey();
         const privateKeyObject = convertKey(algoritmKey, false, null, keys.privateKey, 'private');
         const publicKeyObject = convertKey(algoritmKey, false, null, keys.publicKey, 'public');
         return {
-                publicKey: this.exportKey('raw',publicKeyObject),
-                privateKey: this.exportKey('raw',privateKeyObject)
+            publicKey: this.exportKey('raw', publicKeyObject),
+            privateKey: this.exportKey('raw', privateKeyObject)
         }
     },
 
-    sign (privateKey: Uint8Array, dataBytes: Uint8Array) {
+    sign(privateKey: Uint8Array, dataBytes: Uint8Array) {
         const GostSign = gostEngine.getGostSign({...algorithmGostSign});
 
         const signature = GostSign.sign(privateKey.buffer, dataBytes);
@@ -70,7 +72,7 @@ export default {
         }
     },
 
-    importKey (format: string, key: ArrayBuffer, type: string) {
+    importKey(format: string, key: ArrayBuffer, type: string) {
         let decodeKey = null;
         switch (format) {
             case 'spki':
@@ -93,7 +95,7 @@ export default {
 
     },
 
-    exportKey (format: string, key): ArrayBuffer {
+    exportKey(format: string, key): ArrayBuffer {
         let encodeKey = null;
         switch (format) {
             case 'spki':
@@ -103,7 +105,7 @@ export default {
                 encodeKey = gostCrypto.asn1.GostPrivateKeyInfo.encode(key);
                 break;
             case 'raw':
-                encodeKey = extractKey(null, null, key);
+                encodeKey = key.buffer;
                 break;
         }
         if (encodeKey) {
@@ -114,16 +116,46 @@ export default {
 
     },
 
-    verify (publicKey: Uint8Array, signature: Uint8Array, data: Uint8Array) {
+    verify(publicKey: Uint8Array, signature: Uint8Array, data: Uint8Array) {
         const GostSign = gostEngine.getGostSign({...algorithmGostSign});
 
         return GostSign.verify(publicKey, signature, data);
     },
 
-    encrypt (password: string, seed: string) {
+    encrypt(password: string, seed: string, address: string): string {
+        const baseKey = getBaseKeyForDerivation(password, address);
+        if (baseKey instanceof ArrayBuffer) {
+            const GostCipher = gostEngine.getGostCipher({
+                name: 'GOST R 34.12',
+                version: 2015,
+                length: 128
 
+            });
+            const seedBytes = this.decodeChars(seed);
+            const encryptedSeedBytes = GostCipher.encrypt(baseKey, seedBytes);
+            return this.encodeHex(encryptedSeedBytes);
+        } else {
+            throw new Error('baseKey format not supported');
+        }
     },
-    decrypt (password: string, encreptedSeed: string) {
+
+    decrypt(password: string, encryptedSeed: string, address: string) {
+        const baseKey = getBaseKeyForDerivation(password, address);
+
+        if (baseKey instanceof ArrayBuffer) {
+            const GostCipher = gostEngine.getGostCipher({
+                name: 'GOST R 34.12',
+                version: 2015,
+                length: 128
+
+            });
+            const encryptedSeedBytes = this.decodeHex(encryptedSeed);
+            const decryptedSeedBytes = GostCipher.decrypt(baseKey, encryptedSeedBytes);
+
+            return this.encodeChars(decryptedSeedBytes).replace(/[^\x20-\x7E]/g, '');
+        } else {
+            throw new Error('baseKey format not supported');
+        }
 
     },
 
@@ -135,11 +167,11 @@ export default {
         return coding.Hex.encode(input);
     },
 
-    decodeChars(input: string, charset: string): ArrayBuffer {
+    decodeChars(input: string, charset: string = 'utf-8'): ArrayBuffer {
         return coding.Chars.decode(input, charset);
     },
 
-    encodeChars(input: ArrayBuffer, charset: string): string {
+    encodeChars(input: ArrayBuffer, charset: string = 'utf-8'): string {
         return coding.Chars.encode(input, charset);
     }
 }
@@ -154,44 +186,16 @@ function convertKey(algorithm, extractable: boolean, keyUsages: [string] | null,
     }
 }
 
-function extractKey(method, algorithm, key):ArrayBuffer {
-    if (algorithm) {
-        let params = null;
-        switch (algorithm.mode) {
-            case 'ES':
-                params = ['sBox', 'keyMeshing', 'padding', 'block'];
-                break;
-            case 'SIGN':
-                params = ['namedCurve', 'namedParam', 'sBox', 'curve', 'param', 'modulusLength'];
-                break;
-            case 'MAC':
-                params = ['sBox'];
-                break;
-            case 'KW':
-                params = ['keyWrapping', 'ukm'];
-                break;
-            case 'DH':
-                params = ['namedCurve', 'namedParam', 'sBox', 'ukm', 'curve', 'param', 'modulusLength'];
-                break;
-            case 'KDF':
-                params = ['context', 'label'];
-                break;
-            case 'PBKDF2':
-                params = ['sBox', 'iterations', 'salt'];
-                break;
-            case 'PFXKDF':
-                params = ['sBox', 'iterations', 'salt', 'diversifier'];
-                break;
-            case 'CPKDF':
-                params = ['sBox', 'salt'];
-                break;
-        }
-        if (params)
-            params.forEach(function (name) {
-                key.algorithm[name] && (algorithm[name] = key.algorithm[name]);
-            });
-    }
-    return key.buffer;
+function getBaseKeyForDerivation(password: string, salt: string): ArrayBuffer {
+    const saltBytes = coding.Chars.decode(salt, 'utf-8');
+    const GostDigest = gostEngine.getGostDigest({
+        name: 'GOST R 34.11',
+        mode: 'CPKDF',
+        salt: saltBytes
+    });
+    const passwordBytes = coding.Chars.decode(password, 'utf-8');
+
+    return GostDigest.deriveKey(passwordBytes);
 }
 
 

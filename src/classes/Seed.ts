@@ -24,32 +24,28 @@ export function generateNewSeed(length): string {
 
 }
 
-function encryptSeedPhrase(seedPhrase: string, password: string, encryptionRounds: number = 5000) {
+function encryptSeedPhrase(seedPhrase: string, password: string, address:string):string {
 
     if (password && password.length < 8) {
         logger.warn('Your password may be too weak');
-    }
-
-    if (encryptionRounds < 1000) {
-        logger.warn('Encryption rounds may be too few');
     }
 
     if (seedPhrase.length < config.getMinimumSeedLength()) {
         throw new Error('The seed phrase you are trying to encrypt is too short');
     }
 
-    return crypto.encryptSeed(seedPhrase, password, encryptionRounds);
+    return crypto.encryptSeed(seedPhrase, password, address);
 
 }
 
-function decryptSeedPhrase(encryptedSeedPhrase: string, password: string, encryptionRounds: number = 5000) {
+function decryptSeedPhrase(encryptedSeedPhrase: string, password: string, address:string):string {
 
     const wrongPasswordMessage = 'The password is wrong';
 
     let phrase;
 
     try {
-        phrase = crypto.decryptSeed(encryptedSeedPhrase, password, encryptionRounds);
+        phrase = crypto.decryptSeed(encryptedSeedPhrase, password, address);
     } catch (e) {
         throw new Error(wrongPasswordMessage);
     }
@@ -67,7 +63,7 @@ export interface ISeed {
     readonly phrase: string;
     readonly address: string;
     readonly keyPair: IKeyPair;
-    encrypt(password: string, encryptionRounds?: number);
+    encrypt(password: string);
 }
 
 
@@ -92,8 +88,8 @@ class Seed implements ISeed {
         Object.freeze(this.keyPair);
     }
 
-    public encrypt(password: string, encryptionRounds?: number) {
-        return encryptSeedPhrase(this.phrase, password, encryptionRounds);
+    public encrypt(password: string) {
+        return encryptSeedPhrase(this.phrase, password, this.address);
     }
 
 }
