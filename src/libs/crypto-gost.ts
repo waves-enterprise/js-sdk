@@ -1,7 +1,6 @@
 import * as Crypto from 'crypto-gost';
 import converters from '../libs/converters';
 import {IKeyPairBytes} from "../../interfaces";
-import base58 from "./base58";
 
 
 const gostEngine = (Crypto as any).GostEngine;
