@@ -13,8 +13,8 @@ describe('tools', function () {
 
     it('should build the right address from the given public key', () => {
 
-        const publicKey = 'GL6Cbk3JnD9XiBRK5ntCavSrGGD5JT9pXSRkukcEcaSW';
-        const address = '3N1JKsPcQ5x49utR79Maey4tbjssfrn2RYp';
+        const publicKey = '4h7s6v7QaJcMsh1jFfNJmBkf5KQXQjCX8ghqWLcF6FY5EyfpPf7vZNgtfiEem7NTkG422hxh4hf96aqhbnvxBaLn';
+        const address = '3N7HWB7bkqYfUp8FC2ttr1Uz2yfuV8GJYZW';
 
         expect(Waves.tools.getAddressFromPublicKey(publicKey)).to.equal(address);
 

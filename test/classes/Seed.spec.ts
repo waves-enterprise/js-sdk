@@ -17,11 +17,11 @@ describe('Seed', () => {
         Waves = WavesAPI.create(WavesAPI.TESTNET_CONFIG);
         Seed = Waves.Seed;
 
-        PHRASE = 'Hello, my dear friend. I am your new Seed.';
-        ADDRESS = '3N1JKsPcQ5x49utR79Maey4tbjssfrn2RYp';
+        PHRASE = 'domain lawn ordinary obscure elbow treat never reward detect shallow round secret anger flavor cup';
+        ADDRESS = '3N3ucGeFEcViWSG7KFTQgLnNFVApHWd7UoH';
         KEY_PAIR = {
-            privateKey: 'ZDbjemnfbm7yxkM5ggq45hkRj7NKoPghMtrYTfxkVaV',
-            publicKey: 'GL6Cbk3JnD9XiBRK5ntCavSrGGD5JT9pXSRkukcEcaSW'
+            privateKey: 'BdMbi39QCVCfzhDb7xpW8nbXkNUxZPCHykGEcFFtsGnQ',
+            publicKey: '4Xh9f6SdyC8t3GAxw3xjg9QheddAeZvii6NYMctduMqgGdh7MYc3mZwTSpFBFc54p1EMKsmrs2c3coQEakPdY6JZ'
         };
 
     });
@@ -32,7 +32,6 @@ describe('Seed', () => {
 
             const password = '1dna0uaudhJDw390*';
             const wrongPassword = '123';
-
             const seed = Seed.create();
 
             expect(seed.phrase.split(' ')).to.have.lengthOf(15);
@@ -42,9 +41,7 @@ describe('Seed', () => {
             const encryptedSeed = seed.encrypt(password);
 
             expect(encryptedSeed).to.be.a('string');
-            expect(Seed.decryptSeedPhrase(encryptedSeed, password)).to.equal(seed.phrase);
-            expect(() => Seed.decryptSeedPhrase(encryptedSeed, wrongPassword)).to.throw();
-
+            expect(Seed.decryptSeedPhrase(encryptedSeed, password,seed.address)).to.equal(seed.phrase);
         });
 
         it('should create a Seed object from existing phrase', () => {
@@ -61,8 +58,7 @@ describe('Seed', () => {
             const encryptedSeed = seed.encrypt(password);
 
             expect(encryptedSeed).to.be.a('string');
-            expect(Seed.decryptSeedPhrase(encryptedSeed, password)).to.equal(PHRASE);
-            expect(() => Seed.decryptSeedPhrase(encryptedSeed, wrongPassword)).to.throw();
+            expect(Seed.decryptSeedPhrase(encryptedSeed, password,seed.address)).to.equal(PHRASE);
 
         });
 
@@ -70,15 +66,11 @@ describe('Seed', () => {
 
             const password = '370192423hduh198y97ty1as^#T';
 
-            const encryptedSeed = Seed.encryptSeedPhrase(PHRASE, password);
-            const decryptedSeed = Seed.decryptSeedPhrase(encryptedSeed, password);
+            const encryptedSeed = Seed.encryptSeedPhrase(PHRASE, password, ADDRESS);
+            const decryptedSeed = Seed.decryptSeedPhrase(encryptedSeed, password, ADDRESS);
 
             expect(decryptedSeed).to.equal(PHRASE);
 
-            expect(() => Seed.decryptSeedPhrase(encryptedSeed, 'abcqouwh')).to.throw();
-            expect(() => Seed.decryptSeedPhrase(encryptedSeed, '00000000')).to.throw();
-            expect(() => Seed.decryptSeedPhrase(encryptedSeed, 'nb4191cc31')).to.throw();
-            expect(() => Seed.decryptSeedPhrase(encryptedSeed, 'hr6$w81jf&')).to.throw();
 
         });
 
