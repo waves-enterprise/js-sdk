@@ -1,4 +1,8 @@
-# Waves API [![npm version](https://badge.fury.io/js/%40waves%2Fwaves-api.svg)](https://www.npmjs.com/package/@waves/waves-api) [![downloads/month](https://img.shields.io/npm/dm/%40waves%2Fwaves-api.svg)](https://www.npmjs.com/package/@waves/waves-api)
+# TODO
+Доработать кроссплатформенность (nodeJS) (https://github.com/vostokplatform/crypto)
+для возможности использования пакетов не только в браузерном окружении
+
+# Waves API implementing GOST (russian state standart) [![npm version](https://badge.fury.io/js/%40waves%2Fwaves-api.svg)](https://www.npmjs.com/package/@waves/waves-api) [![downloads/month](https://img.shields.io/npm/dm/%40waves%2Fwaves-api.svg)](https://www.npmjs.com/package/@waves/waves-api)
 
 Waves Platform core features and Waves API library for both Node.js and browser.
 

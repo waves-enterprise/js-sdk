@@ -1,12 +1,12 @@
 import { IWavesBasicConfig, IWavesConfig } from '../interfaces';
 
-import { TRANSACTION_TYPE, TRANSACTION_TYPE_NUMBER, TRANSACTION_TYPE_VERSION } from '@waves/signature-generator';
+import { TRANSACTION_TYPE, TRANSACTION_TYPE_NUMBER, TRANSACTION_TYPE_VERSION } from '@vostokplatform/signature-generator';
 
 
 export const WAVES = 'WAVES';
 
-export const MAINNET_BYTE: number = 'W'.charCodeAt(0);
-export const TESTNET_BYTE: number = 'T'.charCodeAt(0);
+export const MAINNET_BYTE: number = 'D'.charCodeAt(0); // todo
+export const TESTNET_BYTE: number = 'D'.charCodeAt(0);
 
 export const INITIAL_NONCE = 0;
 
@@ -53,7 +53,7 @@ export const SET_SCRIPT_TX_NAME = TRANSACTION_TYPE.SET_SCRIPT;
 export const SPONSORSHIP_TX_NAME = TRANSACTION_TYPE.SPONSORSHIP;
 
 export const PRIVATE_KEY_LENGTH = 32;
-export const PUBLIC_KEY_LENGTH = 32;
+export const PUBLIC_KEY_LENGTH = 64;
 
 export const MINIMUM_FEE = 100000;
 export const MINIMUM_ISSUE_FEE = 100000000;

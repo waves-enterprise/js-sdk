@@ -1,4 +1,4 @@
-import { ISignatureGenerator, ISignatureGeneratorConstructor } from '@waves/signature-generator';
+import { ISignatureGenerator, ISignatureGeneratorConstructor } from '@vostokplatform/signature-generator';
 import { IHash, IKeyPair } from '../../interfaces';
 
 import * as create from 'parse-json-bignumber';
