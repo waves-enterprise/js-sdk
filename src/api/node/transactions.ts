@@ -59,6 +59,8 @@ export default {
                 return requests.sendSetScriptTx(data, keys);
             case constants.SPONSORSHIP_TX_NAME:
                 return requests.sendSponsorshipTx(data, keys);
+            case constants.PERMISSION_TX_NAME:
+                return requests.sendPermissionTx(data, keys);
             default:
                 throw new WavesError(`Wrong transaction type: ${type}`, data);
         }

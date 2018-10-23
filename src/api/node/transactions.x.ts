@@ -1,12 +1,12 @@
-import { TTransactionRequest } from '../../utils/request';
-import { IHash } from '../../../interfaces';  // TODO : fix this issue with interface
+import {TTransactionRequest} from '../../utils/request';
+import {IHash} from '../../../interfaces';  // TODO : fix this issue with interface
 
-import { Schema, NumberPart, ObjectPart, StringPart, ArrayPart, BasePart } from 'ts-api-validator';
-import { TX_TYPE_MAP } from '@vostokplatform/signature-generator';
+import {Schema, NumberPart, ObjectPart, StringPart, ArrayPart, BasePart} from 'ts-api-validator';
+import {TX_TYPE_MAP} from '@vostokplatform/signature-generator';
 
 import schemaFields from '../schemaFields';
-import { createRemapper, normalizeAssetId, precisionCheck, removeAliasPrefix } from '../../utils/remap';
-import { createFetchWrapper, processJSON, PRODUCTS, VERSIONS, wrapTxRequest } from '../../utils/request';
+import {createRemapper, normalizeAssetId, precisionCheck, removeAliasPrefix} from '../../utils/remap';
+import {createFetchWrapper, processJSON, PRODUCTS, VERSIONS, wrapTxRequest} from '../../utils/request';
 import * as constants from '../../constants';
 import config from '../../config';
 
@@ -433,5 +433,44 @@ export const postSponsorship = createRemapper({
 });
 
 export const sendSponsorshipTx = wrapTxRequest(TX_TYPE_MAP.sponsorship, preSponsorship, postSponsorship, (postParams) => {
+    return fetch(constants.BROADCAST_PATH, postParams);
+}, true) as TTransactionRequest;
+
+
+/* PERMISSION */
+
+export const permissionSchema = new Schema({
+    type: ObjectPart,
+    required: true,
+    content: {
+        senderPublicKey: schemaFields.publicKey,
+        timestamp: schemaFields.timestamp,
+        opType: {
+            type: StringPart,
+            required: true
+        },
+        role: {
+            type: StringPart,
+            required: true
+        },
+        target: {
+            type: StringPart,
+            required: true
+        },
+        dueTimestamp: {
+            type: NumberPart,
+            required: false,
+        }
+    }
+});
+
+export const prePermit = (data) => permissionSchema.parse(data);
+export const postPermit = createRemapper({
+    transactionType: null,
+    type: constants.PERMISSION_TX,
+    version: constants.PERMISSION_TX_VERSION
+});
+
+export const sendPermissionTx = wrapTxRequest(TX_TYPE_MAP.permit, prePermit, postPermit, (postParams) => {
     return fetch(constants.BROADCAST_PATH, postParams);
 }, true) as TTransactionRequest;

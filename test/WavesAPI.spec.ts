@@ -1,10 +1,8 @@
-import { expect } from './getChai';
+import {expect} from './getChai';
 import * as WavesAPI from '../dist/waves-api';
-
 
 let requiredConfigValues;
 let allConfigValues;
-
 
 describe('WavesAPI', () => {
 
@@ -27,11 +25,11 @@ describe('WavesAPI', () => {
 
     });
 
-    it('should throw when created without required fields in config', () => {
+    it('should throw when created without required fields in config', async () => {
         expect(() => WavesAPI.create({})).to.throw();
-        expect(() => WavesAPI.create({ networkByte: 1, nodeAddress: '1' })).to.throw();
-        expect(() => WavesAPI.create({ networkByte: 1, matcherAddress: '1' })).to.throw();
-        expect(() => WavesAPI.create({ nodeAddress: '1', matcherAddress: '1' })).to.throw();
+        expect(() => WavesAPI.create({networkByte: 1, nodeAddress: '1'})).to.throw();
+        expect(() => WavesAPI.create({networkByte: 1, matcherAddress: '1'})).to.throw();
+        expect(() => WavesAPI.create({nodeAddress: '1', matcherAddress: '1'})).to.throw();
     });
 
     it('should have all fields in config when all fields are passed', () => {
@@ -55,8 +53,11 @@ describe('WavesAPI', () => {
 
         const logLevel = 'none';
 
-        const Waves = WavesAPI.create({ ...requiredConfigValues, logLevel });
-        Waves.config.set({ assetFactory: () => {} });
+        const Waves = WavesAPI.create({...requiredConfigValues, logLevel});
+        Waves.config.set({
+            assetFactory: () => {
+            }
+        });
         const config = Waves.config.get();
         expect(config.logLevel).to.equal(logLevel);
 

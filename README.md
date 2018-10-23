@@ -295,6 +295,24 @@ Waves.API.Node.transactions.broadcast('createAlias', createAliasData, seed.keyPa
 });
 ```
 
+##### Create Permission transaction
+
+Vostok permission transaction 
+
+```
+const createPermissionData ={
+    timestamp: Date.now(),
+    opType: 'add',
+    role: 'banned',
+    target: '3FV34HcWJEq7eQEvzWdwyhsxrMr2qHBN5k6',
+    dueTimestamp: 0 // empty or timestamp in the future Date.now() + 100000
+};
+
+Waves.API.Node.transactions.broadcast('permit', createPermissionData, seed.keyPair).then((responseData) => {
+    console.log(responseData);
+});
+```
+
 #### Getting the information from Node
 
 The most used GET requests are those related to balances and transactions history.
