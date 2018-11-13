@@ -25,6 +25,10 @@ export default {
         return config.nodeAddress;
     },
 
+    isCryptoGost(): boolean {
+        return config.crypto === 'gost'
+    },
+
     getMatcherAddress(): string {
         return config.matcherAddress;
     },

@@ -1,5 +1,5 @@
 import { libs, utils, TX_TYPE_MAP } from '@vostokplatform/signature-generator';
-
+import config from './config'
 import { MINIMUM_DATA_FEE_PER_KB } from './constants';
 import { createTransaction, ITransactionWrapper } from './utils/transactions'; // TODO : fix this issue with interface
 
@@ -8,7 +8,9 @@ export default {
 
     getAddressFromPublicKey(publicKey: string) {
         const publicKeyBytes = libs.base58.decode(publicKey);
-        return utils.crypto.buildRawAddress(publicKeyBytes);
+        return config.isCryptoGost()
+            ? utils.cryptoGost.buildRawAddress(publicKeyBytes)
+            : utils.crypto.buildRawAddress(publicKeyBytes);
     },
 
     calculateTimeDiff(nodeTime, userTime) {

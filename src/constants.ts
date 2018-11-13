@@ -56,7 +56,8 @@ export const SPONSORSHIP_TX_NAME = TRANSACTION_TYPE.SPONSORSHIP;
 export const PERMISSION_TX_NAME = TRANSACTION_TYPE.PERMIT;
 
 export const PRIVATE_KEY_LENGTH = 32;
-export const PUBLIC_KEY_LENGTH = 64;
+export const PUBLIC_KEY_LENGTH = 32;
+export const PUBLIC_KEY_GOST_LENGTH = 64;
 
 export const MINIMUM_FEE = 100000;
 export const MINIMUM_ISSUE_FEE = 100000000;
@@ -74,7 +75,8 @@ export const DEFAULT_BASIC_CONFIG: IWavesBasicConfig = {
     requestOffset: 0,
     requestLimit: 100,
     logLevel: 'warning',
-    timeDiff: 0
+    timeDiff: 0,
+    crypto: 'waves'
 };
 
 export const DEFAULT_MAINNET_CONFIG: IWavesConfig = {

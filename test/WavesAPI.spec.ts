@@ -13,7 +13,8 @@ describe('WavesAPI', () => {
             nodeAddress: '1',
             matcherAddress: '1',
             logLevel: 'warning',
-            timeDiff: 0 // TODO : add some cases in the future API tests
+            timeDiff: 0, // TODO : add some cases in the future API tests
+            crypto: 'waves'
         };
 
         allConfigValues = {

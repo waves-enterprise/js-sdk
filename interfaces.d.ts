@@ -1,7 +1,7 @@
 export type TBuffer = Uint8Array | number[];
 
 export type TLogLevel = 'none' | 'error' | 'warning' | 'info';
-
+export type TCrypto = 'waves' | 'gost'
 
 export interface IHash<T> {
     [key: string]: T;
@@ -23,6 +23,7 @@ export interface IWavesBasicConfig {
     requestLimit: number;
     logLevel: TLogLevel;
     timeDiff: number;
+    crypto: TCrypto
 }
 
 export interface IWavesConfig extends IWavesBasicConfig {
