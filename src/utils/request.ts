@@ -70,6 +70,7 @@ export function createFetchWrapper(product: PRODUCTS, version: VERSIONS, pipe?: 
     return function (path: string, options?: IHash<any>): Promise<any> {
 
         const url = resolveHost() + normalizePath(path);
+
         const request = fetch(url, options);
 
         if (pipe) {

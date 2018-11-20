@@ -42,8 +42,13 @@ export function precisionCheck(precision) {
 
 
 function castFromBytesToBase58(bytes, sliceIndex) {
-    bytes = Uint8Array.from(Array.prototype.slice.call(bytes, sliceIndex));
-    return libs.base58.encode(bytes);
+    const processedBytes = Uint8Array.from(Array.prototype.slice.call(bytes, sliceIndex));
+    return libs.base58.encode(processedBytes);
+}
+
+function castFromStringToBase58(str, sliceIndex) {
+    const processedBytes = Uint8Array.from(Array.prototype.slice.call(str.split('').map(e => e.charCodeAt()), sliceIndex));
+    return libs.base58.encode(processedBytes);
 }
 
 function castFromRawToPrefixed(raw) {
@@ -75,8 +80,13 @@ export function createRemapper(rules) {
                 // Transform according to the rule
                 if (rule.from === 'bytes' && rule.to === 'base58') {
                     result[key] = castFromBytesToBase58(data[key], rule.slice || 0);
+
+                } else if (rule.from === 'string' && rule.to === 'base58') {
+                    result[key] = castFromStringToBase58(data[key], rule.slice || 0);
+
                 } else if (rule.from === 'raw' && rule.to === 'prefixed') {
                     result[rule.path || key] = castFromRawToPrefixed(data[key]);
+
                 }
 
             } else if (rule !== null) {
