@@ -305,7 +305,7 @@ export const postMassTransfer = createRemapper({
     transactionType: null,
     assetId: normalizeAssetId,
     attachment: {
-        from: 'bytes',
+        from: 'string',
         to: 'base58'
     },
     transfers: {
