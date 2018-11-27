@@ -3,6 +3,7 @@ import config from './config'
 import { MINIMUM_DATA_FEE_PER_KB } from './constants';
 import { createTransaction, ITransactionWrapper } from './utils/transactions'; // TODO : fix this issue with interface
 
+import { base58ToString } from './utils/base58ToString';
 
 export default {
 
@@ -19,7 +20,8 @@ export default {
 
     base58: {
         encode: libs.base58.encode,
-        decode: libs.base58.decode
+        decode: libs.base58.decode,
+        base58ToString
     },
 
     getMinimumDataTxFee(data: any[]): Promise<number> {

@@ -5,6 +5,7 @@ import { libs } from '@vostokplatform/signature-generator';
 import { WAVES } from '../constants';
 import config from '../config';
 
+declare function unescape(s:string): string;
 
 export function normalizeAssetId(original) {
     if (!original || original === WAVES) {
@@ -46,8 +47,14 @@ function castFromBytesToBase58(bytes, sliceIndex) {
     return libs.base58.encode(processedBytes);
 }
 
+/*
+decode
+function: /utils/base58ToString
+usage: Waves.tools.base58.base58ToString(str)
+*/
 function castFromStringToBase58(str, sliceIndex) {
-    const processedBytes = Uint8Array.from(Array.prototype.slice.call(str.split('').map(e => e.charCodeAt()), sliceIndex));
+    const processedBytes = Uint8Array.from(Array.prototype.slice.call(unescape(encodeURIComponent(str))
+        .split('').map(e => e.charCodeAt(0)), sliceIndex));
     return libs.base58.encode(processedBytes);
 }
 
@@ -59,7 +66,6 @@ function castFromRawToPrefixed(raw) {
         return `alias:${networkCharacter}:${raw}`;
     }
 }
-
 
 export function createRemapper(rules) {
 

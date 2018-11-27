@@ -50,7 +50,7 @@ const permissionTxMockWaves = {
 
 const Waves = WavesAPI.create(allConfigValues);
 
-/*
+
 const transferData = {
 
     // An arbitrary address; mine, in this example
@@ -67,12 +67,52 @@ const transferData = {
     fee: 100000,
 
     // 140 bytes of data (it's allowed to use Uint8Array here)
-    attachment: 'my attach',
+    attachment: 'мой аттач some! data?',
 
     timestamp: Date.now()
 
 };
 
-Waves.API.Node.transactions.broadcast('transfer', transferData, seed.keyPair).then((responseData) => {
-    console.log(responseData);
-});*/
+// Waves.API.Node.transactions.broadcast('transfer', transferData, seed.keyPair).then((responseData) => {
+//    console.log(responseData);
+// });
+
+const t = {
+    "senderPublicKey": "GmnTn6yVk7CNmm5h7NvKGz9Q6Bo7LdG5iM7FSso9k4tZ",
+    "alias": "wolfarion",
+    "fee": 100000,
+    "timestamp": 1543235238318,
+    "proofs": ["2Kozpqqzdz2cA3fb4brER9gUyLk47J7WD7A26dSze5XbcG13aDmu2FvTmutX3uD42k8vZFmY6zk83mhFyXZz24q4"],
+    "type": 10,
+    "version": 2
+};
+
+const leaseData = {
+
+    recipient: '3FX1SurWuAqycknUBdMDR6Y8fs7Fcn1U39z',
+
+    // Both amount and fee may be presented as divided by 10^8 (8 is Waves precision)
+    amount: 20000, // 10 Waves
+    fee: 100000, // 0.001 Waves
+
+    timestamp: Date.now()
+
+};
+
+// Waves.API.Node.transactions.broadcast('lease', leaseData, seed.keyPair).then((responseData) => {
+//    console.log(responseData);
+// });
+
+const cancelLeasingData = {
+
+    // Related Lease transaction ID
+    leaseId: '3zPsiE5rXRX1sHfn3D59JN1boMzqcvrizBk1ZCZZEuxz',
+
+    fee: 100000,
+    timestamp: Date.now()
+
+};
+
+// Waves.API.Node.transactions.broadcast('cancelLeasing', cancelLeasingData, seed.keyPair).then((responseData) => {
+//    console.log(responseData);
+// });

@@ -1,6 +1,6 @@
 {
   "name": "@vostokplatform/waves-api",
-  "version": "1.8.2",
+  "version": "1.10.3",
   "description": "Vostok client-side API library",
   "keywords": [
     "cryptocurrency",
@@ -42,7 +42,7 @@
     "uglify-es": "3.3.9"
   },
   "dependencies": {
-    "@vostokplatform/signature-generator": "1.1.1",
+    "@vostokplatform/signature-generator": "1.2.2",
     "bignumber.js": "7.2.1",
     "crypto-js": "3.1.9-1",
     "crypto-gost-js": "git+https://git@github.com/vostokplatform/crypto.git#master",

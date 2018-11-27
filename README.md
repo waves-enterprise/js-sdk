@@ -263,7 +263,7 @@ This transaction gives you a mean to cancel previously sent Lease transactions.
 const cancelLeasingData = {
 
     // Related Lease transaction ID
-    transactionId: '2kPvxtAit2nsumxBL7xYjvaWYmvmMfDL5oPgs4nZsHvZ',
+    leaseId: '2kPvxtAit2nsumxBL7xYjvaWYmvmMfDL5oPgs4nZsHvZ',
 
     fee: 100000,
     timestamp: Date.now()

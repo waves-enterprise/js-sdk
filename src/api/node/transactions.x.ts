@@ -215,12 +215,17 @@ export const cancelLeasingSchema = new Schema({
     required: true,
     content: {
         senderPublicKey: schemaFields.publicKey,
-        transactionId: {
+        leaseId: {
             type: StringPart,
             required: true
         },
         fee: schemaFields.fee,
-        timestamp: schemaFields.timestamp
+        timestamp: schemaFields.timestamp,
+        chainId: {
+            type: NumberPart,
+            required: true,
+            parseValue: () => config.getNetworkByte()
+        }
     }
 });
 
@@ -234,7 +239,7 @@ export const postCancelLeasing = createRemapper({
 
 export const sendCancelLeasingTx = wrapTxRequest(TX_TYPE_MAP.cancelLeasing, preCancelLeasing, postCancelLeasing, (postParams) => {
     return fetch('/transactions/broadcast', postParams);
-}/*, true*/) as TTransactionRequest;
+}, true) as TTransactionRequest;
 
 
 /* CREATE ALIAS */
@@ -262,7 +267,7 @@ export const postCreateAlias = createRemapper({
 });
 
 export const sendCreateAliasTx = wrapTxRequest(TX_TYPE_MAP.createAlias, preCreateAlias, postCreateAlias, (postParams) => {
-    return fetch('/alias/broadcast/create', postParams);
+    return fetch('/transactions/broadcast', postParams);
 }, true) as TTransactionRequest;
 
 
