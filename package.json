@@ -45,7 +45,7 @@
     "@vostokplatform/signature-generator": "1.2.2",
     "bignumber.js": "7.2.1",
     "crypto-js": "3.1.9-1",
-    "crypto-gost-js": "git+https://git@github.com/vostokplatform/crypto.git#master",
+    "@vostokplatform/crypto-gost-js": "2.0.0",
     "node-fetch": "2.2.0",
     "parse-json-bignumber": "^0.1.2",
     "ts-api-validator": "2.1.3",
