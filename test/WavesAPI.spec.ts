@@ -47,6 +47,7 @@ describe('WavesAPI', () => {
     it('should create seed without errors', () => {
         const Waves = WavesAPI.create(requiredConfigValues);
         const seed = Waves.Seed.create();
+
         expect(seed.phrase).to.be.a('string');
     });
 

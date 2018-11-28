@@ -18,7 +18,6 @@ import * as constants from './constants';
 import config from './config';
 import tools from './tools';
 
-
 export interface IAPIVersions {
     Node: INodeAPI,
     Matcher: IMatcherAPI
