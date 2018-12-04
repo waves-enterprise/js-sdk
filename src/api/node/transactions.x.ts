@@ -316,7 +316,7 @@ export const postMassTransfer = createRemapper({
     transfers: {
         from: 'raw',
         to: 'prefixed',
-        path: 'recipient'
+        path: 'transfers'
     },
     type: constants.MASS_TRANSFER_TX,
     version: constants.MASS_TRANSFER_TX_VERSION

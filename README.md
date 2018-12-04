@@ -113,7 +113,7 @@ First, a quick introduction into the structure:
         * [lease](#lease-transaction)
         * [cancelLeasing](#cancel-leasing-transaction)
         * [createAlias](#create-alias-transaction)
-        * massTransfer
+        * [massTransfer](#mass-tranfer-transaction)
         * data
         * setScript
         * sponsorship
@@ -187,6 +187,24 @@ Waves.API.Node.transactions.broadcast('transfer', transferData, seed.keyPair).th
     console.log(responseData);
 });
 ```
+
+##### Mass transfer transaction
+```const massTransfer = {
+    timestamp: Date.now(),
+    transfers: [
+        {
+            recipient: 'alias',
+            amount: '20000'
+        }
+    ],
+    attachment: undefined,
+    assetId: 'WAVES',
+    fee: 200000
+};
+
+Waves.API.Node.transactions.broadcast('massTransfer', massTransfer, seed.keyPair).then((responseData) => {
+    console.log(responseData);
+});```
 
 ##### Reissue transaction
 

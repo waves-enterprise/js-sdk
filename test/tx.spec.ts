@@ -113,6 +113,19 @@ const cancelLeasingData = {
 
 };
 
-// Waves.API.Node.transactions.broadcast('cancelLeasing', cancelLeasingData, seed.keyPair).then((responseData) => {
-//    console.log(responseData);
-// });
+/*const massTransfer = {
+    timestamp: Date.now(),
+    transfers: [
+        {
+            recipient: 'wolfarion',
+            amount: '50000'
+        }
+    ],
+    attachment: 'мой аттач some! data?',
+    assetId: 'WAVES',
+    fee: 200000
+};
+
+Waves.API.Node.transactions.broadcast('massTransfer', massTransfer, seed.keyPair).then((responseData) => {
+    console.log(responseData);
+});*/

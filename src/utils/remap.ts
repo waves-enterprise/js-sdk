@@ -1,11 +1,11 @@
-import { IHash } from '../../interfaces';
+import {IHash} from '../../interfaces';
 
-import { libs } from '@vostokplatform/signature-generator';
+import {libs} from '@vostokplatform/signature-generator';
 
-import { WAVES } from '../constants';
+import {WAVES} from '../constants';
 import config from '../config';
 
-declare function unescape(s:string): string;
+declare function unescape(s: string): string;
 
 export function normalizeAssetId(original) {
     if (!original || original === WAVES) {
@@ -71,7 +71,7 @@ export function createRemapper(rules) {
 
     return function (data: IHash<any>): IHash<any> {
 
-        return Object.keys({ ...data, ...rules }).reduce((result, key) => {
+        return Object.keys({...data, ...rules}).reduce((result, key) => {
 
             const rule = rules[key];
 
@@ -91,8 +91,14 @@ export function createRemapper(rules) {
                     result[key] = castFromStringToBase58(data[key], rule.slice || 0);
 
                 } else if (rule.from === 'raw' && rule.to === 'prefixed') {
-                    result[rule.path || key] = castFromRawToPrefixed(data[key]);
-
+                    if (data[key].length && data[key][0].recipient) { // if mass transfers [{recipient: 'address', amount: '100'}] amount = long
+                        result[rule.path || key] = data[key].map(o => ({
+                            ...o,
+                            recipient: castFromRawToPrefixed(o.recipient)
+                        }));
+                    } else {
+                        result[rule.path || key] = castFromRawToPrefixed(data[key])
+                    }
                 }
 
             } else if (rule !== null) {
