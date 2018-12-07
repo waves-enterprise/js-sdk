@@ -48,7 +48,12 @@ export const issueSchema = new Schema({
         },
         reissuable: schemaFields.reissuable,
         fee: schemaFields.issueFee,
-        timestamp: schemaFields.timestamp
+        timestamp: schemaFields.timestamp,
+        chainId: {
+            type: NumberPart,
+            required: true,
+            parseValue: () => config.getNetworkByte()
+        }
     }
 });
 
