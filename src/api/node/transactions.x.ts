@@ -37,7 +37,7 @@ export const issueSchema = new Schema({
             required: false,
             defaultValue: ''
         },
-        quantity: { // todo accept as string OR a bignumber
+        quantity: { // todo accept as string OR as bignumber
             type: StringPart,
             required: true
         },
