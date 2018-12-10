@@ -131,11 +131,11 @@ Waves.API.Node.transactions.broadcast('massTransfer', massTransfer, seed.keyPair
 });*/
 
 const issueData = {
-    name: 'test-token2',
-    description: 'babki кэщ!',
+    name: 'test-token3',
+    description: '',
 
     // With given options you'll have 100000.00000 tokens
-    quantity: 10000000000,
+    quantity: '9223372036854775806',
     precision: 5,
 
     // This flag defines whether additional emission is possible
@@ -147,22 +147,22 @@ const issueData = {
 };
 
 // Waves.API.Node.transactions.broadcast('issue', issueData, seed.keyPair).then((responseData) => {
-//     console.log(responseData);
+//      console.log(responseData);
 // });
 
 
-/*
+
 const permissionTx = {
     version: 1,
     // type: 102,
     timestamp: Date.now(),
     fee: '0',
-    opType: "add",
+    opType: "remove",
     role: "issuer",
     target: "3Fdc25KFhRAtY3PB3viHCkHKiz4LmAsyGpe",
     // senderPublicKey: seed.keyPair.publicKey
 };
 
-Waves.API.Node.transactions.broadcast('permit', permissionTx, seed.keyPair).then((responseData) => {
-    console.log(responseData);
-});*/
+// Waves.API.Node.transactions.broadcast('permit', permissionTx, seed.keyPair).then((responseData) => {
+// console.log(responseData);
+// });

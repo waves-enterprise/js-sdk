@@ -37,8 +37,8 @@ export const issueSchema = new Schema({
             required: false,
             defaultValue: ''
         },
-        quantity: {
-            type: NumberPart,
+        quantity: { // todo accept as string OR a bignumber
+            type: StringPart,
             required: true
         },
         precision: {
@@ -62,7 +62,11 @@ export const postIssue = createRemapper({
     transactionType: null,
     precision: 'decimals',
     type: constants.ISSUE_TX,
-    version: constants.ISSUE_TX_VERSION
+    version: constants.ISSUE_TX_VERSION,
+    quantity: {
+        from: 'string',
+        to: 'bignumber'
+    },
 });
 
 export const sendIssueTx = wrapTxRequest(TX_TYPE_MAP.issue, preIssue, postIssue, (postParams) => {

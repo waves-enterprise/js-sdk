@@ -4,6 +4,7 @@ import {libs} from '@vostokplatform/signature-generator';
 
 import {WAVES} from '../constants';
 import config from '../config';
+import BigNumber from '../libs/bignumber';
 
 declare function unescape(s: string): string;
 
@@ -89,6 +90,9 @@ export function createRemapper(rules) {
 
                 } else if (rule.from === 'string' && rule.to === 'base58') {
                     result[key] = castFromStringToBase58(data[key], rule.slice || 0);
+
+                } else if (rule.from === 'string' && rule.to === 'bignumber') {
+                    result[key] = new BigNumber(data[key]);
 
                 } else if (rule.from === 'raw' && rule.to === 'prefixed') {
                     if (data[key].length && data[key][0].recipient) { // if mass transfers [{recipient: 'address', amount: '100'}] amount = long

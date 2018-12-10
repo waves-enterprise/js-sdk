@@ -140,7 +140,7 @@ const issueData = {
     description: 'Some words about it',
 
     // With given options you'll have 100000.00000 tokens
-    quantity: 10000000000,
+    quantity: '10000000000', // use string to represent 64bit integer here
     precision: 5,
 
     // This flag defines whether additional emission is possible

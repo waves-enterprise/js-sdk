@@ -1,5 +1,5 @@
-import { ISignatureGenerator, ISignatureGeneratorConstructor } from '@vostokplatform/signature-generator';
-import { IHash, IKeyPair } from '../../interfaces';
+import {ISignatureGenerator, ISignatureGeneratorConstructor} from '@vostokplatform/signature-generator';
+import {IHash, IKeyPair} from '../../interfaces';
 
 import * as create from 'parse-json-bignumber';
 
@@ -7,8 +7,14 @@ import WavesRequestError from '../errors/WavesRequestError';
 
 import fetch from '../libs/fetch';
 import config from '../config';
+import BigNumber from '../libs/bignumber';
 
-const SAFE_JSON_PARSE = create().parse;
+const SAFE_JSON_PARSE = create({
+    BigNumber
+}).parse;
+const SAFE_JSON_STRINGIFY = create({
+    BigNumber
+}).stringify;
 
 export type TTransactionRequest = (data: IHash<any>, keyPair: IKeyPair) => Promise<any>;
 
@@ -104,12 +110,13 @@ export function wrapTxRequest(SignatureGenerator: ISignatureGeneratorConstructor
             return transaction.getSignature(keyPair.privateKey)
                 .then((signature) => postRemap({
                     ...validatedData,
-                    ...(withProofs ? { proofs: [signature] } : { signature })
+                    ...(withProofs ? {proofs: [signature]} : {signature})
                 }))
                 .then((tx) => {
                     return callback({
+
                         ...POST_TEMPLATE,
-                        body: JSON.stringify(tx)
+                        body: SAFE_JSON_STRINGIFY(tx)
                     });
                 });
 
