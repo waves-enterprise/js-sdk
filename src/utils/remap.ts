@@ -103,7 +103,7 @@ export function createRemapper(rules) {
 
             } else if (rule !== null) {
                 // Leave the data as is (or add some default value from the rule)
-                result[key] = data[key] || rule;
+                result[key] = typeof data[key] !== 'undefined' ? data[key] : rule;
             }
 
             return result;

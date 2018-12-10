@@ -129,3 +129,40 @@ const cancelLeasingData = {
 Waves.API.Node.transactions.broadcast('massTransfer', massTransfer, seed.keyPair).then((responseData) => {
     console.log(responseData);
 });*/
+
+const issueData = {
+    name: 'test-token2',
+    description: 'babki кэщ!',
+
+    // With given options you'll have 100000.00000 tokens
+    quantity: 10000000000,
+    precision: 5,
+
+    // This flag defines whether additional emission is possible
+    reissuable: false,
+
+    fee: 100000000,
+    timestamp: Date.now()
+
+};
+
+// Waves.API.Node.transactions.broadcast('issue', issueData, seed.keyPair).then((responseData) => {
+//     console.log(responseData);
+// });
+
+
+/*
+const permissionTx = {
+    version: 1,
+    // type: 102,
+    timestamp: Date.now(),
+    fee: '0',
+    opType: "add",
+    role: "issuer",
+    target: "3Fdc25KFhRAtY3PB3viHCkHKiz4LmAsyGpe",
+    // senderPublicKey: seed.keyPair.publicKey
+};
+
+Waves.API.Node.transactions.broadcast('permit', permissionTx, seed.keyPair).then((responseData) => {
+    console.log(responseData);
+});*/
