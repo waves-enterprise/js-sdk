@@ -168,7 +168,12 @@ export const burnSchema = new Schema({
             required: true
         },
         fee: schemaFields.fee,
-        timestamp: schemaFields.timestamp
+        timestamp: schemaFields.timestamp,
+        chainId: {
+            type: NumberPart,
+            required: true,
+            parseValue: () => config.getNetworkByte()
+        }
     }
 });
 
