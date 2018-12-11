@@ -139,7 +139,12 @@ export const reissueSchema = new Schema({
         },
         reissuable: schemaFields.reissuable,
         fee: schemaFields.issueFee,
-        timestamp: schemaFields.timestamp
+        timestamp: schemaFields.timestamp,
+        chainId: {
+            type: NumberPart,
+            required: true,
+            parseValue: () => config.getNetworkByte()
+        }
     }
 });
 
@@ -151,7 +156,7 @@ export const postReissue = createRemapper({
 });
 
 export const sendReissueTx = wrapTxRequest(TX_TYPE_MAP.reissue, preReissue, postReissue, (postParams) => {
-    return fetch('/assets/broadcast/reissue', postParams);
+    return fetch('/transactions/broadcast', postParams);
 }, true) as TTransactionRequest;
 
 
@@ -185,7 +190,7 @@ export const postBurn = createRemapper(({
 }));
 
 export const sendBurnTx = wrapTxRequest(TX_TYPE_MAP.burn, preBurn, postBurn, (postParams) => {
-    return fetch('/assets/broadcast/burn', postParams);
+    return fetch('/transactions/broadcast', postParams);
 }, true) as TTransactionRequest;
 
 

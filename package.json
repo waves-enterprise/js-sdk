@@ -1,6 +1,6 @@
 {
   "name": "@vostokplatform/waves-api",
-  "version": "1.13.8",
+  "version": "1.14.0",
   "description": "Vostok client-side API library",
   "keywords": [
     "cryptocurrency",
