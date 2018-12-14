@@ -39,7 +39,8 @@
     "mock-require": "3.0.2",
     "requirejs": "2.3.6",
     "typescript": "2.5.3",
-    "uglify-es": "3.3.9"
+    "uglify-es": "3.3.9",
+    "ts-node": "^7.0.1"
   },
   "dependencies": {
     "@vostokplatform/signature-generator": "1.2.6",
@@ -59,6 +60,7 @@
     "uglifyjs": "node_modules/.bin/uglifyjs ./dist/waves-api.js -o ./dist/waves-api.min.js && node_modules/.bin/uglifyjs ./dist/waves-api.partial.js -o ./dist/waves-api.partial.min.js",
     "prepublishOnly": "npm run build && npm run test-browser",
     "test": "npm run build && ./node_modules/.bin/tsc -p ./test/tsconfig.json && ./node_modules/.bin/mocha $(find ./tmp-node/test -name '*.spec.js')",
-    "test-browser": "npm run build && ./node_modules/.bin/tsc -p ./test/tsconfig.browser.json && ./node_modules/.bin/karma start karma.conf.js"
+    "test-browser": "npm run build && ./node_modules/.bin/tsc -p ./test/tsconfig.browser.json && ./node_modules/.bin/karma start karma.conf.js",
+    "test-api": "cd test && mocha -r ts-node/register api/api.spec.ts"
   }
 }
