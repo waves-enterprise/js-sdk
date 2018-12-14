@@ -27,6 +27,7 @@ const testSeed = {
 };
 
 let Waves: any;
+let leaseId: string;
 
 describe('API', () => {
 
@@ -161,5 +162,57 @@ describe('API', () => {
       expect(err.data.error).to.equal(112);
     }
   });
+
+  it ('[transactions.broadcast("lease")] should send 1 Waves to address', async () => {
+    const leaseData = {
+      recipient: testSeed.address,
+      amount: 100000000, // 1 Waves
+      fee: 100000, // 0.001 Waves
+      timestamp: Date.now()
+    };
+
+    const leaseDataRes = await Waves.API.Node.transactions.broadcast('lease', leaseData, mainSeed.keyPair);
+    expect(leaseDataRes.type).to.be.a('number').to.equal(8);
+    expect(leaseDataRes.sender).to.be.a('string');
+    expect(leaseDataRes.senderPublicKey).to.be.a('string');
+    expect(leaseDataRes.fee).to.be.a('number').to.equal(leaseData.fee);
+    expect(leaseDataRes.timestamp).to.be.a('number');
+    expect(leaseDataRes.version).to.be.a('number').to.equal(2);
+    expect(leaseDataRes.amount).to.be.a('number').to.equal(leaseData.amount);
+    expect(leaseDataRes.proofs).to.be.an('array');
+    expect(leaseDataRes.recipient).to.be.a('string').to.equal(leaseData.recipient);
+    leaseId = leaseDataRes.id;
+  });
+
+  it ('[transactions.broadcast("lease")] should return error when amount is 0', async () => {
+    const leaseData = {
+      recipient: testSeed.address,
+      amount: 0,
+      fee: 100000, // 0.001 Waves
+      timestamp: Date.now()
+    };
+
+    try {
+      await Waves.API.Node.transactions.broadcast('lease', leaseData, mainSeed.keyPair);
+    } catch (err) {
+      expect(err.data).to.not.be.undefined;
+      expect(err.data.error).to.equal(111);
+    }
+  });
+
+      // Пока не придумал, как тестировать отмену лизинг-транзакции до момента пока она не попадет в блокчейн
+
+      // it ('[transactions.broadcast("cancelLeasing")] should cancel leasing by leaseId', async () => {
+      //   const cancelLeasingData = {
+      //     leaseId: leaseId,
+      //     fee: 100000,
+      //     timestamp: Date.now()
+      //   };
+      //
+      //   const cancelLeaseDataRes = await Waves.API.Node.transactions.broadcast('cancelLeasing', cancelLeasingData, mainSeed.keyPair);
+      //   console.log(cancelLeaseDataRes);
+      // })
+
+
 
 });
