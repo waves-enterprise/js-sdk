@@ -213,6 +213,39 @@ describe('API', () => {
       //   console.log(cancelLeaseDataRes);
       // })
 
+  it ('[transactions.broadcast("createAlias")] should send alias by keys', async () => {
+    const createAliasData = {
+      alias: `username_${new Date().getTime()}`,
+      fee: 100000,
+      timestamp: Date.now()
+    };
+
+    const createAliasRes = await Waves.API.Node.transactions.broadcast('createAlias', createAliasData, testSeed.keyPair);
+    expect(createAliasRes.type).to.be.a('number').to.be.equal(10);
+    expect(createAliasRes.id).to.be.a('string');
+    expect(createAliasRes.sender).to.be.a('string');
+    expect(createAliasRes.senderPublicKey).to.be.a('string');
+    expect(createAliasRes.fee).to.be.a('number').to.be.equal(createAliasData.fee);
+    expect(createAliasRes.timestamp).to.be.a('number');
+    expect(createAliasRes.proofs).to.be.an('array');
+    expect(createAliasRes.version).to.be.a('number').to.be.equal(2);
+    expect(createAliasRes.alias).to.be.a('string').to.be.equal(createAliasData.alias);
+  })
+
+  it ('[transactions.broadcast("createAlias")] should return error if alias is empty', async () => {
+    const createAliasData = {
+      alias: '',
+      fee: 100000,
+      timestamp: Date.now()
+    };
+
+    try {
+      await Waves.API.Node.transactions.broadcast('createAlias', createAliasData, testSeed.keyPair);
+    } catch (err) {
+      expect(err.data).to.not.be.undefined;
+      expect(err.data.error).to.equal(199);
+    }
+  })
 
 
 });
