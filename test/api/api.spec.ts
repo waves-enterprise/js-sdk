@@ -354,4 +354,127 @@ describe('API', () => {
     }
   });
 
+  it ('[transactions.broadcast](issue) should send issue data', async () => {
+    const issueData = {
+      name: `TCURRENCY`,
+      description: 'Some words about it',
+      quantity: 500000,
+      fee: 100000000, // 0.001 Waves
+      precision: 5,
+      reissuable: true,
+      timestamp: Date.now()
+    };
+
+    const issueRes = await Waves.API.Node.transactions.broadcast('issue', issueData, testSeed.keyPair);
+    expect(issueRes.id).to.be.a('string');
+    expect(issueRes.sender).to.be.a('string').to.be.equal(testSeed.address);
+    expect(issueRes.senderPublicKey).to.be.a('string').to.be.equal(testSeed.keyPair.publicKey);
+    expect(issueRes.fee).to.be.a('number').to.be.equal(issueData.fee);
+    expect(issueRes.timestamp).to.be.a('number');
+    expect(issueRes.proofs).to.be.an('array');
+    expect(issueRes.version).to.be.a('number').to.be.equal(2);
+    expect(issueRes.assetId).to.be.a('string');
+    expect(issueRes.name).to.be.a('string').to.be.equal(issueData.name);
+    expect(issueRes.quantity).to.be.a('number').to.be.equal(issueData.quantity);
+    expect(issueRes.reissuable).to.be.equal(issueData.reissuable);
+    expect(issueRes.decimals).to.be.a('number').to.be.equal(issueData.precision);
+    expect(issueRes.description).to.be.a('string');
+    expect(issueRes.script).to.be.a('null');
+  });
+
+  it ('[transactions.broadcast](issue) should send wrong issue data, return error: 112', async () => {
+    const issueData = {
+      name: `TCURRENCY`,
+      description: 'Some words about it',
+      quantity: 1,
+      fee: 1, // 0.001 Waves
+      precision: 5,
+      reissuable: true,
+      timestamp: Date.now()
+    };
+
+    try {
+      await Waves.API.Node.transactions.broadcast('issue', issueData, testSeed.keyPair);
+    } catch (err) {
+      expect(err.data.error).to.be.equal(112);
+    }
+  });
+
+  it ('[transactions.broadcast(burn)] should send burn tx', async () => {
+    const burnData = {
+      assetId: '4ifnPVca5VRrrGdADQsgZD4yDxQQHY2YXHGxxXsxgE7u', // TCURRENCY
+      quantity: 500000,
+      fee: 100000,
+      timestamp: Date.now()
+    };
+
+    const burnRes = await Waves.API.Node.transactions.broadcast('burn', burnData, testSeed.keyPair);
+    expect(burnRes.type).to.be.a('number').to.be.equal(6);
+    expect(burnRes.id).to.be.a('string');
+    expect(burnRes.sender).to.be.a('string').to.be.equal(testSeed.address);
+    expect(burnRes.senderPublicKey).to.be.a('string').to.be.equal(testSeed.keyPair.publicKey);
+    expect(burnRes.fee).to.be.a('number').to.be.equal(burnData.fee);
+    expect(burnRes.timestamp).to.be.a('number');
+    expect(burnRes.proofs).to.be.an('array');
+    expect(burnRes.chainId).to.be.a('number');
+    expect(burnRes.version).to.be.a('number').to.be.equal(2);
+    expect(burnRes.assetId).to.be.a('string').to.be.equal(burnData.assetId);
+    expect(burnRes.amount).to.be.a('number').to.be.equal(burnData.quantity);
+  });
+
+  it ('[transactions.broadcast(burn)] should send wrong burn tx data, return error: 112', async () => {
+    const burnData = {
+      assetId: '4ifnPVca5VRrrGdADQsgZD4yDxQQHY2YXHGxxXsxgE7u', // TCURRENCY
+      quantity: 1,
+      fee: 1,
+      timestamp: Date.now()
+    };
+
+    try {
+      await Waves.API.Node.transactions.broadcast('burn', burnData, testSeed.keyPair);
+    } catch (err) {
+      expect(err.data.error).to.be.a('number').to.be.equal(112);
+    }
+  });
+
+  it ('[transactions.broadcast(reissue)] should send reissue data', async () => {
+    const reissueData = {
+      assetId: '4ifnPVca5VRrrGdADQsgZD4yDxQQHY2YXHGxxXsxgE7u',
+      quantity: 100000000,
+      fee: 100000000,
+      reissuable: true,
+      timestamp: Date.now()
+    };
+
+    const reissueRes = await Waves.API.Node.transactions.broadcast('reissue', reissueData, testSeed.keyPair);
+    expect(reissueRes.type).to.be.a('number').to.be.equal(5);
+    expect(reissueRes.id).to.be.a('string');
+    expect(reissueRes.sender).to.be.a('string').to.be.equal(testSeed.address);
+    expect(reissueRes.senderPublicKey).to.be.a('string').to.be.equal(testSeed.keyPair.publicKey);
+    expect(reissueRes.fee).to.be.a('number').to.be.equal(reissueData.fee);
+    expect(reissueRes.timestamp).to.be.a('number');
+    expect(reissueRes.proofs).to.be.an('array');
+    expect(reissueRes.chainId).to.be.a('number');
+    expect(reissueRes.version).to.be.a('number').to.be.equal(2);
+    expect(reissueRes.assetId).to.be.a('string').to.be.equal(reissueData.assetId);
+    expect(reissueRes.quantity).to.be.a('number').to.be.equal(reissueData.quantity);
+    expect(reissueRes.reissuable).to.be.equal(reissueData.reissuable);
+  });
+
+  it ('[transactions.broadcast(reissue)] should send wrong reissue data, return error: 112', async () => {
+    const reissueData = {
+      assetId: '4ifnPVca5VRrrGdADQsgZD4yDxQQHY2YXHGxxXsxgE7u',
+      quantity: 1,
+      fee: 1,
+      reissuable: true,
+      timestamp: Date.now()
+    };
+
+    try {
+      await Waves.API.Node.transactions.broadcast('reissue', reissueData, testSeed.keyPair);
+    } catch (err) {
+      expect(err.data.error).to.be.a('number').to.be.equal(112);
+    }
+  });
+
 });

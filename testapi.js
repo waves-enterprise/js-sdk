@@ -145,7 +145,7 @@ async function main() {
 
   // await sendTransferData();
 
-  await createIssue();
+  // await createIssue();
 
   // await createPermissions('3Fhk53o8ciL6GvoteHq9Z5asVo9co2hAhTz');
 
