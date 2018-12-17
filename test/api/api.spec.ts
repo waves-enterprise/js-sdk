@@ -230,7 +230,7 @@ describe('API', () => {
     expect(createAliasRes.proofs).to.be.an('array');
     expect(createAliasRes.version).to.be.a('number').to.be.equal(2);
     expect(createAliasRes.alias).to.be.a('string').to.be.equal(createAliasData.alias);
-  })
+  });
 
   it ('[transactions.broadcast("createAlias")] should return error if alias is empty', async () => {
     const createAliasData = {
@@ -245,7 +245,113 @@ describe('API', () => {
       expect(err.data).to.not.be.undefined;
       expect(err.data.error).to.equal(199);
     }
-  })
+  });
 
+  it ('[aliases.byAlias] should send alias "philsitumorang", return { address: "ADDRESS" }', async () => {
+    const alias = await Waves.API.Node.aliases.byAlias('philsitumorang');
+    expect(alias.address).to.be.a('string');
+  });
+
+  it ('[aliases.byAlias] should send empty alias value, return error-type: invalid-json', async () => {
+    try {
+      await Waves.API.Node.aliases.byAlias('');
+    } catch (err) {
+      expect(err.data.type).to.be.equal('invalid-json');
+    }
+  });
+
+  it ('[aliases.byAlias] should send invalid alias value, return error: 199', async () => {
+    try {
+      await Waves.API.Node.aliases.byAlias('09876789oiuyu987tydhbanlkwiy312wfawfAkxzjvh8123');
+    } catch (err) {
+      expect(err.data.error).to.be.a('number').to.be.equal(199);
+    }
+  });
+
+  it ('[aliases.byAddress] should send address 3Fhk53o8ciL6GvoteHq9Z5asVo9co2hAhTz, return aliases', async () => {
+    const aliases = await Waves.API.Node.aliases.byAddress(testSeed.address);
+    expect(aliases).to.be.an('array');
+    const foundAlias = aliases.includes('alias:D:philsitumorang');
+    expect(foundAlias).to.be.equal(true);
+  });
+
+  it ('[aliases.byAddress] should send invalid address, return error: 102', async () => {
+    try {
+      await Waves.API.Node.aliases.byAddress('0987tyfvghjbnju9a8yt7ygbfnawfAWfjawfo87t12vz');
+    } catch (err) {
+      expect(err.data.error).to.be.a('number').to.be.equal(102);
+    }
+  });
+
+  it ('[transactions.broadcast](permit) should send role', async () => {
+    const seed = Waves.Seed.create();
+
+    const createPermissionData = {
+      timestamp: Date.now(),
+      opType: 'add',
+      role: 'issuer',
+      target: seed.address
+    };
+
+    const permissionsData = await Waves.API.Node.transactions.broadcast('permit', createPermissionData, mainSeed.keyPair);
+    expect(permissionsData.type).to.be.a('number').to.be.equal(102);
+    expect(permissionsData.sender).to.be.a('string').to.be.equal(mainSeed.address);
+    expect(permissionsData.senderPublicKey).to.be.a('string').to.be.equal(mainSeed.keyPair.publicKey);
+    expect(permissionsData.fee).to.be.a('number').to.be.equal(0);
+    expect(permissionsData.timestamp).to.be.a('number');
+    expect(permissionsData.proofs).to.be.an('array');
+    expect(permissionsData.target).to.be.a('string').to.be.equal(seed.address);
+    expect(permissionsData.opType).to.be.a('string').to.be.equal(createPermissionData.opType);
+    expect(permissionsData.role).to.be.a('string').to.be.equal(createPermissionData.role);
+    expect(permissionsData.dueTimestamp).to.be.a('null');
+  });
+
+  it ('[transactions.broadcast](permit) should send wrong address, return error: 102', async () => {
+    const seed = Waves.Seed.create();
+
+    const createPermissionData = {
+      timestamp: Date.now(),
+      opType: 'add',
+      role: 'issuer',
+      target: seed.address + '71826382137861'
+    };
+
+    try {
+      await Waves.API.Node.transactions.broadcast('permit', createPermissionData, mainSeed.keyPair);
+    } catch (err) {
+      expect(err.data.error).to.be.a('number').to.be.equal(102);
+    }
+  });
+
+  it ('[addresses.balanceDetails] should send address, return details balance by address', async () => {
+    const balance = await Waves.API.Node.addresses.balanceDetails(testSeed.address);
+    expect(balance.regular).to.be.a('number');
+    expect(balance.generating).to.be.a('number');
+    expect(balance.available).to.be.a('number');
+    expect(balance.effective).to.be.a('number');
+  });
+
+  it ('[addresses.balanceDetails] should send wrong address, return error: 102', async () => {
+    try {
+      await Waves.API.Node.addresses.balanceDetails(testSeed.address + '98127389172');
+    } catch (err) {
+      expect(err.data.error).to.be.a('number').to.be.equal(102);
+    }
+  });
+
+  it ('[addresses.balance] should send address, return balance by address', async () => {
+    const balance = await Waves.API.Node.addresses.balance(testSeed.address);
+    expect(balance.address).to.be.a('string').to.equal(testSeed.address);
+    expect(balance.confirmations).to.be.a('number');
+    expect(balance.balance).to.be.a('number');
+  });
+
+  it ('[addresses.balance] should send wrong address, return error', async () => {
+    try {
+      await Waves.API.Node.addresses.balance(testSeed.address + '92178367812');
+    } catch (err) {
+      expect(err.data.error).to.be.a('number').to.be.equal(102);
+    }
+  });
 
 });
