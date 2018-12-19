@@ -140,8 +140,16 @@ async function createIssue() {
 
 async function main() {
   console.log(new Date());
-  const balance = await Waves.API.Node.addresses.balanceDetails('3Fhk53o8ciL6GvoteHq9Z5asVo9co2hAhTz');
-  console.log('[balance]', balance);
+  const mainBalance = await Waves.API.Node.addresses.balanceDetails('3Fdc25KFhRAtY3PB3viHCkHKiz4LmAsyGpe');
+  console.log('[main balance]', mainBalance);
+
+  const testBalance = await Waves.API.Node.addresses.balanceDetails('3Fhk53o8ciL6GvoteHq9Z5asVo9co2hAhTz');
+  console.log('[test balance]', testBalance);
+
+  console.log('[utx list]', await Waves.API.Node.transactions.utxGetList());
+  console.log ('[utx size]', await Waves.API.Node.transactions.utxSize());
+
+  // await sendCreateAlias();
 
   // await sendTransferData();
 

@@ -1,6 +1,13 @@
 import { expect } from '../getChai';
 import * as WavesAPI from '../../dist/waves-api.min';
 
+declare const process: {
+  argv: any,
+  env: {
+    NODE_ENV: string
+  }
+};
+
 const wavesConfig = {
   networkByte: 68,
   nodeAddress: 'http://1.devnet-pos.vostoknodes.com:6862',
@@ -26,10 +33,23 @@ const testSeed = {
   }
 };
 
+function sleep(ms: number) {
+  return new Promise((resolve, reject) => {
+    setTimeout(() => {
+      resolve(true);
+    }, ms);
+  })
+}
+
 let Waves: any;
 let leaseId: string;
+let issueAssetId: string;
 
-describe('API', () => {
+const withLongTests: boolean = process.argv
+  .filter((a: string) => a === '--with-long-tests').length > 0;
+
+describe('API', function() {
+  this.timeout(3600000);
 
   beforeEach(() => {
     Waves = WavesAPI.create(wavesConfig);
@@ -39,7 +59,7 @@ describe('API', () => {
     const transferData = {
       recipient: testSeed.address,
       assetId: 'WAVES',
-      amount: 100000,
+      amount: 100000000,
       feeAssetId: 'WAVES',
       fee: 100000,
       attachment: 'some test attachment message',
@@ -58,7 +78,6 @@ describe('API', () => {
     expect(transferRes.recipient).to.be.a('string').to.equal(testSeed.address);
     expect(transferRes.assetId).to.be.a('null');
     expect(transferRes.feeAssetId).to.be.a('null');
-    expect(transferRes.feeAsset).to.be.a('null');
     expect(transferRes.amount + '').to.be.a('string').to.equal(transferData.amount + '');
     expect(transferRes.attachment).to.be.a('string');
   });
@@ -97,7 +116,7 @@ describe('API', () => {
       await Waves.API.Node.transactions.broadcast('transfer', transferData, mainSeed.keyPair);
     } catch (err) {
       expect(err.data).to.not.be.undefined;
-      expect(err.data.error).to.equal(112);
+      expect(err.data.error).to.equal(199);
     }
 
   });
@@ -200,18 +219,22 @@ describe('API', () => {
     }
   });
 
-      // Пока не придумал, как тестировать отмену лизинг-транзакции до момента пока она не попадет в блокчейн
-
-      // it ('[transactions.broadcast("cancelLeasing")] should cancel leasing by leaseId', async () => {
-      //   const cancelLeasingData = {
-      //     leaseId: leaseId,
-      //     fee: 100000,
-      //     timestamp: Date.now()
-      //   };
-      //
-      //   const cancelLeaseDataRes = await Waves.API.Node.transactions.broadcast('cancelLeasing', cancelLeasingData, mainSeed.keyPair);
-      //   console.log(cancelLeaseDataRes);
-      // })
+  if (withLongTests) {
+    it('[transactions.broadcast("cancelLeasing")] should cancel leasing by leaseId', async () => {
+      const cancelLeasingData = {
+        leaseId: leaseId,
+        fee: 100000,
+        timestamp: Date.now()
+      };
+      while (true) {
+        try {
+          const cancelLeaseDataRes = await Waves.API.Node.transactions.broadcast('cancelLeasing', cancelLeasingData, mainSeed.keyPair);
+          break;
+        } catch (err) {}
+        await sleep(1000);
+      }
+    });
+  }
 
   it ('[transactions.broadcast("createAlias")] should send alias by keys', async () => {
     const createAliasData = {
@@ -380,9 +403,11 @@ describe('API', () => {
     expect(issueRes.decimals).to.be.a('number').to.be.equal(issueData.precision);
     expect(issueRes.description).to.be.a('string');
     expect(issueRes.script).to.be.a('null');
+
+    issueAssetId = issueRes.assetId;
   });
 
-  it ('[transactions.broadcast](issue) should send wrong issue data, return error: 112', async () => {
+  it ('[transactions.broadcast](issue) should send wrong issue data, return error: 199', async () => {
     const issueData = {
       name: `TCURRENCY`,
       description: 'Some words about it',
@@ -396,85 +421,117 @@ describe('API', () => {
     try {
       await Waves.API.Node.transactions.broadcast('issue', issueData, testSeed.keyPair);
     } catch (err) {
-      expect(err.data.error).to.be.equal(112);
+      expect(err.data.error).to.be.equal(199);
     }
   });
 
-  it ('[transactions.broadcast(burn)] should send burn tx', async () => {
-    const burnData = {
-      assetId: '4ifnPVca5VRrrGdADQsgZD4yDxQQHY2YXHGxxXsxgE7u', // TCURRENCY
-      quantity: 500000,
-      fee: 100000,
-      timestamp: Date.now()
-    };
+  if (withLongTests) {
+    it('[transactions.broadcast(burn)] should send burn tx', async () => {
+      const burnData = {
+        assetId: issueAssetId, // TCURRENCY
+        quantity: 500000,
+        fee: 100000,
+        timestamp: Date.now()
+      };
 
-    const burnRes = await Waves.API.Node.transactions.broadcast('burn', burnData, testSeed.keyPair);
-    expect(burnRes.type).to.be.a('number').to.be.equal(6);
-    expect(burnRes.id).to.be.a('string');
-    expect(burnRes.sender).to.be.a('string').to.be.equal(testSeed.address);
-    expect(burnRes.senderPublicKey).to.be.a('string').to.be.equal(testSeed.keyPair.publicKey);
-    expect(burnRes.fee).to.be.a('number').to.be.equal(burnData.fee);
-    expect(burnRes.timestamp).to.be.a('number');
-    expect(burnRes.proofs).to.be.an('array');
-    expect(burnRes.chainId).to.be.a('number');
-    expect(burnRes.version).to.be.a('number').to.be.equal(2);
-    expect(burnRes.assetId).to.be.a('string').to.be.equal(burnData.assetId);
-    expect(burnRes.amount).to.be.a('number').to.be.equal(burnData.quantity);
-  });
+      while (true) {
+        try {
+          const burnRes = await Waves.API.Node.transactions.broadcast('burn', burnData, testSeed.keyPair);
+          expect(burnRes.type).to.be.a('number').to.be.equal(6);
+          expect(burnRes.id).to.be.a('string');
+          expect(burnRes.sender).to.be.a('string').to.be.equal(testSeed.address);
+          expect(burnRes.senderPublicKey).to.be.a('string').to.be.equal(testSeed.keyPair.publicKey);
+          expect(burnRes.fee).to.be.a('number').to.be.equal(burnData.fee);
+          expect(burnRes.timestamp).to.be.a('number');
+          expect(burnRes.proofs).to.be.an('array');
+          expect(burnRes.chainId).to.be.a('number');
+          expect(burnRes.version).to.be.a('number').to.be.equal(2);
+          expect(burnRes.assetId).to.be.a('string').to.be.equal(burnData.assetId);
+          expect(burnRes.amount).to.be.a('number').to.be.equal(burnData.quantity);
+          break;
+        } catch (err) {}
+        await sleep(1000);
+      }
+    });
+  }
 
-  it ('[transactions.broadcast(burn)] should send wrong burn tx data, return error: 112', async () => {
-    const burnData = {
-      assetId: '4ifnPVca5VRrrGdADQsgZD4yDxQQHY2YXHGxxXsxgE7u', // TCURRENCY
-      quantity: 1,
-      fee: 1,
-      timestamp: Date.now()
-    };
+  if (withLongTests) {
+    it('[transactions.broadcast(burn)] should send wrong burn tx data, return error: 199', async () => {
+      const burnData = {
+        assetId: issueAssetId, // TCURRENCY
+        quantity: 1,
+        fee: 1,
+        timestamp: Date.now()
+      };
 
-    try {
-      await Waves.API.Node.transactions.broadcast('burn', burnData, testSeed.keyPair);
-    } catch (err) {
-      expect(err.data.error).to.be.a('number').to.be.equal(112);
-    }
-  });
+      while (true) {
+        try {
+          await Waves.API.Node.transactions.broadcast('burn', burnData, testSeed.keyPair);
+        } catch (err) {
+          try {
+            expect(err.data.error).to.be.a('number').to.be.equal(199);
+            break;
+          } catch (err) {}
+        }
+        await sleep(1000);
+      }
+    });
+  }
 
-  it ('[transactions.broadcast(reissue)] should send reissue data', async () => {
-    const reissueData = {
-      assetId: '4ifnPVca5VRrrGdADQsgZD4yDxQQHY2YXHGxxXsxgE7u',
-      quantity: 100000000,
-      fee: 100000000,
-      reissuable: true,
-      timestamp: Date.now()
-    };
+  if (withLongTests) {
+    it('[transactions.broadcast(reissue)] should send reissue data', async () => {
+      const reissueData = {
+        assetId: issueAssetId,
+        quantity: 100000000,
+        fee: 100000000,
+        reissuable: true,
+        timestamp: Date.now()
+      };
 
-    const reissueRes = await Waves.API.Node.transactions.broadcast('reissue', reissueData, testSeed.keyPair);
-    expect(reissueRes.type).to.be.a('number').to.be.equal(5);
-    expect(reissueRes.id).to.be.a('string');
-    expect(reissueRes.sender).to.be.a('string').to.be.equal(testSeed.address);
-    expect(reissueRes.senderPublicKey).to.be.a('string').to.be.equal(testSeed.keyPair.publicKey);
-    expect(reissueRes.fee).to.be.a('number').to.be.equal(reissueData.fee);
-    expect(reissueRes.timestamp).to.be.a('number');
-    expect(reissueRes.proofs).to.be.an('array');
-    expect(reissueRes.chainId).to.be.a('number');
-    expect(reissueRes.version).to.be.a('number').to.be.equal(2);
-    expect(reissueRes.assetId).to.be.a('string').to.be.equal(reissueData.assetId);
-    expect(reissueRes.quantity).to.be.a('number').to.be.equal(reissueData.quantity);
-    expect(reissueRes.reissuable).to.be.equal(reissueData.reissuable);
-  });
+      while (true) {
+        try {
+          const reissueRes = await Waves.API.Node.transactions.broadcast('reissue', reissueData, testSeed.keyPair);
+          expect(reissueRes.type).to.be.a('number').to.be.equal(5);
+          expect(reissueRes.id).to.be.a('string');
+          expect(reissueRes.sender).to.be.a('string').to.be.equal(testSeed.address);
+          expect(reissueRes.senderPublicKey).to.be.a('string').to.be.equal(testSeed.keyPair.publicKey);
+          expect(reissueRes.fee).to.be.a('number').to.be.equal(reissueData.fee);
+          expect(reissueRes.timestamp).to.be.a('number');
+          expect(reissueRes.proofs).to.be.an('array');
+          expect(reissueRes.chainId).to.be.a('number');
+          expect(reissueRes.version).to.be.a('number').to.be.equal(2);
+          expect(reissueRes.assetId).to.be.a('string').to.be.equal(reissueData.assetId);
+          expect(reissueRes.quantity).to.be.a('number').to.be.equal(reissueData.quantity);
+          expect(reissueRes.reissuable).to.be.equal(reissueData.reissuable);
+          break;
+        } catch (err) {}
+        await sleep(1000);
+      }
+    });
+  }
 
-  it ('[transactions.broadcast(reissue)] should send wrong reissue data, return error: 112', async () => {
-    const reissueData = {
-      assetId: '4ifnPVca5VRrrGdADQsgZD4yDxQQHY2YXHGxxXsxgE7u',
-      quantity: 1,
-      fee: 1,
-      reissuable: true,
-      timestamp: Date.now()
-    };
+  if (withLongTests) {
+    it('[transactions.broadcast(reissue)] should send wrong reissue data, return error: 199', async () => {
+      const reissueData = {
+        assetId: issueAssetId,
+        quantity: 1,
+        fee: 1,
+        reissuable: true,
+        timestamp: Date.now()
+      };
 
-    try {
-      await Waves.API.Node.transactions.broadcast('reissue', reissueData, testSeed.keyPair);
-    } catch (err) {
-      expect(err.data.error).to.be.a('number').to.be.equal(112);
-    }
-  });
+      while (true) {
+        try {
+          await Waves.API.Node.transactions.broadcast('reissue', reissueData, testSeed.keyPair);
+        } catch (err) {
+          try {
+            expect(err.data.error).to.be.a('number').to.be.equal(199);
+            break;
+          } catch (err) {}
+        }
+        await sleep(1000);
+      }
+    });
+  }
 
 });
