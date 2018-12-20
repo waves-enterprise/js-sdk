@@ -134,7 +134,7 @@ export const reissueSchema = new Schema({
         senderPublicKey: schemaFields.publicKey,
         assetId: schemaFields.assetId,
         quantity: {
-            type: NumberPart,
+            type: StringPart,
             required: true
         },
         reissuable: schemaFields.reissuable,
@@ -152,7 +152,11 @@ export const preReissue = (data) => reissueSchema.parse(data);
 export const postReissue = createRemapper({
     transactionType: null,
     type: constants.REISSUE_TX,
-    version: constants.REISSUE_TX_VERSION
+    version: constants.REISSUE_TX_VERSION,
+    quantity: {
+        from: 'string',
+        to: 'bignumber'
+    }
 });
 
 export const sendReissueTx = wrapTxRequest(TX_TYPE_MAP.reissue, preReissue, postReissue, (postParams) => {
@@ -169,7 +173,7 @@ export const burnSchema = new Schema({
         senderPublicKey: schemaFields.publicKey,
         assetId: schemaFields.assetId,
         quantity: {
-            type: NumberPart,
+            type: StringPart,
             required: true
         },
         fee: schemaFields.fee,
@@ -186,7 +190,11 @@ export const preBurn = (data) => burnSchema.parse(data);
 export const postBurn = createRemapper(({
     transactionType: null,
     type: constants.BURN_TX,
-    version: constants.BURN_TX_VERSION
+    version: constants.BURN_TX_VERSION,
+    quantity: {
+        from: 'string',
+        to: 'bignumber'
+    }
 }));
 
 export const sendBurnTx = wrapTxRequest(TX_TYPE_MAP.burn, preBurn, postBurn, (postParams) => {

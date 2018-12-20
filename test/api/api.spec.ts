@@ -381,7 +381,7 @@ describe('API', function() {
     const issueData = {
       name: `TCURRENCY`,
       description: 'Some words about it',
-      quantity: 500000,
+      quantity: '500000',
       fee: 100000000, // 0.001 Waves
       precision: 5,
       reissuable: true,
@@ -398,7 +398,7 @@ describe('API', function() {
     expect(issueRes.version).to.be.a('number').to.be.equal(2);
     expect(issueRes.assetId).to.be.a('string');
     expect(issueRes.name).to.be.a('string').to.be.equal(issueData.name);
-    expect(issueRes.quantity).to.be.a('number').to.be.equal(issueData.quantity);
+    expect(issueRes.quantity).to.be.a('number').to.be.equal(+issueData.quantity); // todo не отрабатывает большие значения
     expect(issueRes.reissuable).to.be.equal(issueData.reissuable);
     expect(issueRes.decimals).to.be.a('number').to.be.equal(issueData.precision);
     expect(issueRes.description).to.be.a('string');
@@ -411,7 +411,7 @@ describe('API', function() {
     const issueData = {
       name: `TCURRENCY`,
       description: 'Some words about it',
-      quantity: 1,
+      quantity: '1',
       fee: 1, // 0.001 Waves
       precision: 5,
       reissuable: true,
@@ -429,7 +429,7 @@ describe('API', function() {
     it('[transactions.broadcast(burn)] should send burn tx', async () => {
       const burnData = {
         assetId: issueAssetId, // TCURRENCY
-        quantity: 500000,
+        quantity: '500000',
         fee: 100000,
         timestamp: Date.now()
       };
@@ -447,7 +447,7 @@ describe('API', function() {
           expect(burnRes.chainId).to.be.a('number');
           expect(burnRes.version).to.be.a('number').to.be.equal(2);
           expect(burnRes.assetId).to.be.a('string').to.be.equal(burnData.assetId);
-          expect(burnRes.amount).to.be.a('number').to.be.equal(burnData.quantity);
+          expect(burnRes.amount).to.be.a('number').to.be.equal(+burnData.quantity);
           break;
         } catch (err) {}
         await sleep(1000);
@@ -459,7 +459,7 @@ describe('API', function() {
     it('[transactions.broadcast(burn)] should send wrong burn tx data, return error: 199', async () => {
       const burnData = {
         assetId: issueAssetId, // TCURRENCY
-        quantity: 1,
+        quantity: '1',
         fee: 1,
         timestamp: Date.now()
       };
@@ -482,7 +482,7 @@ describe('API', function() {
     it('[transactions.broadcast(reissue)] should send reissue data', async () => {
       const reissueData = {
         assetId: issueAssetId,
-        quantity: 100000000,
+        quantity: '100000000',
         fee: 100000000,
         reissuable: true,
         timestamp: Date.now()
@@ -501,7 +501,7 @@ describe('API', function() {
           expect(reissueRes.chainId).to.be.a('number');
           expect(reissueRes.version).to.be.a('number').to.be.equal(2);
           expect(reissueRes.assetId).to.be.a('string').to.be.equal(reissueData.assetId);
-          expect(reissueRes.quantity).to.be.a('number').to.be.equal(reissueData.quantity);
+          expect(reissueRes.quantity).to.be.a('number').to.be.equal(+reissueData.quantity);
           expect(reissueRes.reissuable).to.be.equal(reissueData.reissuable);
           break;
         } catch (err) {}
@@ -514,7 +514,7 @@ describe('API', function() {
     it('[transactions.broadcast(reissue)] should send wrong reissue data, return error: 199', async () => {
       const reissueData = {
         assetId: issueAssetId,
-        quantity: 1,
+        quantity: '1',
         fee: 1,
         reissuable: true,
         timestamp: Date.now()

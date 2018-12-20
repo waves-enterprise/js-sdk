@@ -217,7 +217,7 @@ const reissueData = {
     assetId: '5xN8XPkKi7RoYUAT5hNKC26FKCcX6Rj6epASpgFEYZss',
 
     // Additional quantity is the given number divided by 10^(precision of the token)
-    quantity: 100000000,
+    quantity: '100000000',
 
     reissuable: false,
     fee: 100000000,
@@ -239,7 +239,7 @@ const burnData = {
 
     // Asset ID and its quantity to be burned
     assetId: '5xN8XPkKi7RoYUAT5hNKC26FKCcX6Rj6epASpgFEYZss',
-    quantity: 20000000000,
+    quantity: '20000000000',
 
     fee: 100000,
     timestamp: Date.now()
