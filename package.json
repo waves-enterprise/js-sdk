@@ -1,6 +1,6 @@
 {
   "name": "@vostokplatform/waves-api",
-  "version": "1.15.0",
+  "version": "1.15.1",
   "description": "Vostok client-side API library",
   "keywords": [
     "cryptocurrency",
@@ -58,7 +58,7 @@
     "build": "npm run compile && mkdir -p dist && npm run _build-partial && npm run _build-full && npm run uglifyjs && cp ./interfaces.d.ts ./raw/interfaces.d.ts",
     "compile": "mkdir -p raw && ./node_modules/.bin/tsc -p ./tsconfig.json --declaration --outDir raw",
     "uglifyjs": "node_modules/.bin/uglifyjs ./dist/waves-api.js -o ./dist/waves-api.min.js && node_modules/.bin/uglifyjs ./dist/waves-api.partial.js -o ./dist/waves-api.partial.min.js",
-    "prepublishOnly": "npm run build && npm run test-browser",
+    "prepublishOnly": "npm run build",
     "test": "npm run build && ./node_modules/.bin/tsc -p ./test/tsconfig.json && ./node_modules/.bin/mocha $(find ./tmp-node/test -name '*.spec.js')",
     "test-browser": "npm run build && ./node_modules/.bin/tsc -p ./test/tsconfig.browser.json && ./node_modules/.bin/karma start karma.conf.js",
     "test-api": "cd test && mocha -r ts-node/register api/api.spec.ts --with-long-tests"

@@ -84,7 +84,7 @@ export const transferSchema = new Schema({
         recipient: schemaFields.recipient,
         assetId: schemaFields.assetId,
         amount: {
-            type: NumberPart,
+            type: StringPart,
             required: true
         },
         feeAssetId: {
@@ -115,6 +115,10 @@ export const postTransfer = createRemapper({
     recipient: {
         from: 'raw',
         to: 'prefixed'
+    },
+    amount: {
+        from: 'string',
+        to: 'bignumber'
     },
     type: constants.TRANSFER_TX,
     version: constants.TRANSFER_TX_VERSION
