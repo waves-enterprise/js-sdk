@@ -45,8 +45,7 @@ let Waves: any;
 let leaseId: string;
 let issueAssetId: string;
 
-const withLongTests: boolean = process.argv
-  .filter((a: string) => a === '--with-long-tests').length > 0;
+const withLongTests: boolean = process.argv.filter((a: string) => a === '--with-long-tests').length > 0;
 
 describe('API', function() {
   this.timeout(3600000);
