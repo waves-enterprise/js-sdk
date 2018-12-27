@@ -26,11 +26,12 @@ async function sendTransferData() {
   const transferData = {
     recipient: '3Fhk53o8ciL6GvoteHq9Z5asVo9co2hAhTz',
     assetId: 'WAVES',
-    amount: 1000000000, // 10 Waves
+    amount: 1000000, // 00.1 Waves
     feeAssetId: 'WAVES',
     fee: 100000,
     attachment: 'some test attachment message',
-    timestamp: Date.now()
+    timestamp: Date.now(),
+    getTxWithoutFetch: true
   };
 
   const transferRes = await Waves.API.Node.transactions.broadcast('transfer', transferData, seed.keyPair);
@@ -86,7 +87,8 @@ async function sendCreateAlias() {
   const createAliasData = {
     alias: 'philsitumorang',
     fee: 100000,
-    timestamp: Date.now()
+    timestamp: Date.now(),
+    getTxWithoutFetch: true
   };
 
   const createAliasRes = await Waves.API.Node.transactions.broadcast('createAlias', createAliasData,{
@@ -112,7 +114,8 @@ async function createPermissions(addr) {
     timestamp: Date.now(),
     opType: 'add',
     role: 'issuer',
-    target: addr
+    target: addr,
+    getTxWithoutFetch: true
   };
 
   const permissionsData = await Waves.API.Node.transactions.broadcast('permit', createPermissionData, seed.keyPair);
@@ -127,7 +130,8 @@ async function createIssue() {
     fee: 100000000, // 0.001 Waves
     precision: 5,
     reissuable: true,
-    timestamp: Date.now()
+    timestamp: Date.now(),
+    getTxWithoutFetch: true
   };
 
   const issueRes = await Waves.API.Node.transactions.broadcast('issue', issueData, {
@@ -135,27 +139,27 @@ async function createIssue() {
     publicKey: 'Fy4dWFL192DRjhMqMW6HhQfSa6gcFNmu7ZSk4ts1empE'
   });
 
-  console.log('issueData', issueData);
+  console.log('issueRes', issueRes);
 }
 
 async function main() {
   console.log(new Date());
-  const mainBalance = await Waves.API.Node.addresses.balanceDetails('3Fdc25KFhRAtY3PB3viHCkHKiz4LmAsyGpe');
-  console.log('[main balance]', mainBalance);
+  // const mainBalance = await Waves.API.Node.addresses.balanceDetails('3FeyprePzig1TM5yWNK5gopuqonGJHch9hZ');
+  // console.log('[main balance]', mainBalance);
 
-  const testBalance = await Waves.API.Node.addresses.balanceDetails('3Fhk53o8ciL6GvoteHq9Z5asVo9co2hAhTz');
-  console.log('[test balance]', testBalance);
+  // const testBalance = await Waves.API.Node.addresses.balanceDetails('3FX24kSvUnvyYP92qPudEsa7VfgnsJVW6S8');
+  // console.log('[test balance]', testBalance);
 
-  console.log('[utx list]', await Waves.API.Node.transactions.utxGetList());
-  console.log ('[utx size]', await Waves.API.Node.transactions.utxSize());
-
-  // await sendCreateAlias();
-
-  // await sendTransferData();
-
-  // await createIssue();
-
-  // await createPermissions('3Fhk53o8ciL6GvoteHq9Z5asVo9co2hAhTz');
+  // console.log('[utx list]', await Waves.API.Node.transactions.utxGetList());
+  // console.log ('[utx size]', await Waves.API.Node.transactions.utxSize());
+  console.log('\n[sendCreateAlias] ---------------------');
+  await sendCreateAlias();
+  console.log('\n[sendTransferData] --------------------');
+  await sendTransferData();
+  console.log('\n[createIssue] -------------------------');
+  await createIssue();
+  console.log('\n[createPermissions] -------------------');
+  await createPermissions('3Fhk53o8ciL6GvoteHq9Z5asVo9co2hAhTz');
 
   // await getByAddress('3Fhk53o8ciL6GvoteHq9Z5asVo9co2hAhTz');
 
