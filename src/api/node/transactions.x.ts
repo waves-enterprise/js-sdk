@@ -16,6 +16,11 @@ interface signedTx {
     getTxWithoutFetch?: boolean
 }
 
+interface signedTxData {
+    send: boolean,
+    data?: any
+}
+
 const fetch = createFetchWrapper(PRODUCTS.NODE, VERSIONS.V1, processJSON);
 
 
@@ -25,11 +30,11 @@ class AnyPart extends BasePart<any> {
     }
 }
 
-function getSignedTx(data: signedTx): { send: boolean, data?: any } {
+function getSignedTx(data: signedTx): signedTxData {
     if (data.getTxWithoutFetch !== undefined && data.getTxWithoutFetch === true) {
         return {
             send: true,
-            data: new Promise((resolve, reject) => {
+            data: new Promise((resolve) => {
                 resolve(data.body);
             })
         };
