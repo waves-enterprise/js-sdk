@@ -165,13 +165,20 @@ async function main() {
   // await createIssue();
   // console.log('\n[createPermissions] -------------------');
   // await createPermissions('3Fhk53o8ciL6GvoteHq9Z5asVo9co2hAhTz');
-  let signedTx = await sendTransferData();
-  console.log('@@@@@@@@@@@@@@@@', signedTx, typeof signedTx);
 
-  setTimeout(async () => {
-    let dd = await Waves.API.Node.transactions.rawBroadcast(signedTx);
-    console.log('!!!!!!!!!!!!!!!!!', dd);
-  }, 2000)
+
+  // let signedTx = await sendTransferData();
+  // console.log('@@@@@@@@@@@@@@@@', signedTx, typeof signedTx);
+
+  // setTimeout(async () => {
+  //   let dd = await Waves.API.Node.transactions.rawBroadcast(signedTx);
+  //   console.log('!!!!!!!!!!!!!!!!!', dd);
+  // }, 2000)
+
+
+  // const alias = await Waves.API.Node.aliases.byAlias('philsitumorang');
+  const alias = await Waves.API.Node.aliases.byAddress(seed.address);
+  console.log('@@@@@@@@@@@#!@#', alias);  
 
 
   // await getByAddress('3Fhk53o8ciL6GvoteHq9Z5asVo9co2hAhTz');

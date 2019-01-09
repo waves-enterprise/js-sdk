@@ -251,7 +251,7 @@ describe('API', function() {
       timestamp: Date.now()
     };
 
-    const createAliasRes = await Waves.API.Node.transactions.broadcast('createAlias', createAliasData, testSeed.keyPair);
+    const createAliasRes = await Waves.API.Node.transactions.broadcast('createAlias', createAliasData, mainSeed.keyPair);
     expect(createAliasRes.type).to.be.a('number').to.be.equal(10);
     expect(createAliasRes.id).to.be.a('string');
     expect(createAliasRes.sender).to.be.a('string');
@@ -278,11 +278,6 @@ describe('API', function() {
     }
   });
 
-  it ('[aliases.byAlias] should send alias "philsitumorang", return { address: "ADDRESS" }', async () => {
-    const alias = await Waves.API.Node.aliases.byAlias('philsitumorang');
-    expect(alias.address).to.be.a('string');
-  });
-
   it ('[aliases.byAlias] should send empty alias value, return error-type: invalid-json', async () => {
     try {
       await Waves.API.Node.aliases.byAlias('');
@@ -299,11 +294,9 @@ describe('API', function() {
     }
   });
 
-  it ('[aliases.byAddress] should send address 3Fhk53o8ciL6GvoteHq9Z5asVo9co2hAhTz, return aliases', async () => {
-    const aliases = await Waves.API.Node.aliases.byAddress(testSeed.address);
+  it(`[aliases.byAddress] should send address ${mainSeed.address}, return aliases`, async () => {
+    const aliases = await Waves.API.Node.aliases.byAddress(mainSeed.address);
     expect(aliases).to.be.an('array');
-    const foundAlias = aliases.includes('alias:D:philsitumorang');
-    expect(foundAlias).to.be.equal(true);
   });
 
   it ('[aliases.byAddress] should send invalid address, return error: 102', async () => {
@@ -396,10 +389,10 @@ describe('API', function() {
       timestamp: Date.now()
     };
 
-    const issueRes = await Waves.API.Node.transactions.broadcast('issue', issueData, testSeed.keyPair);
+    const issueRes = await Waves.API.Node.transactions.broadcast('issue', issueData, mainSeed.keyPair);
     expect(issueRes.id).to.be.a('string');
-    expect(issueRes.sender).to.be.a('string').to.be.equal(testSeed.address);
-    expect(issueRes.senderPublicKey).to.be.a('string').to.be.equal(testSeed.keyPair.publicKey);
+    expect(issueRes.sender).to.be.a('string').to.be.equal(mainSeed.address);
+    expect(issueRes.senderPublicKey).to.be.a('string').to.be.equal(mainSeed.keyPair.publicKey);
     expect(issueRes.fee).to.be.a('number').to.be.equal(issueData.fee);
     expect(issueRes.timestamp).to.be.a('number');
     expect(issueRes.proofs).to.be.an('array');
