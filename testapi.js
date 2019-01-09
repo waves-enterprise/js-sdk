@@ -1,3 +1,6 @@
+// author: Phil Situmorang
+// Здесь я проверяю логику работы отправки транзакций
+
 const WavesAPI = require('./dist/waves-api');
 
 let requiredConfigValues = {

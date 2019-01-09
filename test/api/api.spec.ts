@@ -17,12 +17,21 @@ const wavesConfig = {
 
 const mainSeed = {
   phrase: 'sign clay point alpha enough supreme magic auto echo ladder reason weather twin sniff north',
-  address: '3Fdc25KFhRAtY3PB3viHCkHKiz4LmAsyGpe',
+  address: '3FX24kSvUnvyYP92qPudEsa7VfgnsJVW6S8',
   keyPair: {
-    privateKey: '3hFkg3XwC827R7CzQLbpXQzZpMS98S3Jrv8wYY5LTtn7',
-    publicKey: '3RBMLDrd27WAfv84abTZSZTE5ZBsp5JX6dNz3YteQwNz'
+    privateKey: '4G8xjSLvwZmbMkystNKRGxBLmpBRR7vLjtZBihMkSzXB',
+    publicKey: 'Hp39rdfjAYiq5C4H3wF97VsMr8T2jVGFMFC7LB7KPpj5'
   }
 };
+
+// const mainSeed = {
+//   phrase: 'sign clay point alpha enough supreme magic auto echo ladder reason weather twin sniff north',
+//   address: '3Fdc25KFhRAtY3PB3viHCkHKiz4LmAsyGpe',
+//   keyPair: {
+//     privateKey: '3hFkg3XwC827R7CzQLbpXQzZpMS98S3Jrv8wYY5LTtn7',
+//     publicKey: '3RBMLDrd27WAfv84abTZSZTE5ZBsp5JX6dNz3YteQwNz'
+//   }
+// };
 
 const testSeed = {
   phrase: 'meat interest finger caught liquid math next predict close skirt aspect trouble then ocean scissors',
