@@ -35,7 +35,7 @@ function getSignedTx(data: signedTx): signedTxData {
         return {
             send: true,
             data: new Promise((resolve) => {
-                resolve(data.body);
+                resolve(JSON.parse(data.body));
             })
         };
     } else {

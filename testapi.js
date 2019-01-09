@@ -13,10 +13,10 @@ let allConfigValues = {
 
 const seed = {
   phrase: 'sign clay point alpha enough supreme magic auto echo ladder reason weather twin sniff north',
-  address: '3Fdc25KFhRAtY3PB3viHCkHKiz4LmAsyGpe',
+  address: '3FX24kSvUnvyYP92qPudEsa7VfgnsJVW6S8',
   keyPair: {
-    privateKey: '3hFkg3XwC827R7CzQLbpXQzZpMS98S3Jrv8wYY5LTtn7',
-    publicKey: '3RBMLDrd27WAfv84abTZSZTE5ZBsp5JX6dNz3YteQwNz'
+    privateKey: '4G8xjSLvwZmbMkystNKRGxBLmpBRR7vLjtZBihMkSzXB',
+    publicKey: 'Hp39rdfjAYiq5C4H3wF97VsMr8T2jVGFMFC7LB7KPpj5'
   }
 };
 
@@ -35,7 +35,7 @@ async function sendTransferData() {
   };
 
   const transferRes = await Waves.API.Node.transactions.broadcast('transfer', transferData, seed.keyPair);
-  console.log('transferRes', transferRes)
+  return transferRes;
 }
 
 async function sendMassTransferData() {
@@ -152,14 +152,24 @@ async function main() {
 
   // console.log('[utx list]', await Waves.API.Node.transactions.utxGetList());
   // console.log ('[utx size]', await Waves.API.Node.transactions.utxSize());
-  console.log('\n[sendCreateAlias] ---------------------');
-  await sendCreateAlias();
-  console.log('\n[sendTransferData] --------------------');
-  await sendTransferData();
-  console.log('\n[createIssue] -------------------------');
-  await createIssue();
-  console.log('\n[createPermissions] -------------------');
-  await createPermissions('3Fhk53o8ciL6GvoteHq9Z5asVo9co2hAhTz');
+
+
+  // console.log('\n[sendCreateAlias] ---------------------');
+  // await sendCreateAlias();
+  // console.log('\n[sendTransferData] --------------------');
+  // await sendTransferData();
+  // console.log('\n[createIssue] -------------------------');
+  // await createIssue();
+  // console.log('\n[createPermissions] -------------------');
+  // await createPermissions('3Fhk53o8ciL6GvoteHq9Z5asVo9co2hAhTz');
+  let signedTx = await sendTransferData();
+  console.log('@@@@@@@@@@@@@@@@', signedTx, typeof signedTx);
+
+  setTimeout(async () => {
+    let dd = await Waves.API.Node.transactions.rawBroadcast(signedTx);
+    console.log('!!!!!!!!!!!!!!!!!', dd);
+  }, 2000)
+
 
   // await getByAddress('3Fhk53o8ciL6GvoteHq9Z5asVo9co2hAhTz');
 
