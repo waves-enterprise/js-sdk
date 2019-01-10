@@ -22,27 +22,25 @@ let allConfigValues = {
 };
 
 const seed = {
-  phrase: "intact hungry mother crime human number swallow final frog sister danger foam climb march stone",
-  address: "3Mwnu7nsmSZ3atCmtwD19bKfUPrRAEmpTqB",
-  keyPair: {
-    privateKey: "CsEN9A7hqsHR8MtduY8vDRDXtNBUr5XvAh2fguN4SnFK",
-    publicKey: "8bqyawEDe8qN1Y4tN4ctirQXn2FkgFXnL5m13SosG1JA"
+  phrase:
+    'intact hungry mother crime human number swallow final frog sister danger foam climb march stone',
+  address: '3Mwnu7nsmSZ3atCmtwD19bKfUPrRAEmpTqB',
+  keyPair:
+  {
+    privateKey: 'F3x94A8LiYUUc4zjmMYwUdRhLASirvfSnTQfZLuC6fKy',
+    publicKey: 'DmpUrRRGqtzCbRmPiHAb8zPz33MP1WoRERsJ12PrZh3h'
   }
-  // phrase: 'sign clay point alpha enough supreme magic auto echo ladder reason weather twin sniff north',
-  // address: '3FX24kSvUnvyYP92qPudEsa7VfgnsJVW6S8',
-  // keyPair: {
-  //   privateKey: '4G8xjSLvwZmbMkystNKRGxBLmpBRR7vLjtZBihMkSzXB',
-  //   publicKey: 'Hp39rdfjAYiq5C4H3wF97VsMr8T2jVGFMFC7LB7KPpj5'
-  // }
 };
 
 const Waves = WavesAPI.create(allConfigValues);
 
 async function sendTransferData() {
+  const recipientSeed = Waves.Seed.create();
+
   const transferData = {
-    recipient: '3Fhk53o8ciL6GvoteHq9Z5asVo9co2hAhTz',
+    recipient: recipientSeed.address,
     assetId: 'WAVES',
-    amount: 1000000, // 00.1 Waves
+    amount: 1000000, // 0.01 Waves
     feeAssetId: 'WAVES',
     fee: 100000,
     attachment: 'some test attachment message',
@@ -161,20 +159,20 @@ async function createIssue() {
 async function main() {
   console.log(new Date());
 
-  try {
-    const testSeed = Waves.Seed.create();
+  // try {
+  //   const testSeed = Waves.Seed.create();
 
-    const createAliasData = {
-      alias: `username${new Date().getTime()}`,
-      fee: 100000,
-      timestamp: Date.now()
-    };
+  //   const createAliasData = {
+  //     alias: `username${new Date().getTime()}`,
+  //     fee: 100000,
+  //     timestamp: Date.now()
+  //   };
 
-    const createAliasRes = await Waves.API.Node.transactions.broadcast('createAlias', createAliasData, testSeed.keyPair);
-    console.log('[createAliasRes]', createAliasRes);
-  } catch (err) {
-    console.log(err);
-  }
+  //   const createAliasRes = await Waves.API.Node.transactions.broadcast('createAlias', createAliasData, testSeed.keyPair);
+  //   console.log('[createAliasRes]', createAliasRes);
+  // } catch (err) {
+  //   console.log(err);
+  // }
 
   // const account = await Waves.Seed.fromExistingPhrase('release sick must laptop film wagon ask manage token shoulder turkey sick wash involve object');
   // console.log('[account]', account);
@@ -202,14 +200,44 @@ async function main() {
   // await createPermissions('3Fhk53o8ciL6GvoteHq9Z5asVo9co2hAhTz');
 
 
-  // let signedTx = await sendTransferData();
+  let signedTx = await sendTransferData();
+  let data = await Waves.API.Node.transactions.rawBroadcast(signedTx);
+
+  console.log(data);
+
   // console.log('@@@@@@@@@@@@@@@@', signedTx, typeof signedTx);
 
   // setTimeout(async () => {
+  //   const transferData = {
+  //     recipient: '3Fhk53o8ciL6GvoteHq9Z5asVo9co2hAhTz',
+  //     assetId: 'WAVES',
+  //     amount: 1000000, // 00.1 Waves
+  //     feeAssetId: 'WAVES',
+  //     fee: 100000,
+  //     attachment: 'some test attachment message',
+  //     timestamp: Date.now(),
+  //     getTxWithoutFetch: true
+  //   };
+
   //   let dd = await Waves.API.Node.transactions.rawBroadcast(signedTx);
   //   console.log('!!!!!!!!!!!!!!!!!', dd);
   // }, 2000)
 
+  // const recipientSeed = Waves.Seed.create();
+
+  // const transferData = {
+  //   type: 'transfer',
+  //   recipient: recipientSeed.address,
+  //   assetId: 'WAVES',
+  //   amount: 1000000, // 0.01 Waves
+  //   feeAssetId: 'WAVES',
+  //   fee: 100000,
+  //   attachment: 'some test attachment message',
+  //   timestamp: Date.now(),
+  // };
+
+  // let dd = await Waves.API.Node.transactions.rawBroadcast(transferData);
+  // console.log('!!!!!!!!!!!!!!!!!', dd);
 
   // const alias = await Waves.API.Node.aliases.byAlias('philsitumorang');
 
