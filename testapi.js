@@ -44,11 +44,27 @@ async function sendTransferData() {
     feeAssetId: 'WAVES',
     fee: 100000,
     attachment: 'some test attachment message',
-    timestamp: Date.now(),
-    getTxWithoutFetch: true
+    timestamp: Date.now()
   };
 
   const transferRes = await Waves.API.Node.transactions.broadcast('transfer', transferData, seed.keyPair);
+  return transferRes;
+}
+
+async function sendSignedTransferData() {
+  const recipientSeed = Waves.Seed.create();
+
+  const transferData = {
+    recipient: recipientSeed.address,
+    assetId: 'WAVES',
+    amount: 2000000, // 0.02 Waves
+    feeAssetId: 'WAVES',
+    fee: 100000,
+    attachment: 'some test attachment message',
+    timestamp: Date.now()
+  };
+
+  const transferRes = await Waves.API.Node.transactions.signedBroadcast('transfer', transferData, seed.keyPair);
   return transferRes;
 }
 
@@ -101,8 +117,7 @@ async function sendCreateAlias() {
   const createAliasData = {
     alias: 'philsitumorang',
     fee: 100000,
-    timestamp: Date.now(),
-    getTxWithoutFetch: true
+    timestamp: Date.now()
   };
 
   const createAliasRes = await Waves.API.Node.transactions.broadcast('createAlias', createAliasData,{
@@ -128,8 +143,7 @@ async function createPermissions(addr) {
     timestamp: Date.now(),
     opType: 'add',
     role: 'issuer',
-    target: addr,
-    getTxWithoutFetch: true
+    target: addr
   };
 
   const permissionsData = await Waves.API.Node.transactions.broadcast('permit', createPermissionData, seed.keyPair);
@@ -144,8 +158,7 @@ async function createIssue() {
     fee: 100000000, // 0.001 Waves
     precision: 5,
     reissuable: true,
-    timestamp: Date.now(),
-    getTxWithoutFetch: true
+    timestamp: Date.now()
   };
 
   const issueRes = await Waves.API.Node.transactions.broadcast('issue', issueData, {
@@ -199,11 +212,12 @@ async function main() {
   // console.log('\n[createPermissions] -------------------');
   // await createPermissions('3Fhk53o8ciL6GvoteHq9Z5asVo9co2hAhTz');
 
+  let txData = await sendTransferData();
+  console.log('[txData]', txData);
 
-  let signedTx = await sendTransferData();
-  let data = await Waves.API.Node.transactions.rawBroadcast(signedTx);
-
-  console.log(data);
+  let txSigned = await sendSignedTransferData();
+  // let txSignedData = await Waves.API.Node.transactions.rawBroadcast(txSigned);
+  console.log('[txSigned]', txSigned);
 
   // console.log('@@@@@@@@@@@@@@@@', signedTx, typeof signedTx);
 
@@ -215,8 +229,7 @@ async function main() {
   //     feeAssetId: 'WAVES',
   //     fee: 100000,
   //     attachment: 'some test attachment message',
-  //     timestamp: Date.now(),
-  //     getTxWithoutFetch: true
+  //     timestamp: Date.now()
   //   };
 
   //   let dd = await Waves.API.Node.transactions.rawBroadcast(signedTx);

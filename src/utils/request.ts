@@ -116,10 +116,6 @@ export function wrapTxRequest(SignatureGenerator: ISignatureGeneratorConstructor
                         body: SAFE_JSON_STRINGIFY(tx)                        
                     };
 
-                    if (data.getTxWithoutFetch) {
-                        sendData.getTxWithoutFetch = data.getTxWithoutFetch;
-                    }
-
                     return callback(sendData);
                 });
 

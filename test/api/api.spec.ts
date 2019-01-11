@@ -371,22 +371,22 @@ describe('API', function() {
   //   expect(permissionsData.dueTimestamp).to.be.a('null');
   // });
 
-  it ('[transactions.broadcast](permit) should send wrong address, return error: 102', async () => {
-    const seed = Waves.Seed.create();
+  // it ('[transactions.broadcast](permit) should send wrong address, return error: 102', async () => {
+  //   const seed = Waves.Seed.create();
 
-    const createPermissionData = {
-      timestamp: Date.now(),
-      opType: 'add',
-      role: 'issuer',
-      target: seed.address + '71826382137861'
-    };
+  //   const createPermissionData = {
+  //     timestamp: Date.now(),
+  //     opType: 'add',
+  //     role: 'issuer',
+  //     target: seed.address + '71826382137861'
+  //   };
 
-    try {
-      await Waves.API.Node.transactions.broadcast('permit', createPermissionData, mainSeed.keyPair);
-    } catch (err) {
-      expect(err.data.error).to.be.a('number').to.be.equal(102);
-    }
-  });
+  //   try {
+  //     await Waves.API.Node.transactions.broadcast('permit', createPermissionData, mainSeed.keyPair);
+  //   } catch (err) {
+  //     expect(err.data.error).to.be.a('number').to.be.equal(102);
+  //   }
+  // });
 
   // Эта проблема будет возникать часто, т.к. после каждой очистики БД, нужно запрашивать у бекендеров аккаунт с ролью permissioner и issuer
 
