@@ -117,7 +117,7 @@ First, a quick introduction into the structure:
         * data
         * setScript
         * sponsorship
-    * signedBroadcast - method return signed TX, after that you can pass data to rawBroadcast method
+    * sign - method return signed TX, after that you can pass data to rawBroadcast method
     * rawBroadcast — POST-method to send any JSON to the `/transactions/broadcast` path
 * utils
     * time — get the current Node timestamp
@@ -135,7 +135,7 @@ const transferData = {
     timestamp: Date.now()
 };
 
-const singedTx = await Waves.API.Node.transactions.signedBroadcast('transfer', transferData, seed.keyPair);
+const singedTx = await Waves.API.Node.transactions.sign('transfer', transferData, seed.keyPair);
 ```
 
 #### Sending rawTransactions

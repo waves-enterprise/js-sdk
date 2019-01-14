@@ -66,7 +66,7 @@ export default {
         }
     },
 
-    signedBroadcast(type: string, data, keys) {
+    sign(type: string, data, keys) {
         switch (type) {
             case constants.ISSUE_TX_NAME:
                 return requests.sendSignedIssueTx(data, keys);

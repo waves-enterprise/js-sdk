@@ -64,7 +64,7 @@ async function sendSignedTransferData() {
     timestamp: Date.now()
   };
 
-  const transferRes = await Waves.API.Node.transactions.signedBroadcast('transfer', transferData, seed.keyPair);
+  const transferRes = await Waves.API.Node.transactions.sign('transfer', transferData, seed.keyPair);
   return transferRes;
 }
 
