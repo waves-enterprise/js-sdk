@@ -94,9 +94,7 @@ export function wrapTxRequest(SignatureGenerator: ISignatureGeneratorConstructor
                               postRemap: (data: IHash<any>) => IHash<any>,
                               callback: (postParams: IHash<any>) => Promise<any>,
                               withProofs: boolean = false) {
-
     return function (data: IHash<any>, keyPair: IKeyPair): Promise<any> {
-
         return preRemapAsync({
 
             // The order is required for `senderPublicKey` must be rewritten if it exists in `data`
@@ -113,12 +111,12 @@ export function wrapTxRequest(SignatureGenerator: ISignatureGeneratorConstructor
                     ...(withProofs ? {proofs: [signature]} : {signature})
                 }))
                 .then((tx) => {
-                    console.log(tx)
-                    return callback({
-
+                    let sendData: any = {
                         ...POST_TEMPLATE,
-                        body: SAFE_JSON_STRINGIFY(tx)
-                    });
+                        body: SAFE_JSON_STRINGIFY(tx)                        
+                    };
+
+                    return callback(sendData);
                 });
 
         });

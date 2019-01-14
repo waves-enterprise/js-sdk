@@ -117,9 +117,34 @@ First, a quick introduction into the structure:
         * data
         * setScript
         * sponsorship
+    * sign - method return signed TX, after that you can pass data to rawBroadcast method
     * rawBroadcast — POST-method to send any JSON to the `/transactions/broadcast` path
 * utils
     * time — get the current Node timestamp
+
+#### Get signed transactions
+
+```
+const transferData = {
+    recipient: recipientSeed.address,
+    assetId: 'WAVES',
+    amount: 1000000, // 0.01 Waves
+    feeAssetId: 'WAVES',
+    fee: 100000,
+    attachment: 'some test attachment message',
+    timestamp: Date.now()
+};
+
+const singedTx = await Waves.API.Node.transactions.sign('transfer', transferData, seed.keyPair);
+```
+
+#### Sending rawTransactions
+
+Transaction should be [signed](#get-signed-transactions) before you can pass to rawBroadcast method.
+
+```
+const txData = await Waves.API.Node.transactions.rawBroadcast(singedTx);
+```
 
 #### Sending transactions
 
@@ -557,9 +582,14 @@ cd ./node_modules/@waves/waves-api/
 npm install
 npm run test # to run tests in Node.js
 npm run test-browser # to run test in Chrome browser
+npm run test-api # run transactions tests
+npm run test-api-long-tests # run transactions with tests as getBalance, which has long update time in blockchain.
 ```
 
 Test configuration may be changed in the _./node_modules/@waves/waves-api/karma.conf.js_ file.
+
+Tests: 'npm run test-api' and 'test-api-long-tests' may be broken, because data and seeds on testnet removed.
+You can generate new seeds and update tests. Soon, we fix this problem and set main seed with roles and balance.
 
 ## Authors
 

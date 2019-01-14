@@ -66,6 +66,37 @@ export default {
         }
     },
 
+    sign(type: string, data, keys) {
+        switch (type) {
+            case constants.ISSUE_TX_NAME:
+                return requests.sendSignedIssueTx(data, keys);
+            case constants.TRANSFER_TX_NAME:
+                return requests.sendSignedTransferTx(data, keys);
+            case constants.REISSUE_TX_NAME:
+                return requests.sendSignedReissueTx(data, keys);
+            case constants.BURN_TX_NAME:
+                return requests.sendSignedBurnTx(data, keys);
+            case constants.LEASE_TX_NAME:
+                return requests.sendSignedLeaseTx(data, keys);
+            case constants.CANCEL_LEASING_TX_NAME:
+                return requests.sendSignedCancelLeasingTx(data, keys);
+            case constants.CREATE_ALIAS_TX_NAME:
+                return requests.sendSignedCreateAliasTx(data, keys);
+            case constants.MASS_TRANSFER_TX_NAME:
+                return requests.sendSignedMassTransferTx(data, keys);
+            case constants.DATA_TX_NAME:
+                return requests.sendSignedDataTx(data, keys);
+            case constants.SET_SCRIPT_TX_NAME:
+                return requests.sendSignedSetScriptTx(data, keys);
+            case constants.SPONSORSHIP_TX_NAME:
+                return requests.sendSignedSponsorshipTx(data, keys);
+            case constants.PERMISSION_TX_NAME:
+                return requests.sendSignedPermissionTx(data, keys);
+            default:
+                throw new WavesError(`Wrong transaction type: ${type}`, data);
+        }
+    },
+
     rawBroadcast(data) {
         return fetch(constants.BROADCAST_PATH, {
             ...POST_TEMPLATE,

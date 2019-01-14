@@ -1,9 +1,19 @@
+// author: Phil Situmorang
+// Здесь я проверяю логику работы отправки транзакций
+
 const WavesAPI = require('./dist/waves-api');
 
-let requiredConfigValues = {
-  networkByte: 68,
-  nodeAddress: 'http://1.devnet-pos.vostoknodes.com:6862',
-  matcherAddress: 'http://1.devnet-pos.vostoknodes.com/matcher:6862',
+// let requiredConfigValues = {
+//   networkByte: 68,
+//   nodeAddress: 'http://1.devnet-pos.vostoknodes.com:6862',
+//   matcherAddress: 'http://1.devnet-pos.vostoknodes.com/matcher:6862',
+//   crypto: 'waves'
+// };
+
+const requiredConfigValues = {
+  networkByte: 84,
+  nodeAddress: 'http://2.testnet-pos.vostoknodes.com:6862',
+  matcherAddress: 'http://2.testnet-pos.vostoknodes.com/matcher:6862',
   crypto: 'waves'
 };
 
@@ -12,21 +22,25 @@ let allConfigValues = {
 };
 
 const seed = {
-  phrase: 'sign clay point alpha enough supreme magic auto echo ladder reason weather twin sniff north',
-  address: '3Fdc25KFhRAtY3PB3viHCkHKiz4LmAsyGpe',
-  keyPair: {
-    privateKey: '3hFkg3XwC827R7CzQLbpXQzZpMS98S3Jrv8wYY5LTtn7',
-    publicKey: '3RBMLDrd27WAfv84abTZSZTE5ZBsp5JX6dNz3YteQwNz'
+  phrase:
+    'intact hungry mother crime human number swallow final frog sister danger foam climb march stone',
+  address: '3Mwnu7nsmSZ3atCmtwD19bKfUPrRAEmpTqB',
+  keyPair:
+  {
+    privateKey: 'F3x94A8LiYUUc4zjmMYwUdRhLASirvfSnTQfZLuC6fKy',
+    publicKey: 'DmpUrRRGqtzCbRmPiHAb8zPz33MP1WoRERsJ12PrZh3h'
   }
 };
 
 const Waves = WavesAPI.create(allConfigValues);
 
 async function sendTransferData() {
+  const recipientSeed = Waves.Seed.create();
+
   const transferData = {
-    recipient: '3Fhk53o8ciL6GvoteHq9Z5asVo9co2hAhTz',
+    recipient: recipientSeed.address,
     assetId: 'WAVES',
-    amount: 1000000000, // 10 Waves
+    amount: 1000000, // 0.01 Waves
     feeAssetId: 'WAVES',
     fee: 100000,
     attachment: 'some test attachment message',
@@ -34,7 +48,24 @@ async function sendTransferData() {
   };
 
   const transferRes = await Waves.API.Node.transactions.broadcast('transfer', transferData, seed.keyPair);
-  console.log('transferRes', transferRes)
+  return transferRes;
+}
+
+async function sendSignedTransferData() {
+  const recipientSeed = Waves.Seed.create();
+
+  const transferData = {
+    recipient: recipientSeed.address,
+    assetId: 'WAVES',
+    amount: 2000000, // 0.02 Waves
+    feeAssetId: 'WAVES',
+    fee: 100000,
+    attachment: 'some test attachment message',
+    timestamp: Date.now()
+  };
+
+  const transferRes = await Waves.API.Node.transactions.sign('transfer', transferData, seed.keyPair);
+  return transferRes;
 }
 
 async function sendMassTransferData() {
@@ -135,27 +166,96 @@ async function createIssue() {
     publicKey: 'Fy4dWFL192DRjhMqMW6HhQfSa6gcFNmu7ZSk4ts1empE'
   });
 
-  console.log('issueData', issueData);
+  console.log('issueRes', issueRes);
 }
 
 async function main() {
   console.log(new Date());
-  const mainBalance = await Waves.API.Node.addresses.balanceDetails('3Fdc25KFhRAtY3PB3viHCkHKiz4LmAsyGpe');
-  console.log('[main balance]', mainBalance);
 
-  const testBalance = await Waves.API.Node.addresses.balanceDetails('3Fhk53o8ciL6GvoteHq9Z5asVo9co2hAhTz');
-  console.log('[test balance]', testBalance);
+  // try {
+  //   const testSeed = Waves.Seed.create();
 
-  console.log('[utx list]', await Waves.API.Node.transactions.utxGetList());
-  console.log ('[utx size]', await Waves.API.Node.transactions.utxSize());
+  //   const createAliasData = {
+  //     alias: `username${new Date().getTime()}`,
+  //     fee: 100000,
+  //     timestamp: Date.now()
+  //   };
 
+  //   const createAliasRes = await Waves.API.Node.transactions.broadcast('createAlias', createAliasData, testSeed.keyPair);
+  //   console.log('[createAliasRes]', createAliasRes);
+  // } catch (err) {
+  //   console.log(err);
+  // }
+
+  // const account = await Waves.Seed.fromExistingPhrase('release sick must laptop film wagon ask manage token shoulder turkey sick wash involve object');
+  // console.log('[account]', account);
+
+  // const mainBalance = await Waves.API.Node.addresses.balanceDetails(seed.address);
+  // console.log('[mainBalance]', mainBalance);
+
+  // const mainBalance = await Waves.API.Node.addresses.balanceDetails('3FeyprePzig1TM5yWNK5gopuqonGJHch9hZ');
+  // console.log('[main balance]', mainBalance);
+
+  // const testBalance = await Waves.API.Node.addresses.balanceDetails('3FX24kSvUnvyYP92qPudEsa7VfgnsJVW6S8');
+  // console.log('[test balance]', testBalance);
+
+  // console.log('[utx list]', await Waves.API.Node.transactions.utxGetList());
+  // console.log ('[utx size]', await Waves.API.Node.transactions.utxSize());
+
+
+  // console.log('\n[sendCreateAlias] ---------------------');
   // await sendCreateAlias();
-
+  // console.log('\n[sendTransferData] --------------------');
   // await sendTransferData();
-
+  // console.log('\n[createIssue] -------------------------');
   // await createIssue();
-
+  // console.log('\n[createPermissions] -------------------');
   // await createPermissions('3Fhk53o8ciL6GvoteHq9Z5asVo9co2hAhTz');
+
+  let txData = await sendTransferData();
+  console.log('[txData]', txData);
+
+  let txSigned = await sendSignedTransferData();
+  // let txSignedData = await Waves.API.Node.transactions.rawBroadcast(txSigned);
+  console.log('[txSigned]', txSigned);
+
+  // console.log('@@@@@@@@@@@@@@@@', signedTx, typeof signedTx);
+
+  // setTimeout(async () => {
+  //   const transferData = {
+  //     recipient: '3Fhk53o8ciL6GvoteHq9Z5asVo9co2hAhTz',
+  //     assetId: 'WAVES',
+  //     amount: 1000000, // 00.1 Waves
+  //     feeAssetId: 'WAVES',
+  //     fee: 100000,
+  //     attachment: 'some test attachment message',
+  //     timestamp: Date.now()
+  //   };
+
+  //   let dd = await Waves.API.Node.transactions.rawBroadcast(signedTx);
+  //   console.log('!!!!!!!!!!!!!!!!!', dd);
+  // }, 2000)
+
+  // const recipientSeed = Waves.Seed.create();
+
+  // const transferData = {
+  //   type: 'transfer',
+  //   recipient: recipientSeed.address,
+  //   assetId: 'WAVES',
+  //   amount: 1000000, // 0.01 Waves
+  //   feeAssetId: 'WAVES',
+  //   fee: 100000,
+  //   attachment: 'some test attachment message',
+  //   timestamp: Date.now(),
+  // };
+
+  // let dd = await Waves.API.Node.transactions.rawBroadcast(transferData);
+  // console.log('!!!!!!!!!!!!!!!!!', dd);
+
+  // const alias = await Waves.API.Node.aliases.byAlias('philsitumorang');
+
+  // const alias = await Waves.API.Node.aliases.byAddress(seed.address);
+  // console.log('@@@@@@@@@@@#!@#', alias);
 
   // await getByAddress('3Fhk53o8ciL6GvoteHq9Z5asVo9co2hAhTz');
 
