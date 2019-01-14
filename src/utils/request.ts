@@ -113,6 +113,7 @@ export function wrapTxRequest(SignatureGenerator: ISignatureGeneratorConstructor
                     ...(withProofs ? {proofs: [signature]} : {signature})
                 }))
                 .then((tx) => {
+                    console.log(tx)
                     return callback({
 
                         ...POST_TEMPLATE,

@@ -3,9 +3,9 @@
 import * as WavesAPI from '../dist/waves-api';
 
 let requiredConfigValues = {
-    networkByte: 68,
-    nodeAddress: 'http://1.devnet-pos.vostoknodes.com:6862',
-    matcherAddress: 'http://1.devnet-pos.vostoknodes.com/matcher:6862',
+    networkByte: 84,
+    nodeAddress: 'http://2.testnet-pos.vostoknodes.com:6862',
+    matcherAddress: 'http://2.testnet-pos.vostoknodes.com:6862',
     crypto: 'waves'
 };
 
@@ -16,11 +16,14 @@ let allConfigValues = {
 const seed = {
     phrase:
         'sign clay point alpha enough supreme magic auto echo ladder reason weather twin sniff north',
-    address: '3Fdc25KFhRAtY3PB3viHCkHKiz4LmAsyGpe',
+    address: '3N6J8YZ4VGMrcX9fHRoJutfGPmiWziMd8z7',
     keyPair:
         {
-            privateKey: '3hFkg3XwC827R7CzQLbpXQzZpMS98S3Jrv8wYY5LTtn7',
-            publicKey: '3RBMLDrd27WAfv84abTZSZTE5ZBsp5JX6dNz3YteQwNz'
+           // privateKey: '7Qi7EuGU74GrnCuoSuEETNyGJFNnxNwLUTPurejcUWod',
+            // publicKey: 'F2W3jcpP1acrH62FVs97FkMPoqkvumwkXD7BepkZgwWM',
+
+            publicKey: '7Qi7EuGU74GrnCuoSuEETNyGJFNnxNwLUTPurejcUWod',
+            privateKey: 'F2W3jcpP1acrH62FVs97FkMPoqkvumwkXD7BepkZgwWM'
         }
 };
 
@@ -54,7 +57,7 @@ const Waves = WavesAPI.create(allConfigValues);
 const transferData = {
 
     // An arbitrary address; mine, in this example
-    recipient: '3Fdc25KFhRAtY3PB3viHCkHKiz4LmAsyGpe',
+    recipient: '3N6J8YZ4VGMrcX9fHRoJutfGPmiWziMd8z7',
 
     // ID of a token, or WAVES
     assetId: 'WAVES',
@@ -73,9 +76,9 @@ const transferData = {
 
 };
 
-// Waves.API.Node.transactions.broadcast('transfer', transferData, seed.keyPair).then((responseData) => {
-//    console.log(responseData);
-// });
+ Waves.API.Node.transactions.broadcast('transfer', transferData, seed.keyPair).then((responseData) => {
+    console.log(responseData);
+});
 
 const t = {
     "senderPublicKey": "GmnTn6yVk7CNmm5h7NvKGz9Q6Bo7LdG5iM7FSso9k4tZ",
@@ -151,7 +154,6 @@ const issueData = {
 // });
 
 
-
 const permissionTx = {
     version: 1,
     // type: 102,
@@ -166,3 +168,17 @@ const permissionTx = {
 // Waves.API.Node.transactions.broadcast('permit', permissionTx, seed.keyPair).then((responseData) => {
 // console.log(responseData);
 // });
+
+
+const scriptData = {
+    "fee": 5000000,
+    "timestamp": 1545992919891,
+    "script": "base64:AQQAAAAHJG1hdGNoMAUAAAACdHgG+RXSzQ==",
+    "name": "faucet",
+    "description": "description"
+};
+
+/*
+Waves.API.Node.transactions.broadcast('setScript', scriptData, seed.keyPair).then((responseData) => {
+    console.log(responseData);
+});*/
