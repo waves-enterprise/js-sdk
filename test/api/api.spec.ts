@@ -1,4 +1,4 @@
-import {expect} from '../getChai';
+import { expect } from '../getChai';
 import * as WavesAPI from '../../dist/waves-api.min';
 
 declare const process: {
@@ -47,7 +47,7 @@ let issueAssetId: string;
 
 const withLongTests: boolean = process.argv.filter((a: string) => a === '--with-long-tests').length > 0;
 
-describe('API', function () {
+describe('API', function() {
     this.timeout(3600000);
 
     beforeEach(() => {
@@ -81,7 +81,7 @@ describe('API', function () {
         expect(transferRes.attachment).to.be.a('string');
     });
 
-    it('[transactions.broadcast("transfer")] should return error when transferData fields one by one is empty', async () => {
+    it ('[transactions.broadcast("transfer")] should return error when transferData fields one by one is empty', async () => {
         const transferData = {
             recipient: testSeed.address,
             assetId: 'WAVES',
@@ -181,7 +181,7 @@ describe('API', function () {
         }
     });
 
-    it('[transactions.broadcast("lease")] should send 1 Waves to address', async () => {
+    it ('[transactions.broadcast("lease")] should send 1 Waves to address', async () => {
         const leaseData = {
             recipient: testSeed.address,
             amount: 100000000, // 1 Waves
@@ -202,7 +202,7 @@ describe('API', function () {
         leaseId = leaseDataRes.id;
     });
 
-    it('[transactions.broadcast("lease")] should return error when amount is 0', async () => {
+    it ('[transactions.broadcast("lease")] should return error when amount is 0', async () => {
         const leaseData = {
             recipient: testSeed.address,
             amount: 0,
@@ -229,14 +229,13 @@ describe('API', function () {
                 try {
                     const cancelLeaseDataRes = await Waves.API.Node.transactions.broadcast('cancelLeasing', cancelLeasingData, mainSeed.keyPair);
                     break;
-                } catch (err) {
-                }
+                } catch (err) {}
                 await sleep(1000);
             }
         });
     }
 
-    it('[transactions.broadcast("createAlias")] should send alias by keys', async () => {
+    it ('[transactions.broadcast("createAlias")] should send alias by keys', async () => {
         const createAliasData = {
             alias: `username_${new Date().getTime()}`,
             fee: 100000,
@@ -255,7 +254,7 @@ describe('API', function () {
         expect(createAliasRes.alias).to.be.a('string').to.be.equal(createAliasData.alias);
     });
 
-    it('[transactions.broadcast("createAlias")] should return error if alias is empty', async () => {
+    it ('[transactions.broadcast("createAlias")] should return error if alias is empty', async () => {
         const createAliasData = {
             alias: '',
             fee: 100000,
@@ -270,12 +269,12 @@ describe('API', function () {
         }
     });
 
-    it('[aliases.byAlias] should send alias "philsitumorang", return { address: "ADDRESS" }', async () => {
+    it ('[aliases.byAlias] should send alias "philsitumorang", return { address: "ADDRESS" }', async () => {
         const alias = await Waves.API.Node.aliases.byAlias('philsitumorang');
         expect(alias.address).to.be.a('string');
     });
 
-    it('[aliases.byAlias] should send empty alias value, return error-type: invalid-json', async () => {
+    it ('[aliases.byAlias] should send empty alias value, return error-type: invalid-json', async () => {
         try {
             await Waves.API.Node.aliases.byAlias('');
         } catch (err) {
@@ -283,7 +282,7 @@ describe('API', function () {
         }
     });
 
-    it('[aliases.byAlias] should send invalid alias value, return error: 199', async () => {
+    it ('[aliases.byAlias] should send invalid alias value, return error: 199', async () => {
         try {
             await Waves.API.Node.aliases.byAlias('09876789oiuyu987tydhbanlkwiy312wfawfAkxzjvh8123');
         } catch (err) {
@@ -291,14 +290,14 @@ describe('API', function () {
         }
     });
 
-    it('[aliases.byAddress] should send address 3Fhk53o8ciL6GvoteHq9Z5asVo9co2hAhTz, return aliases', async () => {
+    it ('[aliases.byAddress] should send address 3Fhk53o8ciL6GvoteHq9Z5asVo9co2hAhTz, return aliases', async () => {
         const aliases = await Waves.API.Node.aliases.byAddress(testSeed.address);
         expect(aliases).to.be.an('array');
         const foundAlias = aliases.includes('alias:D:philsitumorang');
         expect(foundAlias).to.be.equal(true);
     });
 
-    it('[aliases.byAddress] should send invalid address, return error: 102', async () => {
+    it ('[aliases.byAddress] should send invalid address, return error: 102', async () => {
         try {
             await Waves.API.Node.aliases.byAddress('0987tyfvghjbnju9a8yt7ygbfnawfAWfjawfo87t12vz');
         } catch (err) {
@@ -306,7 +305,7 @@ describe('API', function () {
         }
     });
 
-    it('[transactions.broadcast](permit) should send role', async () => {
+    it ('[transactions.broadcast](permit) should send role', async () => {
         const seed = Waves.Seed.create();
 
         const createPermissionData = {
@@ -329,7 +328,7 @@ describe('API', function () {
         expect(permissionsData.dueTimestamp).to.be.a('null');
     });
 
-    it('[transactions.broadcast](permit) should send wrong address, return error: 102', async () => {
+    it ('[transactions.broadcast](permit) should send wrong address, return error: 102', async () => {
         const seed = Waves.Seed.create();
 
         const createPermissionData = {
@@ -346,7 +345,7 @@ describe('API', function () {
         }
     });
 
-    it('[addresses.balanceDetails] should send address, return details balance by address', async () => {
+    it ('[addresses.balanceDetails] should send address, return details balance by address', async () => {
         const balance = await Waves.API.Node.addresses.balanceDetails(testSeed.address);
         expect(balance.regular).to.be.a('number');
         expect(balance.generating).to.be.a('number');
@@ -354,7 +353,7 @@ describe('API', function () {
         expect(balance.effective).to.be.a('number');
     });
 
-    it('[addresses.balanceDetails] should send wrong address, return error: 102', async () => {
+    it ('[addresses.balanceDetails] should send wrong address, return error: 102', async () => {
         try {
             await Waves.API.Node.addresses.balanceDetails(testSeed.address + '98127389172');
         } catch (err) {
@@ -362,14 +361,14 @@ describe('API', function () {
         }
     });
 
-    it('[addresses.balance] should send address, return balance by address', async () => {
+    it ('[addresses.balance] should send address, return balance by address', async () => {
         const balance = await Waves.API.Node.addresses.balance(testSeed.address);
         expect(balance.address).to.be.a('string').to.equal(testSeed.address);
         expect(balance.confirmations).to.be.a('number');
         expect(balance.balance).to.be.a('number');
     });
 
-    it('[addresses.balance] should send wrong address, return error', async () => {
+    it ('[addresses.balance] should send wrong address, return error', async () => {
         try {
             await Waves.API.Node.addresses.balance(testSeed.address + '92178367812');
         } catch (err) {
@@ -377,7 +376,7 @@ describe('API', function () {
         }
     });
 
-    it('[transactions.broadcast](issue) should send issue data', async () => {
+    it ('[transactions.broadcast](issue) should send issue data', async () => {
         const issueData = {
             name: `TCURRENCY`,
             description: 'Some words about it',
@@ -407,7 +406,7 @@ describe('API', function () {
         issueAssetId = issueRes.assetId;
     });
 
-    it('[transactions.broadcast](issue) should send wrong issue data, return error: 199', async () => {
+    it ('[transactions.broadcast](issue) should send wrong issue data, return error: 199', async () => {
         const issueData = {
             name: `TCURRENCY`,
             description: 'Some words about it',
@@ -449,8 +448,7 @@ describe('API', function () {
                     expect(burnRes.assetId).to.be.a('string').to.be.equal(burnData.assetId);
                     expect(burnRes.amount).to.be.a('number').to.be.equal(+burnData.quantity);
                     break;
-                } catch (err) {
-                }
+                } catch (err) {}
                 await sleep(1000);
             }
         });
@@ -472,8 +470,7 @@ describe('API', function () {
                     try {
                         expect(err.data.error).to.be.a('number').to.be.equal(199);
                         break;
-                    } catch (err) {
-                    }
+                    } catch (err) {}
                 }
                 await sleep(1000);
             }
@@ -506,8 +503,7 @@ describe('API', function () {
                     expect(reissueRes.quantity).to.be.a('number').to.be.equal(+reissueData.quantity);
                     expect(reissueRes.reissuable).to.be.equal(reissueData.reissuable);
                     break;
-                } catch (err) {
-                }
+                } catch (err) {}
                 await sleep(1000);
             }
         });
@@ -530,8 +526,7 @@ describe('API', function () {
                     try {
                         expect(err.data.error).to.be.a('number').to.be.equal(199);
                         break;
-                    } catch (err) {
-                    }
+                    } catch (err) {}
                 }
                 await sleep(1000);
             }
