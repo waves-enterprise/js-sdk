@@ -461,6 +461,15 @@ export const setScriptSchema = new Schema({
     type: ObjectPart,
     required: true,
     content: {
+        name: {
+            type: StringPart,
+            required: true
+        },
+        description: {
+            type: StringPart,
+            required: false,
+            defaultValue: ''
+        },
         senderPublicKey: schemaFields.publicKey,
         script: {
             type: StringPart,
