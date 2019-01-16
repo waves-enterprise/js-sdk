@@ -104,7 +104,6 @@ export function wrapTxRequest(SignatureGenerator: ISignatureGeneratorConstructor
         }).then((validatedData) => {
 
             const transaction: ISignatureGenerator = new SignatureGenerator(validatedData);
-
             return transaction.getSignature(keyPair.privateKey)
                 .then((signature) => postRemap({
                     ...validatedData,

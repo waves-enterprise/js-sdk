@@ -412,6 +412,7 @@ export const dataSchema = new Schema({
     required: true,
     content: {
         senderPublicKey: schemaFields.publicKey,
+        authorPublicKey: schemaFields.publicKey,
         data: {
             type: ArrayPart,
             content: {
@@ -434,8 +435,8 @@ export const dataSchema = new Schema({
             },
             defaultValue: []
         },
-        timestamp: schemaFields.timestamp,
-        fee: schemaFields.fee // TODO : validate against the transaction size in bytes
+        fee: schemaFields.fee, // TODO : validate against the transaction size in bytes
+        timestamp: schemaFields.timestamp
     }
 });
 

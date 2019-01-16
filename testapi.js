@@ -27,8 +27,8 @@ const seed = {
   address: '3Mwnu7nsmSZ3atCmtwD19bKfUPrRAEmpTqB',
   keyPair:
   {
-    privateKey: 'F3x94A8LiYUUc4zjmMYwUdRhLASirvfSnTQfZLuC6fKy',
-    publicKey: 'DmpUrRRGqtzCbRmPiHAb8zPz33MP1WoRERsJ12PrZh3h'
+    publicKey: 'DmpUrRRGqtzCbRmPiHAb8zPz33MP1WoRERsJ12PrZh3h',
+    privateKey: 'F3x94A8LiYUUc4zjmMYwUdRhLASirvfSnTQfZLuC6fKy'
   }
 };
 
@@ -69,15 +69,17 @@ async function sendSignedTransferData() {
 }
 
 async function sendMassTransferData() {
+  const seed1 = Waves.Seed.create();
+  const seed2 = Waves.Seed.create();
   const massTransfer = {
     timestamp: Date.now(),
     transfers: [
       {
-        recipient: '3Fhk53o8ciL6GvoteHq9Z5asVo9co2hAhTz',
+        recipient: seed1.address,
         amount: '20000'
       },
       {
-        recipient: '3FQMraRo46L3WvkzNJKM4HjKH1hBDXtgvTu',
+        recipient: seed2.address,
         amount: '25000'
       }
     ],
@@ -169,8 +171,31 @@ async function createIssue() {
   console.log('issueRes', issueRes);
 }
 
+async function sendDataTX() {
+  const dataTX = {
+    "authorPublicKey": seed.keyPair.publicKey,
+    "data": [
+      { "type": "integer", "key": "int", "value": 24 },
+      { "type": "boolean", "key": "bool", "value": true },
+      { "type": "string", "key": "My poem", "value": "Oh waves!" }
+    ],
+    "fee": 100000,
+    "timestamp": Date.now()
+  }
+
+  try {
+    const data = await Waves.API.Node.transactions.broadcast('data', dataTX, seed.keyPair);
+    console.log('data', data);
+  } catch (err){
+    console.log('@@@@@@@@@@@@@@@@@@@@@@@', err);
+  }
+}
+
 async function main() {
   console.log(new Date());
+
+  await sendDataTX();
+  // await sendMassTransferData();
 
   // try {
   //   const testSeed = Waves.Seed.create();
@@ -212,12 +237,12 @@ async function main() {
   // console.log('\n[createPermissions] -------------------');
   // await createPermissions('3Fhk53o8ciL6GvoteHq9Z5asVo9co2hAhTz');
 
-  let txData = await sendTransferData();
-  console.log('[txData]', txData);
+  // let txData = await sendTransferData();
+  // console.log('[txData]', txData);
 
-  let txSigned = await sendSignedTransferData();
-  // let txSignedData = await Waves.API.Node.transactions.rawBroadcast(txSigned);
-  console.log('[txSigned]', txSigned);
+  // let txSigned = await sendSignedTransferData();
+  // // let txSignedData = await Waves.API.Node.transactions.rawBroadcast(txSigned);
+  // console.log('[txSigned]', txSigned);
 
   // console.log('@@@@@@@@@@@@@@@@', signedTx, typeof signedTx);
 
