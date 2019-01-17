@@ -578,4 +578,25 @@ describe('API', function() {
         expect(data.data[2].value).to.be.equal(dataTX.data[2].value);        
     })
 
+    it('[transactions.broadcast(data)] should send wrong DataTX', async () => {
+        const seedWithoutBalance = Waves.Seed.create();
+        const dataTX = {
+            "senderPublicKey": mainSeed.keyPair.publicKey,
+            "authorPublicKey": mainSeed.keyPair.publicKey,
+            "data": [
+                { "key": "int", "type": "integer", "value": 24 },
+                { "key": "bool", "type": "boolean", "value": true },
+                { "key": "My poem", "type": "string", "value": "Oh waves!" }
+            ],
+            "timestamp": Date.now(),
+            "fee": 500000
+        }
+
+        try {
+            const data = await Waves.API.Node.transactions.broadcast('data', dataTX, seedWithoutBalance.keyPair);
+        } catch (err) {
+            expect(err.data.error).to.be.a('number').to.be.equal(112);
+        }
+    })
+
 });
