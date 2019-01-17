@@ -543,4 +543,39 @@ describe('API', function() {
         });
     }
 
+    it ('[transactions.broadcast(data)] should send DataTX', async () => {
+        const dataTX = {
+            "senderPublicKey": mainSeed.keyPair.publicKey,
+            "authorPublicKey": mainSeed.keyPair.publicKey,
+            "data": [
+                { "key": "int", "type": "integer", "value": 24 },
+                { "key": "bool", "type": "boolean", "value": true },
+                { "key": "My poem", "type": "string", "value": "Oh waves!" }
+            ],
+            "timestamp": Date.now(),
+            "fee": 500000
+        }
+
+        const data = await Waves.API.Node.transactions.broadcast('data', dataTX, mainSeed.keyPair);
+        expect(data.type).to.be.equal(12);
+        expect(data.version).to.be.equal(1);
+        expect(data.id).to.be.a('string');
+        expect(data.sender).to.be.equal(mainSeed.address);
+        expect(data.senderPublicKey).to.be.equal(mainSeed.keyPair.publicKey);
+        expect(data.author).to.be.equal(mainSeed.address);
+        expect(data.authorPublicKey).to.be.equal(mainSeed.keyPair.publicKey);
+        expect(data.fee).to.be.equal(dataTX.fee);
+        expect(data.timestamp).to.be.equal(dataTX.timestamp);
+        expect(data.data).to.be.an('array').to.have.lengthOf(3);
+        expect(data.data[0].key).to.be.equal(dataTX.data[0].key);
+        expect(data.data[1].key).to.be.equal(dataTX.data[1].key);
+        expect(data.data[2].key).to.be.equal(dataTX.data[2].key);
+        expect(data.data[0].type).to.be.equal(dataTX.data[0].type);
+        expect(data.data[1].type).to.be.equal(dataTX.data[1].type);
+        expect(data.data[2].type).to.be.equal(dataTX.data[2].type);
+        expect(data.data[0].value).to.be.equal(dataTX.data[0].value);
+        expect(data.data[1].value).to.be.equal(dataTX.data[1].value);
+        expect(data.data[2].value).to.be.equal(dataTX.data[2].value);        
+    })
+
 });

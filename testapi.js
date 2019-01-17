@@ -17,9 +17,24 @@ const requiredConfigValues = {
   crypto: 'waves'
 };
 
+// const requiredConfigValues = {
+//   networkByte: 87,
+//   nodeAddress: 'http://10.56.1.203:6862',
+//   matcherAddress: 'http://10.56.1.203/matcher:6862',
+//   crypto: 'waves'
+// }
+
 let allConfigValues = {
   ...requiredConfigValues
 };
+
+// const seed111 = {
+//   address: '3PEjkP5xa9MT86xyzbwVwFAs41VPYy46sGp',
+//   keyPair: {
+//     publicKey: '6MjS6PuxE32NcwaYtCWZQNZa8H2HfV5bnV9TNLnesDnV',
+//     privateKey: '27MmgqiMxJSeh7CHHFaYHpjTtn13nMQKg2r8sWH7i3qR'
+//   }
+// }
 
 const seed = {
   phrase:
@@ -173,19 +188,20 @@ async function createIssue() {
 
 async function sendDataTX() {
   const dataTX = {
+    "senderPublicKey": seed.keyPair.publicKey,
     "authorPublicKey": seed.keyPair.publicKey,
     "data": [
-      { "type": "integer", "key": "int", "value": 24 },
-      { "type": "boolean", "key": "bool", "value": true },
-      { "type": "string", "key": "My poem", "value": "Oh waves!" }
+      { "key": "int", "type": "integer", "value": 24 },
+      { "key": "bool", "type": "boolean", "value": true },
+      { "key": "My poem", "type": "string", "value": "Oh waves!" }
     ],
-    "fee": 100000,
-    "timestamp": Date.now()
+    "timestamp": Date.now(),
+    "fee": 500000
   }
 
   try {
     const data = await Waves.API.Node.transactions.broadcast('data', dataTX, seed.keyPair);
-    console.log('data', data);
+    console.log(data);
   } catch (err){
     console.log('@@@@@@@@@@@@@@@@@@@@@@@', err);
   }
@@ -193,6 +209,9 @@ async function sendDataTX() {
 
 async function main() {
   console.log(new Date());
+
+  // const mainBalance = await Waves.API.Node.addresses.balanceDetails(seed.address);
+  // console.log('[mainBalance]', mainBalance);
 
   await sendDataTX();
   // await sendMassTransferData();
