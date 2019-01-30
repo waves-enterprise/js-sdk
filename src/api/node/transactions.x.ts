@@ -568,10 +568,10 @@ export const postPermit = createRemapper({
     version: constants.PERMISSION_TX_VERSION
 });
 
-export const sendPermissionTx = wrapTxRequest(TX_TYPE_MAP.sponsorship, preSponsorship, postSponsorship, (postParams: any) => {
+export const sendPermissionTx = wrapTxRequest(TX_TYPE_MAP.permit, prePermit, postPermit, (postParams: any) => {
     return fetch(constants.BROADCAST_PATH, postParams);
 }, true) as TTransactionRequest;
 
-export const sendSignedPermissionTx = wrapTxRequest(TX_TYPE_MAP.sponsorship, preSponsorship, postSponsorship, (postParams: any) => {
+export const sendSignedPermissionTx = wrapTxRequest(TX_TYPE_MAP.permit, prePermit, postPermit, (postParams: any) => {
     return getSignedTx(postParams).data;
 }, true) as TTransactionRequest;
