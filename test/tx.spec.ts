@@ -19,7 +19,7 @@ const seed = {
     address: '3N6J8YZ4VGMrcX9fHRoJutfGPmiWziMd8z7',
     keyPair:
         {
-           // privateKey: '7Qi7EuGU74GrnCuoSuEETNyGJFNnxNwLUTPurejcUWod',
+            // privateKey: '7Qi7EuGU74GrnCuoSuEETNyGJFNnxNwLUTPurejcUWod',
             // publicKey: 'F2W3jcpP1acrH62FVs97FkMPoqkvumwkXD7BepkZgwWM',
 
             publicKey: '7Qi7EuGU74GrnCuoSuEETNyGJFNnxNwLUTPurejcUWod',
@@ -76,9 +76,9 @@ const transferData = {
 
 };
 
- Waves.API.Node.transactions.broadcast('transfer', transferData, seed.keyPair).then((responseData) => {
-    console.log(responseData);
-});
+// Waves.API.Node.transactions.broadcast('transfer', transferData, seed.keyPair).then((responseData) => {
+//    console.log(responseData);
+// });
 
 const t = {
     "senderPublicKey": "GmnTn6yVk7CNmm5h7NvKGz9Q6Bo7LdG5iM7FSso9k4tZ",
@@ -146,13 +146,37 @@ const issueData = {
 
     fee: 100000000,
     timestamp: Date.now()
-
 };
 
-// Waves.API.Node.transactions.broadcast('issue', issueData, seed.keyPair).then((responseData) => {
-//      console.log(responseData);
+const iss = {
+    "type": 3,
+    "id": "EMN4GrZHZKMfHVpiaM6H9ejfjmfqrV6h6DSPHKfLCPiw",
+    "sender": "3N6J8YZ4VGMrcX9fHRoJutfGPmiWziMd8z7",
+    "senderPublicKey": "7Qi7EuGU74GrnCuoSuEETNyGJFNnxNwLUTPurejcUWod",
+    "fee": 100000000,
+    "timestamp": 1549446741610,
+    "proofs": [
+        "4joh3ZhJ5JYAwDjHF8iU3mFDsFcFCtCenMd91WZg5wEsmnzybQg354FDn75brRuT8tNQRsBHN4LPFgHFw6JuoHDy"
+    ],
+    "version": 2,
+    "assetId": "EMN4GrZHZKMfHVpiaM6H9ejfjmfqrV6h6DSPHKfLCPiw",
+    "name": "test-token3",
+    "quantity": 9223372036854776000,
+    "reissuable": false,
+    precision: 5,
+    "decimals": 5,
+    "description": "",
+//     "script": "base64:AQa3b8tH"
+};
+
+// Waves.API.Node.transactions.sign('issue', iss, seed.keyPair).then((responseData) => {
+//    console.log(responseData);
 // });
 
+
+//Waves.API.Node.transactions.broadcast('issue', iss, seed.keyPair).then((responseData) => {
+//    console.log(responseData);
+//});
 
 const permissionTx = {
     version: 1,
