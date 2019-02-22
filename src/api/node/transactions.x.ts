@@ -53,6 +53,11 @@ export const issueSchema = new Schema({
             required: false,
             defaultValue: ''
         },
+        script: {
+            type: StringPart,
+            required: false,
+            defaultValue: 'base64:AQa3b8tH'
+        },
         quantity: { // todo accept as string OR as bignumber
             type: StringPart,
             required: true
@@ -91,7 +96,7 @@ export const sendIssueTx = wrapTxRequest(TX_TYPE_MAP.issue, preIssue, postIssue,
 
 export const sendSignedIssueTx = wrapTxRequest(TX_TYPE_MAP.issue, preIssue, postIssue, (postParams: any) => {
     return getSignedTx(postParams).data;
-}, true) as TTransactionRequest; 
+}, true) as TTransactionRequest;
 
 
 /* TRANSFER */
@@ -150,7 +155,7 @@ export const sendTransferTx = wrapTxRequest(TX_TYPE_MAP.transfer, preTransfer, p
 
 export const sendSignedTransferTx = wrapTxRequest(TX_TYPE_MAP.transfer, preTransfer, postTransfer, (postParams: any) => {
     return getSignedTx(postParams).data;
-}, true) as TTransactionRequest; 
+}, true) as TTransactionRequest;
 
 
 /* REISSUE */
@@ -235,7 +240,7 @@ export const sendBurnTx = wrapTxRequest(TX_TYPE_MAP.burn, preBurn, postBurn, (po
 
 export const sendSignedBurnTx = wrapTxRequest(TX_TYPE_MAP.burn, preBurn, postBurn, (postParams: any) => {
     return getSignedTx(postParams).data;
-}, true) as TTransactionRequest; 
+}, true) as TTransactionRequest;
 
 /* LEASE */
 
@@ -271,7 +276,7 @@ export const sendLeaseTx = wrapTxRequest(TX_TYPE_MAP.lease, preLease, postLease,
 
 export const sendSignedLeaseTx = wrapTxRequest(TX_TYPE_MAP.lease, preLease, postLease, (postParams: any) => {
     return getSignedTx(postParams).data;
-}, true) as TTransactionRequest; 
+}, true) as TTransactionRequest;
 
 
 /* CANCEL LEASING */
@@ -309,7 +314,7 @@ export const sendCancelLeasingTx = wrapTxRequest(TX_TYPE_MAP.cancelLeasing, preC
 
 export const sendSignedCancelLeasingTx = wrapTxRequest(TX_TYPE_MAP.cancelLeasing, preCancelLeasing, postCancelLeasing, (postParams: any) => {
     return getSignedTx(postParams).data;
-}, true) as TTransactionRequest; 
+}, true) as TTransactionRequest;
 
 
 /* CREATE ALIAS */
@@ -342,7 +347,7 @@ export const sendCreateAliasTx = wrapTxRequest(TX_TYPE_MAP.createAlias, preCreat
 
 export const sendSignedCreateAliasTx = wrapTxRequest(TX_TYPE_MAP.createAlias, preCreateAlias, postCreateAlias, (postParams: any) => {
     return getSignedTx(postParams).data;
-}, true) as TTransactionRequest; 
+}, true) as TTransactionRequest;
 
 
 /* MASS TRANSFER */
@@ -402,7 +407,7 @@ export const sendMassTransferTx = wrapTxRequest(TX_TYPE_MAP.massTransfer, preMas
 
 export const sendSignedMassTransferTx = wrapTxRequest(TX_TYPE_MAP.massTransfer, preMassTransfer, postMassTransfer, (postParams: any) => {
     return getSignedTx(postParams).data;
-}, true) as TTransactionRequest; 
+}, true) as TTransactionRequest;
 
 
 /* DATA */
@@ -569,10 +574,10 @@ export const postPermit = createRemapper({
     version: constants.PERMISSION_TX_VERSION
 });
 
-export const sendPermissionTx = wrapTxRequest(TX_TYPE_MAP.sponsorship, preSponsorship, postSponsorship, (postParams: any) => {
+export const sendPermissionTx = wrapTxRequest(TX_TYPE_MAP.permit, prePermit, postPermit, (postParams: any) => {
     return fetch(constants.BROADCAST_PATH, postParams);
 }, true) as TTransactionRequest;
 
-export const sendSignedPermissionTx = wrapTxRequest(TX_TYPE_MAP.sponsorship, preSponsorship, postSponsorship, (postParams: any) => {
+export const sendSignedPermissionTx = wrapTxRequest(TX_TYPE_MAP.permit, prePermit, postPermit, (postParams: any) => {
     return getSignedTx(postParams).data;
 }, true) as TTransactionRequest;

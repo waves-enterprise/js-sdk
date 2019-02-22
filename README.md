@@ -172,7 +172,8 @@ const issueData = {
     reissuable: false,
 
     fee: 100000000,
-    timestamp: Date.now()
+    timestamp: Date.now(),
+    script: 'base64:AQa3b8tH' // or no script field for the same result
 
 };
 
