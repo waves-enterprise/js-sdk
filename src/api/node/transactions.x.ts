@@ -9,6 +9,7 @@ import {createRemapper, normalizeAssetId, precisionCheck, removeAliasPrefix} fro
 import {createFetchWrapper, processJSON, PRODUCTS, VERSIONS, wrapTxRequest} from '../../utils/request';
 import * as constants from '../../constants';
 import config from '../../config';
+import BigNumber from '../../libs/bignumber';
 
 interface signedTx {
     headers: any,
@@ -446,11 +447,32 @@ export const dataSchema = new Schema({
 });
 
 export const preData = (data) => dataSchema.parse(data);
-export const postData = createRemapper({
+/*export const postData = createRemapper({
     transactionType: null,
     type: constants.DATA_TX,
     version: constants.DATA_TX_VERSION
-});
+});*/
+export const postData = d => {
+    const data = JSON.parse(JSON.stringify(d.data));
+
+    data.forEach(e => {
+        if (e.type === 'integer' && typeof e.value === 'string') {
+            e.value = new BigNumber(e.value)
+        }
+
+        return e
+    });
+
+    const result = {
+        ...d,
+        data,
+        transactionType: null,
+        type: constants.DATA_TX,
+        version: constants.DATA_TX_VERSION
+    };
+
+    return result
+};
 
 export const sendDataTx = wrapTxRequest(TX_TYPE_MAP.data, preData, postData, (postParams: any) => {
     return fetch(constants.BROADCAST_PATH, postParams);

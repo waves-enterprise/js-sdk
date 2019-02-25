@@ -206,3 +206,19 @@ const scriptData = {
 Waves.API.Node.transactions.broadcast('setScript', scriptData, seed.keyPair).then((responseData) => {
     console.log(responseData);
 });*/
+
+
+const dataTX = {
+    "senderPublicKey": seed.keyPair.publicKey,
+    "authorPublicKey": seed.keyPair.publicKey,
+    "data": [
+        {"key": "int", "type": "integer", "value": '922337203685477579'}
+    ],
+    "timestamp": Date.now(),
+    "fee": 500000
+};
+
+
+/*Waves.API.Node.transactions.broadcast('data', dataTX, seed.keyPair).then((responseData) => {
+    console.log(responseData);
+});*/
