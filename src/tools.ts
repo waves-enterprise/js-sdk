@@ -26,6 +26,7 @@ export default {
 
     getMinimumDataTxFee(data: any[]): Promise<number> {
         const emptyDataTx = new TX_TYPE_MAP.data({
+            authorPublicKey: '11111111111111111111111111111111',
             senderPublicKey: '11111111111111111111111111111111', // 32 bytes
             timestamp: 0,
             fee: '',
