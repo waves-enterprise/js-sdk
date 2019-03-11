@@ -2,6 +2,14 @@
 
 import * as WavesAPI from '../dist/waves-api';
 
+import {
+    utils,
+    Seed,
+    ByteProcessor as byteProcessors,
+    TX_NUMBER_MAP
+} from '@vostokplatform/signature-generator';
+import BigNumber from '../src/libs/bignumber';
+
 let requiredConfigValues = {
     networkByte: 84,
     nodeAddress: 'http://2.testnet-pos.vostoknodes.com:6862',
@@ -212,13 +220,13 @@ const dataTX = {
     "senderPublicKey": seed.keyPair.publicKey,
     "authorPublicKey": seed.keyPair.publicKey,
     "data": [
-        {"key": "int", "type": "integer", "value": '922337203685477579'}
+        {"key": "int", "type": "integer", "value": '-1'}
     ],
     "timestamp": Date.now(),
     "fee": 500000
 };
 
-
-/*Waves.API.Node.transactions.broadcast('data', dataTX, seed.keyPair).then((responseData) => {
-    console.log(responseData);
+/*
+Waves.API.Node.transactions.broadcast('data', dataTX, seed.keyPair).then((responseData) => {
+     console.log(responseData);
 });*/
