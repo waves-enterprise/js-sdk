@@ -4,6 +4,7 @@ import Addresses from './addresses';
 import Aliases from './aliases';
 import Assets from './assets';
 import Blocks from './blocks';
+import Contracts from './contracts'
 import Leasing from './leasing';
 import Transactions from './transactions';
 import Utils from './utils';
@@ -30,6 +31,11 @@ export interface INodeAPI {
         last(): Promise<any>;
         height(): Promise<any>;
     },
+    contracts: {
+        get(id: string): Promise<any>;
+        getKey(id: string, key: string): Promise<any>;
+        getExecutedTxFor(id: string): Promise<any>;
+    },
     leasing: {
         getAllActiveLeases(address: string): Promise<any>;
     },
@@ -53,6 +59,7 @@ export const addresses = Addresses;
 export const aliases = Aliases;
 export const assets = Assets;
 export const blocks = Blocks;
+export const contracts = Contracts;
 export const leasing = Leasing;
 export const transactions = Transactions;
 export const utils = Utils;
