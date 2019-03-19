@@ -6,8 +6,15 @@ const fetch = createFetchWrapper(PRODUCTS.NODE, VERSIONS.V1, processJSON);
 
 export default {
 
-    get(id: string) {
-        return fetch(`/contracts/${id}`);
+    get(id: string, offset?: number, limit?: number) {
+        let params = '';
+        if (typeof offset !== 'undefined') {
+            params += `&offset=${offset}`
+        }
+        if (typeof limit !== 'undefined') {
+            params += `&limit=${limit}`
+        }
+        return fetch(`/contracts/${id}${params}`);
     },
 
     getKey(id: string, key: string) {

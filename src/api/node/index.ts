@@ -14,7 +14,7 @@ export interface INodeAPI {
     addresses: {
         balance(address: string, confirmations?: number): Promise<any>;
         balanceDetails(address: string): Promise<any>;
-        data(address: string): Promise<any>;
+        data(address: string, offset?: number, limit?: number): Promise<any>;
     },
     aliases: {
         byAlias(alias: string): Promise<any>;
@@ -33,7 +33,7 @@ export interface INodeAPI {
         height(): Promise<any>;
     },
     contracts: {
-        get(id: string): Promise<any>;
+        get(id: string, offset?: number, limit?: number): Promise<any>;
         getKey(id: string, key: string): Promise<any>;
         getExecutedTxFor(id: string): Promise<any>;
     },

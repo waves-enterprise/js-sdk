@@ -18,8 +18,15 @@ export default {
         return fetch(`/addresses/balance/details/${address}`);
     },
 
-    data(address: string) {
-        return fetch(`/addresses/data/${address}`)
+    data(address: string, offset?: number, limit?: number) {
+        let params = '';
+        if (typeof offset !== 'undefined') {
+            params += `&offset=${offset}`
+        }
+        if (typeof limit !== 'undefined') {
+            params += `&limit=${limit}`
+        }
+        return fetch(`/addresses/data/${address}${params}`)
     }
 
 };
