@@ -16,6 +16,10 @@ export default {
 
     balanceDetails(address: string) {
         return fetch(`/addresses/balance/details/${address}`);
+    },
+
+    data(address: string) {
+        return fetch(`/addresses/data/${address}`)
     }
 
 };

@@ -14,6 +14,7 @@ export interface INodeAPI {
     addresses: {
         balance(address: string, confirmations?: number): Promise<any>;
         balanceDetails(address: string): Promise<any>;
+        data(address: string): Promise<any>;
     },
     aliases: {
         byAlias(alias: string): Promise<any>;
