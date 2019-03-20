@@ -71,6 +71,9 @@ export const DEFAULT_MIN_SEED_LENGTH = 25;
 
 export const DEFAULT_ORDER_EXPIRATION_DAYS = 20;
 
+export const DEFAULT_PAGING_LIMIT = 50;
+export const DEFAULT_PAGING_OFFSET = 0;
+
 export const DEFAULT_BASIC_CONFIG: IWavesBasicConfig = {
     minimumSeedLength: DEFAULT_MIN_SEED_LENGTH,
     requestOffset: 0,
