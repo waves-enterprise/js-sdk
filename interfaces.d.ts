@@ -41,6 +41,7 @@ declare global {
         Response?: any;
         Promise: PromiseConstructor;
     }
+
     interface ErrorConstructor {
         captureStackTrace(thisArg: any, func: any): void;
     }

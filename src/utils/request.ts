@@ -112,7 +112,7 @@ export function wrapTxRequest(SignatureGenerator: ISignatureGeneratorConstructor
                 .then((tx) => {
                     let sendData: any = {
                         ...POST_TEMPLATE,
-                        body: SAFE_JSON_STRINGIFY(tx)                        
+                        body: SAFE_JSON_STRINGIFY(tx, null, null)
                     };
 
                     return callback(sendData);
