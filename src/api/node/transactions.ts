@@ -61,6 +61,10 @@ export default {
                 return requests.sendSponsorshipTx(data, keys);
             case constants.PERMISSION_TX_NAME:
                 return requests.sendPermissionTx(data, keys);
+            case constants.DOCKER_CREATE_TX_NAME:
+                return requests.sendDockerCallTx(data, keys);
+            case constants.DOCKER_CALL_TX_NAME:
+                return requests.sendDockerCreateTx(data, keys);
             default:
                 throw new WavesError(`Wrong transaction type: ${type}`, data);
         }
@@ -92,6 +96,10 @@ export default {
                 return requests.sendSignedSponsorshipTx(data, keys);
             case constants.PERMISSION_TX_NAME:
                 return requests.sendSignedPermissionTx(data, keys);
+            case constants.DOCKER_CREATE_TX_NAME:
+                return requests.sendSignedDockerCreateTx(data, keys);
+            case constants.DOCKER_CALL_TX_NAME:
+                return requests.sendSignedDockerCallTx(data, keys);
             default:
                 throw new WavesError(`Wrong transaction type: ${type}`, data);
         }

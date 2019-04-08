@@ -603,3 +603,164 @@ export const sendPermissionTx = wrapTxRequest(TX_TYPE_MAP.permit, prePermit, pos
 export const sendSignedPermissionTx = wrapTxRequest(TX_TYPE_MAP.permit, prePermit, postPermit, (postParams: any) => {
     return getSignedTx(postParams).data;
 }, true) as TTransactionRequest;
+
+
+export const dockerCreateSchema = new Schema({
+    type: ObjectPart,
+    required: true,
+    content: {
+        senderPublicKey: schemaFields.publicKey,
+        authorPublicKey: schemaFields.publicKey,
+        image: {
+            type: StringPart,
+            required: true
+        },
+        imageHash: {
+            type: StringPart,
+            required: true
+        },
+        contractName: {
+            type: StringPart,
+            required: true
+        },
+        params: {
+            type: ArrayPart,
+            content: {
+                type: ObjectPart,
+                required: true,
+                content: {
+                    type: {
+                        type: StringPart,
+                        required: true
+                    },
+                    key: {
+                        type: StringPart,
+                        required: true
+                    },
+                    value: {
+                        type: AnyPart,
+                        required: true
+                    }
+                }
+            },
+            defaultValue: []
+        },
+        fee: schemaFields.fee, // TODO : validate against the transaction size in bytes
+        timestamp: schemaFields.timestamp
+    }
+});
+
+export const preDockerCreate = (data) => {
+    return dockerCreateSchema.parse(data)
+};
+/*export const postData = createRemapper({
+    transactionType: null,
+    type: constants.DATA_TX,
+    version: constants.DATA_TX_VERSION
+});*/
+export const postDockerCreate = d => {
+    const data = JSON.parse(JSON.stringify(d.params));
+
+    data.forEach(e => {
+        if (e.type === 'integer' && typeof e.value === 'string') {
+            e.value = new BigNumber(e.value)
+        }
+
+        return e
+    });
+
+    const result = {
+        ...d,
+        params: data,
+        transactionType: null,
+        type: constants.DOCKER_CREATE_TX,
+        version: constants.DOCKER_CREATE_TX_VERSION
+    };
+
+    return result
+};
+
+export const sendSignedDockerCreateTx = wrapTxRequest(TX_TYPE_MAP.dockerCreate, preDockerCreate, postDockerCreate, (postParams: any) => {
+    return getSignedTx(postParams).data;
+}, true) as TTransactionRequest;
+
+export const sendDockerCreateTx = wrapTxRequest(TX_TYPE_MAP.dockerCall, preDockerCreate, postDockerCreate, (postParams: any) => {
+    return fetch(constants.BROADCAST_PATH, postParams);
+}, true) as TTransactionRequest;
+
+
+
+export const dockerCallSchema = new Schema({
+    type: ObjectPart,
+    required: true,
+    content: {
+        senderPublicKey: schemaFields.publicKey,
+        authorPublicKey: schemaFields.publicKey,
+        contractId: {
+            type: StringPart,
+            required: true
+        },
+        params: {
+            type: ArrayPart,
+            content: {
+                type: ObjectPart,
+                required: true,
+                content: {
+                    type: {
+                        type: StringPart,
+                        required: true
+                    },
+                    key: {
+                        type: StringPart,
+                        required: true
+                    },
+                    value: {
+                        type: AnyPart,
+                        required: true
+                    }
+                }
+            },
+            defaultValue: []
+        },
+        fee: schemaFields.fee, // TODO : validate against the transaction size in bytes
+        timestamp: schemaFields.timestamp
+    }
+});
+
+export const preDockerCall = (data) => {
+    return dockerCallSchema.parse(data)
+};
+/*export const postData = createRemapper({
+    transactionType: null,
+    type: constants.DATA_TX,
+    version: constants.DATA_TX_VERSION
+});*/
+export const postDockerCall = d => {
+    const data = JSON.parse(JSON.stringify(d.params));
+
+    data.forEach(e => {
+        if (e.type === 'integer' && typeof e.value === 'string') {
+            e.value = new BigNumber(e.value)
+        }
+
+        return e
+    });
+
+    const result = {
+        ...d,
+        params: data,
+        transactionType: null,
+        type: constants.DOCKER_CALL_TX,
+        version: constants.DOCKER_CALL_TX_VERSION
+    };
+
+    return result
+};
+
+export const sendSignedDockerCallTx = wrapTxRequest(TX_TYPE_MAP.dockerCall, preDockerCall, postDockerCall, (postParams: any) => {
+    return getSignedTx(postParams).data;
+}, true) as TTransactionRequest;
+
+export const sendDockerCallTx = wrapTxRequest(TX_TYPE_MAP.dockerCall, preDockerCall, postDockerCall, (postParams: any) => {
+    return fetch(constants.BROADCAST_PATH, postParams);
+}, true) as TTransactionRequest;

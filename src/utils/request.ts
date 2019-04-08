@@ -114,10 +114,9 @@ export function wrapTxRequest(SignatureGenerator: ISignatureGeneratorConstructor
                         ...POST_TEMPLATE,
                         body: SAFE_JSON_STRINGIFY(tx, null, null)
                     };
-
+                    console.log(sendData);
                     return callback(sendData);
                 });
-
         });
 
     };

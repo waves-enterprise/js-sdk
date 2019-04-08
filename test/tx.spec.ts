@@ -12,8 +12,8 @@ import BigNumber from '../src/libs/bignumber';
 
 let requiredConfigValues = {
     networkByte: 84,
-    nodeAddress: 'http://2.testnet-pos.vostoknodes.com:6862',
-    matcherAddress: 'http://2.testnet-pos.vostoknodes.com:6862',
+    nodeAddress: 'http://1.testnet-pos.vostoknodes.com:6862',
+    matcherAddress: 'http://1.testnet-pos.vostoknodes.com:6862',
     crypto: 'waves'
 };
 
@@ -230,3 +230,30 @@ const dataTX = {
 Waves.API.Node.transactions.broadcast('data', dataTX, seed.keyPair).then((responseData) => {
      console.log(responseData);
 });*/
+
+
+const dockerCallTX = {
+    "senderPublicKey": seed.keyPair.publicKey,
+    "authorPublicKey": seed.keyPair.publicKey,
+    contractId: '2D9vyC5UjBao1yGkjoofBjRPxFyXBYeSy6Y8XUafryxu',
+    "params": [],
+    "timestamp": Date.now(),
+    "fee": 15000000
+};
+
+
+Waves.API.Node.transactions.broadcast('dockerCall', dockerCallTX, seed.keyPair).then((responseData) => {
+    console.log(responseData);
+});
+
+const dcMock = {
+    "senderPublicKey": "7Qi7EuGU74GrnCuoSuEETNyGJFNnxNwLUTPurejcUWod",
+    "sender": "3N6J8YZ4VGMrcX9fHRoJutfGPmiWziMd8z7",
+    "fee": 15000000,
+    "contractId": "2D9vyC5UjBao1yGkjoofBjRPxFyXBYeSy6Y8XUafryxu",
+    "id": "BpzGbk6Mvtofsde3DGVR2Lx7nEUwxWrsfHcvsaY9TZH9",
+    "type": 104,
+    "params": [],
+    "version": 1,
+    "timestamp": 1554293583094
+};
