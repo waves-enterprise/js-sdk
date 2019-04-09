@@ -242,9 +242,9 @@ const dockerCallTX = {
 };
 
 
-Waves.API.Node.transactions.broadcast('dockerCall', dockerCallTX, seed.keyPair).then((responseData) => {
+/*Waves.API.Node.transactions.broadcast('dockerCall', dockerCallTX, seed.keyPair).then((responseData) => {
     console.log(responseData);
-});
+});*/
 
 const dcMock = {
     "senderPublicKey": "7Qi7EuGU74GrnCuoSuEETNyGJFNnxNwLUTPurejcUWod",
@@ -257,3 +257,23 @@ const dcMock = {
     "version": 1,
     "timestamp": 1554293583094
 };
+
+const dockerCreateTX = {
+    "senderPublicKey": "HedMRaC9CdEXqjU4oByjrprJQnzxzAtHVsa7KEWfeLr2",
+    "authorPublicKey": "HedMRaC9CdEXqjU4oByjrprJQnzxzAtHVsa7KEWfeLr2",
+    "timestamp": 1554823515244,
+    "image": "tdm-actions-execution:latest",
+    "imageHash": "sha256:a77b9aede9c28ca7bf00bf84cc753c039c27269c6cda6511066739086a156453",
+    "contractName": "contract_test",
+    "params": [{"key": "key1", "value": "dsfarfarfar", "type": "string"}, {
+        "key": "key2",
+        "value": "222",
+        "type": "integer"
+    }, {"key": "key3", "value": true, "type": "boolean"}],
+    "fee": 1
+};
+
+
+Waves.API.Node.transactions.broadcast('dockerCreate', dockerCreateTX, seed.keyPair).then((responseData) => {
+    console.log(responseData);
+});

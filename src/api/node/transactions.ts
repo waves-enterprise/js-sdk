@@ -62,9 +62,11 @@ export default {
             case constants.PERMISSION_TX_NAME:
                 return requests.sendPermissionTx(data, keys);
             case constants.DOCKER_CREATE_TX_NAME:
-                return requests.sendDockerCallTx(data, keys);
-            case constants.DOCKER_CALL_TX_NAME:
                 return requests.sendDockerCreateTx(data, keys);
+            case constants.DOCKER_CALL_TX_NAME:
+                return requests.sendDockerCallTx(data, keys);
+           case constants.DOCKER_DISABLE_TX_NAME:
+                return requests.sendDockerDisableTx(data, keys);
             default:
                 throw new WavesError(`Wrong transaction type: ${type}`, data);
         }
@@ -100,6 +102,8 @@ export default {
                 return requests.sendSignedDockerCreateTx(data, keys);
             case constants.DOCKER_CALL_TX_NAME:
                 return requests.sendSignedDockerCallTx(data, keys);
+            case constants.DOCKER_DISABLE_TX_NAME:
+                return requests.sendSignedDockerDisableTx(data, keys);
             default:
                 throw new WavesError(`Wrong transaction type: ${type}`, data);
         }

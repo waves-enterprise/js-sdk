@@ -653,11 +653,7 @@ export const dockerCreateSchema = new Schema({
 export const preDockerCreate = (data) => {
     return dockerCreateSchema.parse(data)
 };
-/*export const postData = createRemapper({
-    transactionType: null,
-    type: constants.DATA_TX,
-    version: constants.DATA_TX_VERSION
-});*/
+
 export const postDockerCreate = d => {
     const data = JSON.parse(JSON.stringify(d.params));
 
@@ -684,7 +680,7 @@ export const sendSignedDockerCreateTx = wrapTxRequest(TX_TYPE_MAP.dockerCreate, 
     return getSignedTx(postParams).data;
 }, true) as TTransactionRequest;
 
-export const sendDockerCreateTx = wrapTxRequest(TX_TYPE_MAP.dockerCall, preDockerCreate, postDockerCreate, (postParams: any) => {
+export const sendDockerCreateTx = wrapTxRequest(TX_TYPE_MAP.dockerCreate, preDockerCreate, postDockerCreate, (postParams: any) => {
     return fetch(constants.BROADCAST_PATH, postParams);
 }, true) as TTransactionRequest;
 
@@ -730,11 +726,8 @@ export const dockerCallSchema = new Schema({
 export const preDockerCall = (data) => {
     return dockerCallSchema.parse(data)
 };
-/*export const postData = createRemapper({
-    transactionType: null,
-    type: constants.DATA_TX,
-    version: constants.DATA_TX_VERSION
-});*/
+
+// todo DRY
 export const postDockerCall = d => {
     const data = JSON.parse(JSON.stringify(d.params));
 
@@ -762,5 +755,43 @@ export const sendSignedDockerCallTx = wrapTxRequest(TX_TYPE_MAP.dockerCall, preD
 }, true) as TTransactionRequest;
 
 export const sendDockerCallTx = wrapTxRequest(TX_TYPE_MAP.dockerCall, preDockerCall, postDockerCall, (postParams: any) => {
+    return fetch(constants.BROADCAST_PATH, postParams);
+}, true) as TTransactionRequest;
+
+
+
+export const dockerDisableSchema = new Schema({
+    type: ObjectPart,
+    required: true,
+    content: {
+        senderPublicKey: schemaFields.publicKey,
+        contractId: {
+            type: StringPart,
+            required: true
+        },
+        fee: schemaFields.fee, // TODO : validate against the transaction size in bytes
+        timestamp: schemaFields.timestamp
+    }
+});
+
+export const preDockerDisable = (data) => {
+    return dockerDisableSchema.parse(data)
+};
+
+export const postDockerDisable = d => {
+    return {
+        ...d,
+        transactionType: null,
+        type: constants.DOCKER_DISABLE_TX,
+        version: constants.DOCKER_DISABLE_TX_VERSION
+    };
+};
+
+export const sendSignedDockerDisableTx = wrapTxRequest(TX_TYPE_MAP.dockerDisable, preDockerDisable, postDockerDisable, (postParams: any) => {
+    return getSignedTx(postParams).data;
+}, true) as TTransactionRequest;
+
+
+export const sendDockerDisableTx = wrapTxRequest(TX_TYPE_MAP.dockerDisable, preDockerDisable, postDockerDisable, (postParams: any) => {
     return fetch(constants.BROADCAST_PATH, postParams);
 }, true) as TTransactionRequest;
