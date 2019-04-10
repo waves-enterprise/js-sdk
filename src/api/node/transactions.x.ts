@@ -610,7 +610,6 @@ export const dockerCreateSchema = new Schema({
     required: true,
     content: {
         senderPublicKey: schemaFields.publicKey,
-        authorPublicKey: schemaFields.publicKey,
         image: {
             type: StringPart,
             required: true

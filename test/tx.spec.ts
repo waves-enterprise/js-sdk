@@ -259,21 +259,23 @@ const dcMock = {
 };
 
 const dockerCreateTX = {
-    "senderPublicKey": "HedMRaC9CdEXqjU4oByjrprJQnzxzAtHVsa7KEWfeLr2",
-    "authorPublicKey": "HedMRaC9CdEXqjU4oByjrprJQnzxzAtHVsa7KEWfeLr2",
-    "timestamp": 1554823515244,
+    type: 103,
+    "senderPublicKey": "7Qi7EuGU74GrnCuoSuEETNyGJFNnxNwLUTPurejcUWod",
+    "authorPublicKey": "7Qi7EuGU74GrnCuoSuEETNyGJFNnxNwLUTPurejcUWod",
+    "timestamp": 1554887021294,
     "image": "tdm-actions-execution:latest",
     "imageHash": "sha256:a77b9aede9c28ca7bf00bf84cc753c039c27269c6cda6511066739086a156453",
     "contractName": "contract_test",
-    "params": [{"key": "key1", "value": "dsfarfarfar", "type": "string"}, {
+    "params": [{"key": "key1", "type": "string", "value": "dsfarfarfar"}, {
         "key": "key2",
-        "value": "222",
-        "type": "integer"
-    }, {"key": "key3", "value": true, "type": "boolean"}],
-    "fee": 1
+        "type": "integer",
+        "value": "222"
+    }, {"key": "key3", "type": "boolean", "value": true},
+        {"key": "key", "type": "binary", "value": "base64:abcd"}],
+    "fee": 100000000
 };
 
-
+/*
 Waves.API.Node.transactions.broadcast('dockerCreate', dockerCreateTX, seed.keyPair).then((responseData) => {
     console.log(responseData);
-});
+});*/
