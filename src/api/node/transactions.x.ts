@@ -367,7 +367,7 @@ export const massTransferSchema = new Schema({
                 content: {
                     recipient: schemaFields.recipient,
                     amount: {
-                        type: NumberPart,
+                        type: StringPart,
                         required: true
                     }
                 }

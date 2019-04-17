@@ -124,12 +124,12 @@ const cancelLeasingData = {
 
 };
 
-/*const massTransfer = {
+const massTransfer = {
     timestamp: Date.now(),
     transfers: [
         {
             recipient: 'wolfarion',
-            amount: '50000'
+            amount: '922337203685477580'
         }
     ],
     attachment: 'мой аттач some! data?',
@@ -137,9 +137,11 @@ const cancelLeasingData = {
     fee: 200000
 };
 
+/*
 Waves.API.Node.transactions.broadcast('massTransfer', massTransfer, seed.keyPair).then((responseData) => {
     console.log(responseData);
-});*/
+});
+*/
 
 const issueData = {
     name: 'test-token3',

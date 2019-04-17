@@ -98,6 +98,7 @@ export function createRemapper(rules) {
                     if (data[key].length && data[key][0].recipient) { // if mass transfers [{recipient: 'address', amount: '100'}] amount = long
                         result[rule.path || key] = data[key].map(o => ({
                             ...o,
+                            amount: new BigNumber(o.amount),
                             recipient: castFromRawToPrefixed(o.recipient)
                         }));
                     } else {
