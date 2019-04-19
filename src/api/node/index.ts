@@ -1,4 +1,4 @@
-import { IHash, IKeyPair } from '../../../interfaces';
+import {IHash, IKeyPair} from '../../../interfaces';
 
 import Addresses from './addresses';
 import Aliases from './aliases';
@@ -7,6 +7,8 @@ import Blocks from './blocks';
 import Contracts from './contracts'
 import Leasing from './leasing';
 import Transactions from './transactions';
+import Peers from './peers'
+import {IPeers} from './peers.interfaces'
 import Utils from './utils';
 
 
@@ -47,6 +49,9 @@ export interface INodeAPI {
         utxGet(id: string): Promise<any>;
         utxGetList(): Promise<any>;
     },
+    peers: {
+        connected(): Promise<{peers: IPeers[]}>;
+    }
     utils: {
         time(): Promise<number>;
         script: {
@@ -63,4 +68,5 @@ export const blocks = Blocks;
 export const contracts = Contracts;
 export const leasing = Leasing;
 export const transactions = Transactions;
+export const peers = Peers;
 export const utils = Utils;

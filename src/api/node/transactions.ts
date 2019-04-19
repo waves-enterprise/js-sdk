@@ -114,6 +114,10 @@ export default {
             ...POST_TEMPLATE,
             body: JSON.stringify(data)
         });
-    }
+    },
+
+    signOnNode(data) {
+        return fetch('/transactions/sign');
+    },
 
 };
