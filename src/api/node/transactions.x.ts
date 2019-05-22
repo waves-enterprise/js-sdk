@@ -585,7 +585,8 @@ export const permissionSchema = new Schema({
         dueTimestamp: {
             type: NumberPart,
             required: false,
-        }
+        },
+        fee: schemaFields.fee
     }
 });
 
