@@ -10,10 +10,12 @@ import {
 } from '@vostokplatform/signature-generator';
 import BigNumber from '../src/libs/bignumber';
 
+
+// export NODE_TLS_REJECT_UNAUTHORIZED=0
 let requiredConfigValues = {
     networkByte: 84,
-    nodeAddress: 'http://1.testnet-pos.vostoknodes.com:6862',
-    matcherAddress: 'http://1.testnet-pos.vostoknodes.com:6862',
+    nodeAddress: 'https://obama.dev.vostokservices.com/nodeAddress',
+    matcherAddress: 'https://obama.dev.vostokservices.com/nodeAddress',
     crypto: 'waves'
 };
 
@@ -30,8 +32,10 @@ const seed = {
             // privateKey: '7Qi7EuGU74GrnCuoSuEETNyGJFNnxNwLUTPurejcUWod',
             // publicKey: 'F2W3jcpP1acrH62FVs97FkMPoqkvumwkXD7BepkZgwWM',
 
-            publicKey: '7Qi7EuGU74GrnCuoSuEETNyGJFNnxNwLUTPurejcUWod',
-            privateKey: 'F2W3jcpP1acrH62FVs97FkMPoqkvumwkXD7BepkZgwWM'
+            // publicKey: '7Qi7EuGU74GrnCuoSuEETNyGJFNnxNwLUTPurejcUWod',
+            // privateKey: 'F2W3jcpP1acrH62FVs97FkMPoqkvumwkXD7BepkZgwWM'
+            privateKey: '96oQip2JkSZtWhb3XbpeyTeDVS1FGyRiGuJEucMuwHAC',
+            publicKey: 'GQCWTLnXsw7WE7zzGGwnDNmV6Cmc5Bdd1E69TqoS1Jj7'
         }
 };
 
@@ -48,18 +52,19 @@ const seed = {
 
 
 const permissionTxMockWaves = {
-    version: 1,
-    type: 102,
-    senderPublicKey: "3RBMLDrd27WAfv84abTZSZTE5ZBsp5JX6dNz3YteQwNz",
     timestamp: Date.now(),
-    fee: '0',
-    opType: "remove",
-    role: "dex",
-    target: "3FX1SurWuAqycknUBdMDR6Y8fs7Fcn1U39z",
+    fee: '10',
+    opType: "add",
+    role: "contract_developer",
+    target: "3GNLKcsbWRyFPJbXSaz6doR5EcJ8S3tBW8i",
     dueTimestamp: Date.now() + 500000
 };
 
 const Waves = WavesAPI.create(allConfigValues);
+
+//Waves.API.Node.transactions.broadcast('permit', permissionTxMockWaves, seed.keyPair).then((responseData) => {
+//    console.log(responseData);
+//});
 
 
 const transferData = {

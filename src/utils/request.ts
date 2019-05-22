@@ -112,6 +112,7 @@ export function wrapTxRequest(SignatureGenerator: ISignatureGeneratorConstructor
                 .then((tx) => {
                     let sendData: any = {
                         ...POST_TEMPLATE,
+                        rejectUnauthorized: false,
                         body: SAFE_JSON_STRINGIFY(tx, null, null)
                     };
                     console.log(sendData);
