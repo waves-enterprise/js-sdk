@@ -113,6 +113,11 @@ export function wrapTxRequest(SignatureGenerator: ISignatureGeneratorConstructor
                     let sendData: any = {
                         ...POST_TEMPLATE,
                         rejectUnauthorized: false,
+                        // allow cookies
+                        // used to implement sticky sessions
+                        // by kubernetes ingress balancer
+                        // https://kubernetes.github.io/ingress-nginx/examples/affinity/cookie/
+                        credentials: 'include',
                         body: SAFE_JSON_STRINGIFY(tx, null, null)
                     };
                     console.log(sendData);

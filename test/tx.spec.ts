@@ -14,8 +14,8 @@ import BigNumber from '../src/libs/bignumber';
 // export NODE_TLS_REJECT_UNAUTHORIZED=0
 let requiredConfigValues = {
     networkByte: 84,
-    nodeAddress: 'https://obama.dev.vostokservices.com/nodeAddress',
-    matcherAddress: 'https://obama.dev.vostokservices.com/nodeAddress',
+    nodeAddress: 'https://ford.vostokservices.com/nodeAddress',
+    matcherAddress: 'https://ford.vostokservices.com/nodeAddress',
     crypto: 'waves'
 };
 
@@ -34,8 +34,8 @@ const seed = {
 
             // publicKey: '7Qi7EuGU74GrnCuoSuEETNyGJFNnxNwLUTPurejcUWod',
             // privateKey: 'F2W3jcpP1acrH62FVs97FkMPoqkvumwkXD7BepkZgwWM'
-            privateKey: '96oQip2JkSZtWhb3XbpeyTeDVS1FGyRiGuJEucMuwHAC',
-            publicKey: 'GQCWTLnXsw7WE7zzGGwnDNmV6Cmc5Bdd1E69TqoS1Jj7'
+            privateKey: '4p8KKTt5ExEFDXSV6BSoSD472ANdqq4yZQXgjp7gSBPG',
+            publicKey: 'faf2Rwo9WUoiVchf7dSahT33pS7TZLETRWrRw39Asti'
         }
 };
 
@@ -286,3 +286,36 @@ const dockerCreateTX = {
 Waves.API.Node.transactions.broadcast('dockerCreate', dockerCreateTX, seed.keyPair).then((responseData) => {
     console.log(responseData);
 });*/
+
+
+const r = {
+    //senderPublicKey
+    targetPubKey: 'faf2Rwo9WUoiVchf7dSahT33pS7TZLETRWrRw39Asti',
+    nodeName: 'nodanoda',
+    opType: 'remove',
+    timestamp: Date.now(),
+    fee: 100000000
+};
+
+//Waves.API.Node.transactions.broadcast('policyRegisterNode', r, seed.keyPair).then((responseData) => {
+//    console.log('registry',responseData);
+//});
+
+
+const r2 = {
+    //senderPublicKey
+    "owners": [
+        "3GEYLW3x34YCMYwbhoBQmEy59fMy7zXJCzv", "3GRLFi4rz3SniCuC7rbd9UuD2KUZyNh84pn"
+    ],
+    "recipients": [
+        "3GRLFi4rz3SniCuC7rbd9UuD2KUZyNh84pn"
+    ],
+    "description": "Policy description!",
+    "policyName": "Oscar policy",
+    timestamp: Date.now(),
+    fee: 100000000
+};
+
+//Waves.API.Node.transactions.broadcast('policyCreate', r2, seed.keyPair).then((responseData) => {
+//    console.log('reate', responseData);
+//});

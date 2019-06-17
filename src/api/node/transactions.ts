@@ -67,6 +67,13 @@ export default {
                 return requests.sendDockerCallTx(data, keys);
            case constants.DOCKER_DISABLE_TX_NAME:
                 return requests.sendDockerDisableTx(data, keys);
+
+            case constants.POLICY_REGISTER_NODE_TX_NAME:
+                return requests.sendNodeRegistry(data, keys);
+            case constants.POLICY_CREATE_TX_NAME:
+                return requests.sendPolicyCreate(data, keys);
+            case constants.POLICY_UPDATE_TX_NAME:
+                return requests.sendPolicyUpdate(data, keys);
             default:
                 throw new WavesError(`Wrong transaction type: ${type}`, data);
         }
@@ -104,6 +111,13 @@ export default {
                 return requests.sendSignedDockerCallTx(data, keys);
             case constants.DOCKER_DISABLE_TX_NAME:
                 return requests.sendSignedDockerDisableTx(data, keys);
+
+            case constants.POLICY_REGISTER_NODE_TX_NAME:
+                return requests.signNodeRegistry(data, keys);
+            case constants.POLICY_CREATE_TX_NAME:
+                return requests.signPolicyCreate(data, keys);
+            case constants.POLICY_UPDATE_TX_NAME:
+                return requests.signPolicyUpdate(data, keys);
             default:
                 throw new WavesError(`Wrong transaction type: ${type}`, data);
         }

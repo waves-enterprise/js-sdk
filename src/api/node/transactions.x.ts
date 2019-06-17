@@ -685,7 +685,6 @@ export const sendDockerCreateTx = wrapTxRequest(TX_TYPE_MAP.dockerCreate, preDoc
 }, true) as TTransactionRequest;
 
 
-
 export const dockerCallSchema = new Schema({
     type: ObjectPart,
     required: true,
@@ -759,7 +758,6 @@ export const sendDockerCallTx = wrapTxRequest(TX_TYPE_MAP.dockerCall, preDockerC
 }, true) as TTransactionRequest;
 
 
-
 export const dockerDisableSchema = new Schema({
     type: ObjectPart,
     required: true,
@@ -793,5 +791,163 @@ export const sendSignedDockerDisableTx = wrapTxRequest(TX_TYPE_MAP.dockerDisable
 
 
 export const sendDockerDisableTx = wrapTxRequest(TX_TYPE_MAP.dockerDisable, preDockerDisable, postDockerDisable, (postParams: any) => {
+    return fetch(constants.BROADCAST_PATH, postParams);
+}, true) as TTransactionRequest;
+
+
+export const nodeRegistrySchema = new Schema({
+    type: ObjectPart,
+    required: true,
+    content: {
+        senderPublicKey: schemaFields.publicKey,
+        targetPubKey: schemaFields.publicKey,
+        nodeName: {
+            type: StringPart,
+            required: true
+        },
+        opType: {
+            type: StringPart,
+            required: true
+        },
+        timestamp: schemaFields.timestamp,
+        fee: schemaFields.fee
+    }
+});
+
+export const preNodeRegistry = (data) => {
+    return nodeRegistrySchema.parse(data)
+};
+
+export const postNodeRegistry = d => {
+    return {
+        ...d,
+        transactionType: null,
+        type: constants.POLICY_REGISTER_NODE_TX,
+        version: constants.POLICY_REGISTER_NODE_TX_VERSION
+    };
+};
+
+export const signNodeRegistry = wrapTxRequest(TX_TYPE_MAP.policyRegisterNode, preNodeRegistry, postNodeRegistry, (postParams: any) => {
+    return getSignedTx(postParams).data;
+}, true) as TTransactionRequest;
+
+
+export const sendNodeRegistry = wrapTxRequest(TX_TYPE_MAP.policyRegisterNode, preNodeRegistry, postNodeRegistry, (postParams: any) => {
+    return fetch(constants.BROADCAST_PATH, postParams);
+}, true) as TTransactionRequest;
+
+
+export const policyCreateScheme = new Schema({
+    type: ObjectPart,
+    required: true,
+    content: {
+        senderPublicKey: schemaFields.publicKey,
+        policyName: {
+            type: StringPart,
+            required: true
+        },
+        description: {
+            type: StringPart,
+            required: true
+        },
+        recipients: {
+            type: ArrayPart,
+            content: {
+                type: StringPart,
+                required: true
+            },
+            defaultValue: []
+        },
+        owners: {
+            type: ArrayPart,
+            content: {
+                type: StringPart,
+                required: true
+            },
+            defaultValue: []
+        },
+        timestamp: schemaFields.timestamp,
+        fee: schemaFields.fee
+    }
+});
+
+
+export const prePolicyCreate = (data) => {
+    return policyCreateScheme.parse(data);
+};
+
+export const postPolicyCreate = d => {
+    return {
+        ...d,
+        transactionType: null,
+        type: constants.POLICY_CREATE_TX,
+        version: constants.POLICY_CREATE_TX_VERSION
+    };
+};
+
+export const signPolicyCreate = wrapTxRequest(TX_TYPE_MAP.policyCreate, prePolicyCreate, postPolicyCreate, (postParams: any) => {
+    return getSignedTx(postParams).data;
+}, true) as TTransactionRequest;
+
+
+export const sendPolicyCreate = wrapTxRequest(TX_TYPE_MAP.policyCreate, prePolicyCreate, postPolicyCreate, (postParams: any) => {
+    return fetch(constants.BROADCAST_PATH, postParams);
+}, true) as TTransactionRequest;
+
+
+export const policyUpdateScheme = new Schema({
+    type: ObjectPart,
+    required: true,
+    content: {
+        senderPublicKey: schemaFields.publicKey,
+        policyName: {
+            type: StringPart,
+            required: true
+        },
+        description: {
+            type: StringPart,
+            required: true
+        },
+        recipients: {
+            type: ArrayPart,
+            content: {
+                type: StringPart,
+                required: true
+            },
+            defaultValue: []
+        },
+        owners: {
+            type: ArrayPart,
+            content: {
+                type: StringPart,
+                required: true
+            },
+            defaultValue: []
+        },
+        timestamp: schemaFields.timestamp,
+        fee: schemaFields.fee
+    }
+});
+
+
+export const preUpdateCreate = (data) => {
+    return policyUpdateScheme.parse(data);
+};
+
+export const postUpdateCreate = d => {
+    return {
+        ...d,
+        transactionType: null,
+        type: constants.POLICY_UPDATE_TX,
+        version: constants.POLICY_UPDATE_TX_VERSION
+    };
+};
+
+export const signPolicyUpdate = wrapTxRequest(TX_TYPE_MAP.policyUpdate, preUpdateCreate, postUpdateCreate, (postParams: any) => {
+    return getSignedTx(postParams).data;
+}, true) as TTransactionRequest;
+
+
+export const sendPolicyUpdate = wrapTxRequest(TX_TYPE_MAP.policyUpdate, preUpdateCreate, postUpdateCreate, (postParams: any) => {
     return fetch(constants.BROADCAST_PATH, postParams);
 }, true) as TTransactionRequest;
