@@ -1,17 +1,17 @@
-import { createFetchWrapper, PRODUCTS, VERSIONS, processJSON } from '../../utils/request';
+export default class Aliases {
 
+    constructor(fetchInstance: typeof fetch) {
+        this.fetch = fetchInstance;
+    }
 
-const fetch = createFetchWrapper(PRODUCTS.NODE, VERSIONS.V1, processJSON);
-
-
-export default {
+    private readonly fetch: typeof fetch;
 
     byAlias(alias: string) {
-        return fetch(`/alias/by-alias/${alias}`);
-    },
+        return this.fetch(`/alias/by-alias/${alias}`);
+    }
 
     byAddress(address: string) {
-        return fetch(`/alias/by-address/${address}`);
+        return this.fetch(`/alias/by-address/${address}`);
     }
 
 };

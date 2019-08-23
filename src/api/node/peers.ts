@@ -1,11 +1,14 @@
-import { createFetchWrapper, PRODUCTS, VERSIONS, processJSON } from '../../utils/request';
+import { IFetchWrapper } from "../../utils/request";
 
+export default class Peers {
 
-const fetch = createFetchWrapper(PRODUCTS.NODE, VERSIONS.V1, processJSON);
+    constructor(fetchInstance: IFetchWrapper<any>) {
+        this.fetch = fetchInstance;
+    }
 
+    private readonly fetch: IFetchWrapper<any>;
 
-export default {
     connected() {
-        return fetch('/peers/connected');
-    },
+        return this.fetch('/peers/connected');
+    }
 };

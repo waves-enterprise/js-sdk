@@ -5,10 +5,11 @@ import {
     Seed,
     ByteProcessor as byteProcessors
 } from '@vostokplatform/signature-generator';
+import { createFetchWrapper, processJSON, PRODUCTS, VERSIONS } from "./utils/request";
 
 import * as request from './utils/request';
 
-import * as NodeAPI from './api/node/index';
+import NodeAPI from './api/node/index';
 import { INodeAPI } from './api/node/index';
 
 import * as MatcherAPI from './api/matcher/index';
@@ -33,9 +34,12 @@ export interface IWavesAPI {
     API: IAPIVersions;
 }
 
+export interface IWavesAPICtr {
+    initialConfiguration: IWavesConfig;
+    fetchInstance?: typeof fetch;
+}
 
 class WavesAPI implements IWavesAPI {
-
     public readonly Seed = Seed;
     public readonly byteProcessors = byteProcessors;
     public readonly config = config;
@@ -44,14 +48,19 @@ class WavesAPI implements IWavesAPI {
     public readonly request = request;
     public readonly tools = tools;
 
-    public readonly API = {
-        Node: NodeAPI,
-        Matcher: MatcherAPI
+    public readonly API: {
+        Node: INodeAPI;
+        Matcher: IMatcherAPI;
     };
 
     private static _instance;
 
-    constructor(initialConfiguration) {
+    constructor(params: IWavesAPICtr) {
+        const { initialConfiguration, fetchInstance = createFetchWrapper(PRODUCTS.NODE, VERSIONS.V1, processJSON) } = params;
+        this.API = {
+            Node: new NodeAPI(fetchInstance),
+            Matcher: MatcherAPI
+        };
 
         if (this instanceof WavesAPI) {
 
@@ -66,7 +75,10 @@ class WavesAPI implements IWavesAPI {
 
         } else {
 
-            return new WavesAPI(initialConfiguration);
+            return new WavesAPI({
+                initialConfiguration,
+                fetchInstance,
+            });
 
         }
 
@@ -75,8 +87,8 @@ class WavesAPI implements IWavesAPI {
 }
 
 
-export function create(config: IWavesConfig): IWavesAPI {
-    return new WavesAPI(config);
+export function create({ initialConfiguration, fetchInstance }: IWavesAPICtr): IWavesAPI {
+    return new WavesAPI({ initialConfiguration, fetchInstance });
 }
 
 export const MAINNET_CONFIG: IWavesConfig = constants.DEFAULT_MAINNET_CONFIG;

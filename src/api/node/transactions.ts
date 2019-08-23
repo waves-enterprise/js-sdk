@@ -1,39 +1,43 @@
-import { createFetchWrapper, PRODUCTS, VERSIONS, processJSON, POST_TEMPLATE } from '../../utils/request';
+import { IFetchWrapper, POST_TEMPLATE } from '../../utils/request';
 import WavesError from '../../errors/WavesError';
 import * as constants from '../../constants';
 import config from '../../config';
 import * as requests from './transactions.x';
 
 
-const fetch = createFetchWrapper(PRODUCTS.NODE, VERSIONS.V1, processJSON);
+export default class Transactions {
 
+    constructor(fetchInstance: IFetchWrapper<any>) {
+        this.fetch = fetchInstance;
+    }
 
-export default {
+    private readonly fetch: IFetchWrapper<any>;
+
 
     get(id: string) {
         if (id === constants.WAVES) {
             return Promise.resolve(constants.WAVES_V1_ISSUE_TX);
         } else {
-            return fetch(`/transactions/info/${id}`);
+            return this.fetch(`/transactions/info/${id}`);
         }
-    },
+    }
 
     getList(address: string, limit: number = config.getRequestParams().limit) {
         // In the end of the line a strange response artifact is handled
-        return fetch(`/transactions/address/${address}/limit/${limit}`).then((array) => array[0]);
-    },
+        return this.fetch(`/transactions/address/${address}/limit/${limit}`).then((array) => array[0]);
+    }
 
     utxSize() {
-        return fetch('/transactions/unconfirmed/size');
-    },
+        return this.fetch('/transactions/unconfirmed/size');
+    }
 
     utxGet(id: string) {
-        return fetch(`/transactions/unconfirmed/info/${id}`);
-    },
+        return this.fetch(`/transactions/unconfirmed/info/${id}`);
+    }
 
     utxGetList() {
-        return fetch('/transactions/unconfirmed');
-    },
+        return this.fetch('/transactions/unconfirmed');
+    }
 
     broadcast(type: string, data, keys) {
         switch (type) {
@@ -77,7 +81,7 @@ export default {
             default:
                 throw new WavesError(`Wrong transaction type: ${type}`, data);
         }
-    },
+    }
 
     sign(type: string, data, keys) {
         switch (type) {
@@ -121,17 +125,17 @@ export default {
             default:
                 throw new WavesError(`Wrong transaction type: ${type}`, data);
         }
-    },
+    }
 
     rawBroadcast(data) {
-        return fetch(constants.BROADCAST_PATH, {
+        return this.fetch(constants.BROADCAST_PATH, {
             ...POST_TEMPLATE,
             body: JSON.stringify(data)
         });
-    },
+    }
 
     signOnNode(data) {
-        return fetch('/transactions/sign');
-    },
+        return this.fetch('/transactions/sign');
+    }
 
 };

@@ -1,29 +1,29 @@
-import { createFetchWrapper, PRODUCTS, VERSIONS, processJSON } from '../../utils/request';
+export default class Blocks {
 
+    constructor(fetchInstance: typeof fetch) {
+        this.fetch = fetchInstance;
+    }
 
-const fetch = createFetchWrapper(PRODUCTS.NODE, VERSIONS.V1, processJSON);
-
-
-export default {
+    private readonly fetch: typeof fetch;
 
     get(signature: string) {
-        return fetch(`/blocks/signature/${signature}`);
-    },
+        return this.fetch(`/blocks/signature/${signature}`);
+    }
 
     at(height: number) {
-        return fetch(`/blocks/at/${height}`);
-    },
+        return this.fetch(`/blocks/at/${height}`);
+    }
 
     first() {
-        return fetch('/blocks/first');
-    },
+        return this.fetch('/blocks/first');
+    }
 
     last() {
-        return fetch('/blocks/last');
-    },
+        return this.fetch('/blocks/last');
+    }
 
     height() {
-        return fetch('/blocks/height');
+        return this.fetch('/blocks/height');
     }
 
 };
