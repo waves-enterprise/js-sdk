@@ -1,25 +1,27 @@
-import { createFetchWrapper, PRODUCTS, VERSIONS, processJSON } from '../../utils/request';
 import {DEFAULT_PAGING_OFFSET, DEFAULT_PAGING_LIMIT} from '../../constants';
 
-const fetch = createFetchWrapper(PRODUCTS.NODE, VERSIONS.V1, processJSON);
+export default class Addresses {
 
+    constructor(fetchInstance: typeof fetch) {
+        this.fetch = fetchInstance;
+    }
 
-export default {
+    private readonly fetch: typeof fetch;
 
     balance(address: string, confirmations?: number) {
         if (!confirmations) {
-            return fetch(`/addresses/balance/${address}`);
+            return this.fetch(`/addresses/balance/${address}`);
         } else {
-            return fetch(`/addresses/balance/${address}/${confirmations}`);
+            return this.fetch(`/addresses/balance/${address}/${confirmations}`);
         }
-    },
+    }
 
     balanceDetails(address: string) {
-        return fetch(`/addresses/balance/details/${address}`);
-    },
+        return this.fetch(`/addresses/balance/details/${address}`);
+    }
 
     data(address: string, offset: number = DEFAULT_PAGING_OFFSET, limit: number = DEFAULT_PAGING_LIMIT) {
-        return fetch(`/addresses/data/${address}?offset=${offset}&limit=${limit}`);
+        return this.fetch(`/addresses/data/${address}?offset=${offset}&limit=${limit}`);
     }
 
 };
