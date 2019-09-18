@@ -1,3 +1,4 @@
+import fetchInstance from "../../libs/fetch";
 import { TTransactionRequest } from '../../utils/request'
 import { IHash } from '../../../interfaces'  // TODO : fix this issue with interface
 
@@ -20,7 +21,12 @@ interface signedTxData {
   data?: any
 }
 
-const fetch = createFetchWrapper(PRODUCTS.NODE, VERSIONS.V1, processJSON)
+const fetch = createFetchWrapper({
+  product: PRODUCTS.NODE,
+  version: VERSIONS.V1,
+  pipe: processJSON,
+  fetchInstance
+});
 
 class AnyPart extends BasePart<any> {
   protected getValue<T> (data: T): T {

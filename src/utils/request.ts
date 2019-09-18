@@ -5,7 +5,6 @@ import * as create from 'parse-json-bignumber';
 
 import WavesRequestError from '../errors/WavesRequestError';
 
-import fetch from '../libs/fetch';
 import config from '../config';
 import BigNumber from '../libs/bignumber';
 
@@ -22,6 +21,12 @@ export interface IFetchWrapper<T> {
     (path: string, options?: IHash<any>): Promise<T>;
 }
 
+export interface IFetchWrapperConfig {
+    product: PRODUCTS;
+    version: VERSIONS;
+    fetchInstance: typeof fetch;
+    pipe?: (value: Response) => Response | PromiseLike<Response>
+}
 
 export const enum PRODUCTS { NODE, MATCHER }
 
@@ -69,7 +74,8 @@ function handleError(url, data) {
 }
 
 
-export function createFetchWrapper(product: PRODUCTS, version: VERSIONS, pipe?: Function): IFetchWrapper<any> {
+export function createFetchWrapper(config: IFetchWrapperConfig): IFetchWrapper<any> {
+    const { product, version, pipe, fetchInstance } = config;
 
     const resolveHost = hostResolvers[key(product, version)];
 
@@ -77,7 +83,7 @@ export function createFetchWrapper(product: PRODUCTS, version: VERSIONS, pipe?: 
 
         const url = resolveHost() + normalizePath(path);
 
-        const request = fetch(url, options);
+        const request = fetchInstance(url, options);
 
         if (pipe) {
             return request.then(pipe).catch((data) => handleError(url, data));
