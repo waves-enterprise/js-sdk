@@ -1,24 +1,17 @@
+import { ByteProcessor as byteProcessors, Seed, utils } from '@vostokplatform/signature-generator';
 import { IHash, IWavesConfig } from '../interfaces';
-import fetch from './libs/fetch';
-
-import {
-    utils,
-    Seed,
-    ByteProcessor as byteProcessors
-} from '@vostokplatform/signature-generator';
-import { createFetchWrapper, processJSON, PRODUCTS, VERSIONS } from "./utils/request";
-
-import * as request from './utils/request';
-
-import NodeAPI from './api/node/index';
-import { INodeAPI } from './api/node/index';
 
 import * as MatcherAPI from './api/matcher/index';
 import { IMatcherAPI } from './api/matcher/index';
 
-import * as constants from './constants';
+import NodeAPI, { INodeAPI } from './api/node/index';
 import config from './config';
+
+import * as constants from './constants';
+import fetch from './libs/fetch';
 import tools from './tools';
+import * as request from "./utils/request";
+import { createFetchWrapper, processJSON, PRODUCTS, VERSIONS } from "./utils/request";
 
 export interface IAPIVersions {
     Node: INodeAPI,
@@ -64,7 +57,14 @@ class WavesAPI implements IWavesAPI {
             fetchInstance: fetch
         }) } = params;
         this.API = {
-            Node: new NodeAPI(fetchInstance),
+            Node: new NodeAPI(
+              createFetchWrapper({
+                  product: PRODUCTS.NODE,
+                  version: VERSIONS.V1,
+                  pipe: processJSON,
+                  fetchInstance
+              })
+            ),
             Matcher: MatcherAPI
         };
 
