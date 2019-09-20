@@ -8,10 +8,10 @@ import WavesRequestError from '../errors/WavesRequestError';
 import config from '../config';
 import BigNumber from '../libs/bignumber';
 
-const SAFE_JSON_PARSE = create({
+export const SAFE_JSON_PARSE = create({
     BigNumber
 }).parse;
-const SAFE_JSON_STRINGIFY = create({
+export const SAFE_JSON_STRINGIFY = create({
     BigNumber
 }).stringify;
 

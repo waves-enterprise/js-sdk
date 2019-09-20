@@ -50,12 +50,15 @@ class WavesAPI implements IWavesAPI {
     private static _instance;
 
     constructor(params: IWavesAPICtr) {
-        const { initialConfiguration, fetchInstance = createFetchWrapper({
-            product: PRODUCTS.NODE,
-            version: VERSIONS.V1,
-            pipe: processJSON,
-            fetchInstance: fetch
-        }) } = params;
+        const {
+            initialConfiguration,
+            fetchInstance = createFetchWrapper({
+                product: PRODUCTS.NODE,
+                version: VERSIONS.V1,
+                pipe: processJSON,
+                fetchInstance: fetch
+            })
+        } = params;
         this.API = {
             Node: new NodeAPI(
               createFetchWrapper({

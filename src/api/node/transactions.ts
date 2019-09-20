@@ -1,7 +1,9 @@
-import { IFetchWrapper, POST_TEMPLATE } from '../../utils/request';
+import { BROADCAST_PATH, SIGN_PATH } from "../../constants";
+import { IFetchWrapper, POST_TEMPLATE, processJSON } from '../../utils/request';
 import WavesError from '../../errors/WavesError';
 import * as constants from '../../constants';
 import config from '../../config';
+import { createTxRequest } from "./transactions.x";
 import * as requests from './transactions.x';
 
 
@@ -9,10 +11,12 @@ export default class Transactions {
 
     constructor(fetchInstance: IFetchWrapper<any>) {
         this.fetch = fetchInstance;
+        this.txRequest = createTxRequest(fetchInstance)
     }
 
     private readonly fetch: IFetchWrapper<any>;
 
+    private readonly txRequest: (url: string, txData: any) => Promise<any>;
 
     get(id: string) {
         if (id === constants.WAVES) {
@@ -39,7 +43,7 @@ export default class Transactions {
         return this.fetch('/transactions/unconfirmed');
     }
 
-    broadcast(type: string, data, keys) {
+    broadcastFromClientAddress(type: string, data, keys) {
         switch (type) {
             case constants.ISSUE_TX_NAME:
                 return requests.sendIssueTx(data, keys);
@@ -80,6 +84,15 @@ export default class Transactions {
                 return requests.sendPolicyUpdate(data, keys);
             default:
                 throw new WavesError(`Wrong transaction type: ${type}`, data);
+        }
+    }
+
+    async broadcastFromNodeAddress(nodeAddress: string, data) {
+        try {
+            const r1 = await this.txRequest(`${nodeAddress}/${SIGN_PATH}`, data);
+            return this.txRequest(`${nodeAddress}/${BROADCAST_PATH}`, r1)
+        } catch (e) {
+            throw e
         }
     }
 
