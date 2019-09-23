@@ -93,9 +93,10 @@ export default class Transactions {
     }
 
     async broadcastFromNodeAddress(nodeAddress: string, data) {
+        nodeAddress = nodeAddress.replace(/\/+$/, '');
         try {
-            const r1 = await this.txRequest(`${nodeAddress}/${SIGN_PATH}`, data);
-            return this.txRequest(`${nodeAddress}/${BROADCAST_PATH}`, r1)
+            const response = await this.txRequest(nodeAddress + SIGN_PATH, data);
+            return this.txRequest(nodeAddress + BROADCAST_PATH, response)
         } catch (e) {
             throw e
         }
