@@ -1,5 +1,5 @@
 import { BROADCAST_PATH, SIGN_PATH } from "../../constants";
-import { IFetchWrapper, POST_TEMPLATE, processJSON } from '../../utils/request';
+import { createFetchWrapper, IFetchWrapper, POST_TEMPLATE, processJSON, PRODUCTS, VERSIONS } from '../../utils/request';
 import WavesError from '../../errors/WavesError';
 import * as constants from '../../constants';
 import config from '../../config';
@@ -10,7 +10,12 @@ import * as requests from './transactions.x';
 export default class Transactions {
 
     constructor(fetchInstance: IFetchWrapper<any>) {
-        this.fetch = fetchInstance;
+        this.fetch = createFetchWrapper({
+            product: PRODUCTS.NODE,
+            version: VERSIONS.V1,
+            pipe: processJSON,
+            fetchInstance
+        });
         this.txRequest = createTxRequest(fetchInstance)
     }
 

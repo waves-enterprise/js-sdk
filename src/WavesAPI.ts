@@ -8,6 +8,7 @@ import NodeAPI, { INodeAPI } from './api/node/index';
 import config from './config';
 
 import * as constants from './constants';
+import fetchSubstitute from "./libs/fetch";
 import fetch from './libs/fetch';
 import tools from './tools';
 import * as request from "./utils/request";
@@ -50,24 +51,9 @@ class WavesAPI implements IWavesAPI {
     private static _instance;
 
     constructor(params: IWavesAPICtr) {
-        const {
-            initialConfiguration,
-            fetchInstance = createFetchWrapper({
-                product: PRODUCTS.NODE,
-                version: VERSIONS.V1,
-                pipe: processJSON,
-                fetchInstance: fetch
-            })
-        } = params;
+        const { initialConfiguration, fetchInstance = fetchSubstitute } = params;
         this.API = {
-            Node: new NodeAPI(
-              createFetchWrapper({
-                  product: PRODUCTS.NODE,
-                  version: VERSIONS.V1,
-                  pipe: processJSON,
-                  fetchInstance
-              })
-            ),
+            Node: new NodeAPI(fetchInstance),
             Matcher: MatcherAPI
         };
 

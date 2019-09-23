@@ -1,3 +1,4 @@
+import { createFetchWrapper, processJSON, PRODUCTS, VERSIONS } from "../../utils/request";
 import Addresses from './addresses';
 import * as constants from '../../constants';
 
@@ -5,8 +6,13 @@ import * as constants from '../../constants';
 export default class Assets {
 
     constructor(fetchInstance: typeof fetch) {
-        this.fetch = fetchInstance;
-        this.addresses = new Addresses(fetchInstance);
+        this.fetch = createFetchWrapper({
+            product: PRODUCTS.NODE,
+            version: VERSIONS.V1,
+            pipe: processJSON,
+            fetchInstance
+        });
+        this.addresses = new Addresses(this.fetch);
     }
 
     private readonly fetch: typeof fetch;
