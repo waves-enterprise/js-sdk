@@ -144,8 +144,7 @@ export const createTxRequestWrapper = (fetchInstance: IFetchWrapper<any>) => {
     data: IHash<any>,
     extraData: {
       sender: string;
-      version: number,
-      type: number
+      password: string;
     }
   ): Promise<any> => {
     nodeAddress = nodeAddress.replace(/\/+$/, '');
