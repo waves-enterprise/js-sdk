@@ -1,6 +1,5 @@
 import fetchInstance from "../../libs/fetch";
-import { IFetchWrapper, SAFE_JSON_STRINGIFY, TTransactionRequest } from '../../utils/request'
-import { IHash } from '../../../interfaces'  // TODO : fix this issue with interface
+import { TTransactionRequest } from '../../utils/request'
 
 import { Schema, NumberPart, ObjectPart, StringPart, ArrayPart, BasePart } from 'ts-api-validator'
 import { TX_TYPE_MAP } from '@vostokplatform/signature-generator'
@@ -933,20 +932,3 @@ export const signPolicyUpdate = wrapTxRequest(TX_TYPE_MAP.policyUpdate, preUpdat
 export const sendPolicyUpdate = wrapTxRequest(TX_TYPE_MAP.policyUpdate, preUpdateCreate, postUpdateCreate, (postParams: any) => {
   return fetch(constants.BROADCAST_PATH, postParams)
 }, true) as TTransactionRequest
-
-export const createTxRequest = (fetchInstance: IFetchWrapper<any>) => {
-  return async (url: string, txData) => {
-    const response = await fetchInstance(
-      url,
-      {
-        method: 'POST',
-        headers: {
-          'Accept': 'application/json',
-          'Content-Type': 'application/json;charset=UTF-8'
-        },
-        credentials: 'include',
-        body: SAFE_JSON_STRINGIFY(txData, null, null)
-      });
-    return processJSON(response);
-  };
-};

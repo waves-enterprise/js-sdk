@@ -1,10 +1,18 @@
-import { BROADCAST_PATH, SIGN_PATH } from "../../constants";
-import { createFetchWrapper, IFetchWrapper, POST_TEMPLATE, processJSON, PRODUCTS, VERSIONS } from '../../utils/request';
+import { IHash, IKeyPair } from "../../../interfaces";
+import {
+    createFetchWrapper,
+    createTxRequestWrapper,
+    IFetchWrapper,
+    POST_TEMPLATE,
+    processJSON,
+    PRODUCTS,
+    VERSIONS
+} from '../../utils/request';
 import WavesError from '../../errors/WavesError';
 import * as constants from '../../constants';
 import config from '../../config';
-import { createTxRequest } from "./transactions.x";
 import * as requests from './transactions.x';
+import Func = Mocha.Func;
 
 
 export default class Transactions {
@@ -16,12 +24,22 @@ export default class Transactions {
             pipe: processJSON,
             fetchInstance
         });
-        this.txRequest = createTxRequest(fetchInstance)
+        this.txRequest = createTxRequestWrapper(fetchInstance)
     }
 
     private readonly fetch: IFetchWrapper<any>;
 
-    private readonly txRequest: (url: string, txData: any) => Promise<any>;
+    private readonly txRequest: (
+      preRemapAsync: Function,
+      postRemap: Function,
+      nodeAddress: string,
+      data: IHash<any>,
+      extraData: {
+          sender: string;
+          version: number,
+          type: number
+      }
+    ) => Promise<any>;
 
     get(id: string) {
         if (id === constants.WAVES) {
@@ -92,13 +110,12 @@ export default class Transactions {
         }
     }
 
-    async broadcastFromNodeAddress(nodeAddress: string, data) {
-        nodeAddress = nodeAddress.replace(/\/+$/, '');
-        try {
-            const response = await this.txRequest(nodeAddress + SIGN_PATH, data);
-            return this.txRequest(nodeAddress + BROADCAST_PATH, response)
-        } catch (e) {
-            throw e
+    async broadcastFromNodeAddress(type: string, nodeAddress: string, data, extraData) {
+        switch (type) {
+            case constants.TRANSFER_TX_NAME:
+                return this.txRequest(requests.preTransfer, requests.postTransfer, nodeAddress, data, extraData);
+            default:
+                throw new WavesError(`Wrong transaction type: ${type}`, data);
         }
     }
 

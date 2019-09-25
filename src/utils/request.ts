@@ -2,6 +2,7 @@ import {ISignatureGenerator, ISignatureGeneratorConstructor} from '@vostokplatfo
 import {IHash, IKeyPair} from '../../interfaces';
 
 import * as create from 'parse-json-bignumber';
+import { BROADCAST_PATH, SIGN_PATH } from "../constants";
 
 import WavesRequestError from '../errors/WavesRequestError';
 
@@ -134,3 +135,46 @@ export function wrapTxRequest(SignatureGenerator: ISignatureGeneratorConstructor
     };
 
 }
+
+export const createTxRequestWrapper = (fetchInstance: IFetchWrapper<any>) => {
+  return (
+    preRemapAsync: (data) => Promise<any>,
+    postRemap: Function,
+    nodeAddress: string,
+    data: IHash<any>,
+    extraData: {
+      sender: string;
+      version: number,
+      type: number
+    }
+  ): Promise<any> => {
+    nodeAddress = nodeAddress.replace(/\/+$/, '');
+    return preRemapAsync(data).then(validatedData => {
+      const body = {
+        ...(postRemap(validatedData)),
+        ...extraData
+      };
+      if (body.assetId === '') {
+        body.assetId = null;
+      }
+      if (body.feeAssetId === '') {
+        body.feeAssetId = null;
+      }
+
+      fetchInstance(nodeAddress + SIGN_PATH, {
+        ...POST_TEMPLATE,
+        credentials: 'include',
+        body: SAFE_JSON_STRINGIFY(body, null, null)
+      })
+        .then(r => processJSON(r))
+        .then((tx) => fetchInstance(
+          nodeAddress + BROADCAST_PATH,
+          {
+            ...POST_TEMPLATE,
+            credentials: 'include',
+            body: SAFE_JSON_STRINGIFY(tx, null, null)
+          }).then(r => processJSON(r))
+        );
+    })
+  };
+};
