@@ -1,4 +1,7 @@
-import { IHash, IKeyPair } from "../../../interfaces";
+import { IHash } from "../../../interfaces";
+import config from '../../config';
+import * as constants from '../../constants';
+import WavesError from '../../errors/WavesError';
 import {
     createFetchWrapper,
     createTxRequestWrapper,
@@ -8,24 +11,8 @@ import {
     PRODUCTS,
     VERSIONS
 } from '../../utils/request';
-import WavesError from '../../errors/WavesError';
-import * as constants from '../../constants';
-import config from '../../config';
-import {
-    postBurn,
-    postCancelLeasing, postCreateAlias, postData, postDockerCall, postDockerCreate, postDockerDisable,
-    postIssue,
-    postLease, postMassTransfer, postNodeRegistry, postPermit, postPolicyCreate,
-    postReissue, postSetScript, postSponsorship, postUpdateCreate,
-    preBurn,
-    preCancelLeasing, preCreateAlias, preData, preDockerCall, preDockerCreate, preDockerDisable,
-    preIssue,
-    preLease, preMassTransfer, preNodeRegistry, prePermit, prePolicyCreate,
-    preReissue, preSetScript, preSponsorship, preUpdateCreate
-} from "./transactions.x";
-import * as requests from './transactions.x';
-import Func = Mocha.Func;
-
+import { TransactionsRequests } from "./transactions.x";
+import * as requests from "./transactions.x";
 
 export default class Transactions {
 
@@ -36,12 +23,13 @@ export default class Transactions {
             pipe: processJSON,
             fetchInstance
         });
-        this.txRequest = createTxRequestWrapper(fetchInstance)
+        this.txRequestFromNodeAddress = createTxRequestWrapper(fetchInstance);
+        this.txRequestFromClientAddress = new TransactionsRequests(fetchInstance);
     }
 
     private readonly fetch: IFetchWrapper<any>;
 
-    private readonly txRequest: (
+    private readonly txRequestFromNodeAddress: (
       preRemapAsync: Function,
       postRemap: Function,
       nodeAddress: string,
@@ -51,6 +39,8 @@ export default class Transactions {
           password: string;
       }
     ) => Promise<any>;
+
+    private readonly txRequestFromClientAddress: TransactionsRequests;
 
     get(id: string) {
         if (id === constants.WAVES) {
@@ -80,42 +70,42 @@ export default class Transactions {
     broadcastFromClientAddress(type: string, data, keys) {
         switch (type) {
             case constants.ISSUE_TX_NAME:
-                return requests.sendIssueTx(data, keys);
+                return this.txRequestFromClientAddress.sendIssueTx(data, keys);
             case constants.TRANSFER_TX_NAME:
-                return requests.sendTransferTx(data, keys);
+                return this.txRequestFromClientAddress.sendTransferTx(data, keys);
             case constants.REISSUE_TX_NAME:
-                return requests.sendReissueTx(data, keys);
+                return this.txRequestFromClientAddress.sendReissueTx(data, keys);
             case constants.BURN_TX_NAME:
-                return requests.sendBurnTx(data, keys);
+                return this.txRequestFromClientAddress.sendBurnTx(data, keys);
             case constants.LEASE_TX_NAME:
-                return requests.sendLeaseTx(data, keys);
+                return this.txRequestFromClientAddress.sendLeaseTx(data, keys);
             case constants.CANCEL_LEASING_TX_NAME:
-                return requests.sendCancelLeasingTx(data, keys);
+                return this.txRequestFromClientAddress.sendCancelLeasingTx(data, keys);
             case constants.CREATE_ALIAS_TX_NAME:
-                return requests.sendCreateAliasTx(data, keys);
+                return this.txRequestFromClientAddress.sendCreateAliasTx(data, keys);
             case constants.MASS_TRANSFER_TX_NAME:
-                return requests.sendMassTransferTx(data, keys);
+                return this.txRequestFromClientAddress.sendMassTransferTx(data, keys);
             case constants.DATA_TX_NAME:
-                return requests.sendDataTx(data, keys);
+                return this.txRequestFromClientAddress.sendDataTx(data, keys);
             case constants.SET_SCRIPT_TX_NAME:
-                return requests.sendSetScriptTx(data, keys);
+                return this.txRequestFromClientAddress.sendSetScriptTx(data, keys);
             case constants.SPONSORSHIP_TX_NAME:
-                return requests.sendSponsorshipTx(data, keys);
+                return this.txRequestFromClientAddress.sendSponsorshipTx(data, keys);
             case constants.PERMISSION_TX_NAME:
-                return requests.sendPermissionTx(data, keys);
+                return this.txRequestFromClientAddress.sendPermissionTx(data, keys);
             case constants.DOCKER_CREATE_TX_NAME:
-                return requests.sendDockerCreateTx(data, keys);
+                return this.txRequestFromClientAddress.sendDockerCreateTx(data, keys);
             case constants.DOCKER_CALL_TX_NAME:
-                return requests.sendDockerCallTx(data, keys);
+                return this.txRequestFromClientAddress.sendDockerCallTx(data, keys);
            case constants.DOCKER_DISABLE_TX_NAME:
-                return requests.sendDockerDisableTx(data, keys);
+                return this.txRequestFromClientAddress.sendDockerDisableTx(data, keys);
 
             case constants.POLICY_REGISTER_NODE_TX_NAME:
-                return requests.sendNodeRegistry(data, keys);
+                return this.txRequestFromClientAddress.sendNodeRegistry(data, keys);
             case constants.POLICY_CREATE_TX_NAME:
-                return requests.sendPolicyCreate(data, keys);
+                return this.txRequestFromClientAddress.sendPolicyCreate(data, keys);
             case constants.POLICY_UPDATE_TX_NAME:
-                return requests.sendPolicyUpdate(data, keys);
+                return this.txRequestFromClientAddress.sendPolicyUpdate(data, keys);
             default:
                 throw new WavesError(`Wrong transaction type: ${type}`, data);
         }
@@ -124,41 +114,41 @@ export default class Transactions {
     async broadcastFromNodeAddress(type: string, nodeAddress: string, data, extraData) {
         switch (type) {
             case constants.ISSUE_TX_NAME:
-                return this.txRequest(requests.preIssue, requests.postIssue, nodeAddress, data, extraData);
+                return this.txRequestFromNodeAddress(requests.preIssue, requests.postIssue, nodeAddress, data, extraData);
             case constants.TRANSFER_TX_NAME:
-                return this.txRequest(requests.preTransfer, requests.postTransfer, nodeAddress, data, extraData);
+                return this.txRequestFromNodeAddress(requests.preTransfer, requests.postTransfer, nodeAddress, data, extraData);
             case constants.REISSUE_TX_NAME:
-                return this.txRequest(requests.preReissue, requests.postReissue, nodeAddress, data, extraData);
+                return this.txRequestFromNodeAddress(requests.preReissue, requests.postReissue, nodeAddress, data, extraData);
             case constants.BURN_TX_NAME:
-                return this.txRequest(requests.preBurn, requests.postBurn, nodeAddress, data, extraData);
+                return this.txRequestFromNodeAddress(requests.preBurn, requests.postBurn, nodeAddress, data, extraData);
             case constants.LEASE_TX_NAME:
-                return this.txRequest(requests.preLease, requests.postLease, nodeAddress, data, extraData);
+                return this.txRequestFromNodeAddress(requests.preLease, requests.postLease, nodeAddress, data, extraData);
             case constants.CANCEL_LEASING_TX_NAME:
-                return this.txRequest(preCancelLeasing, postCancelLeasing, nodeAddress, data, extraData);
+                return this.txRequestFromNodeAddress(requests.preCancelLeasing, requests.postCancelLeasing, nodeAddress, data, extraData);
             case constants.CREATE_ALIAS_TX_NAME:
-                return this.txRequest(preCreateAlias, postCreateAlias, nodeAddress, data, extraData);
+                return this.txRequestFromNodeAddress(requests.preCreateAlias, requests.postCreateAlias, nodeAddress, data, extraData);
             case constants.MASS_TRANSFER_TX_NAME:
-                return this.txRequest(preMassTransfer, postMassTransfer, nodeAddress, data, extraData);
+                return this.txRequestFromNodeAddress(requests.preMassTransfer, requests.postMassTransfer, nodeAddress, data, extraData);
             case constants.DATA_TX_NAME:
-                return this.txRequest(preData, postData, nodeAddress, data, extraData);
+                return this.txRequestFromNodeAddress(requests.preData, requests.postData, nodeAddress, data, extraData);
             case constants.SET_SCRIPT_TX_NAME:
-                return this.txRequest(preSetScript, postSetScript, nodeAddress, data, extraData);
+                return this.txRequestFromNodeAddress(requests.preSetScript, requests.postSetScript, nodeAddress, data, extraData);
             case constants.SPONSORSHIP_TX_NAME:
-                return this.txRequest(preSponsorship, postSponsorship, nodeAddress, data, extraData);
+                return this.txRequestFromNodeAddress(requests.preSponsorship, requests.postSponsorship, nodeAddress, data, extraData);
             case constants.PERMISSION_TX_NAME:
-                return this.txRequest(prePermit, postPermit, nodeAddress, data, extraData);
+                return this.txRequestFromNodeAddress(requests.prePermit, requests.postPermit, nodeAddress, data, extraData);
             case constants.DOCKER_CREATE_TX_NAME:
-                return this.txRequest(preDockerCreate, postDockerCreate, nodeAddress, data, extraData);
+                return this.txRequestFromNodeAddress(requests.preDockerCreate, requests.postDockerCreate, nodeAddress, data, extraData);
             case constants.DOCKER_CALL_TX_NAME:
-                return this.txRequest(preDockerCall, postDockerCall, nodeAddress, data, extraData);
+                return this.txRequestFromNodeAddress(requests.preDockerCall, requests.postDockerCall, nodeAddress, data, extraData);
             case constants.DOCKER_DISABLE_TX_NAME:
-                return this.txRequest(preDockerDisable, postDockerDisable, nodeAddress, data, extraData);
+                return this.txRequestFromNodeAddress(requests.preDockerDisable, requests.postDockerDisable, nodeAddress, data, extraData);
             case constants.POLICY_REGISTER_NODE_TX_NAME:
-                return this.txRequest(preNodeRegistry, postNodeRegistry, nodeAddress, data, extraData);
+                return this.txRequestFromNodeAddress(requests.preNodeRegistry, requests.postNodeRegistry, nodeAddress, data, extraData);
             case constants.POLICY_CREATE_TX_NAME:
-                return this.txRequest(prePolicyCreate, postPolicyCreate, nodeAddress, data, extraData);
+                return this.txRequestFromNodeAddress(requests.prePolicyCreate, requests.postPolicyCreate, nodeAddress, data, extraData);
             case constants.POLICY_UPDATE_TX_NAME:
-                return this.txRequest(preUpdateCreate, postUpdateCreate, nodeAddress, data, extraData);
+                return this.txRequestFromNodeAddress(requests.preUpdateCreate, requests.postUpdateCreate, nodeAddress, data, extraData);
             default:
                 throw new WavesError(`Wrong transaction type: ${type}`, data);
         }
