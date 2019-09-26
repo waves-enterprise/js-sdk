@@ -11,6 +11,18 @@ import {
 import WavesError from '../../errors/WavesError';
 import * as constants from '../../constants';
 import config from '../../config';
+import {
+    postBurn,
+    postCancelLeasing, postCreateAlias, postData, postDockerCall, postDockerCreate, postDockerDisable,
+    postIssue,
+    postLease, postMassTransfer, postNodeRegistry, postPermit, postPolicyCreate,
+    postReissue, postSetScript, postSponsorship, postUpdateCreate,
+    preBurn,
+    preCancelLeasing, preCreateAlias, preData, preDockerCall, preDockerCreate, preDockerDisable,
+    preIssue,
+    preLease, preMassTransfer, preNodeRegistry, prePermit, prePolicyCreate,
+    preReissue, preSetScript, preSponsorship, preUpdateCreate
+} from "./transactions.x";
 import * as requests from './transactions.x';
 import Func = Mocha.Func;
 
@@ -36,8 +48,7 @@ export default class Transactions {
       data: IHash<any>,
       extraData: {
           sender: string;
-          version: number,
-          type: number
+          password: string;
       }
     ) => Promise<any>;
 
@@ -112,8 +123,42 @@ export default class Transactions {
 
     async broadcastFromNodeAddress(type: string, nodeAddress: string, data, extraData) {
         switch (type) {
+            case constants.ISSUE_TX_NAME:
+                return this.txRequest(requests.preIssue, requests.postIssue, nodeAddress, data, extraData);
             case constants.TRANSFER_TX_NAME:
                 return this.txRequest(requests.preTransfer, requests.postTransfer, nodeAddress, data, extraData);
+            case constants.REISSUE_TX_NAME:
+                return this.txRequest(requests.preReissue, requests.postReissue, nodeAddress, data, extraData);
+            case constants.BURN_TX_NAME:
+                return this.txRequest(requests.preBurn, requests.postBurn, nodeAddress, data, extraData);
+            case constants.LEASE_TX_NAME:
+                return this.txRequest(requests.preLease, requests.postLease, nodeAddress, data, extraData);
+            case constants.CANCEL_LEASING_TX_NAME:
+                return this.txRequest(preCancelLeasing, postCancelLeasing, nodeAddress, data, extraData);
+            case constants.CREATE_ALIAS_TX_NAME:
+                return this.txRequest(preCreateAlias, postCreateAlias, nodeAddress, data, extraData);
+            case constants.MASS_TRANSFER_TX_NAME:
+                return this.txRequest(preMassTransfer, postMassTransfer, nodeAddress, data, extraData);
+            case constants.DATA_TX_NAME:
+                return this.txRequest(preData, postData, nodeAddress, data, extraData);
+            case constants.SET_SCRIPT_TX_NAME:
+                return this.txRequest(preSetScript, postSetScript, nodeAddress, data, extraData);
+            case constants.SPONSORSHIP_TX_NAME:
+                return this.txRequest(preSponsorship, postSponsorship, nodeAddress, data, extraData);
+            case constants.PERMISSION_TX_NAME:
+                return this.txRequest(prePermit, postPermit, nodeAddress, data, extraData);
+            case constants.DOCKER_CREATE_TX_NAME:
+                return this.txRequest(preDockerCreate, postDockerCreate, nodeAddress, data, extraData);
+            case constants.DOCKER_CALL_TX_NAME:
+                return this.txRequest(preDockerCall, postDockerCall, nodeAddress, data, extraData);
+            case constants.DOCKER_DISABLE_TX_NAME:
+                return this.txRequest(preDockerDisable, postDockerDisable, nodeAddress, data, extraData);
+            case constants.POLICY_REGISTER_NODE_TX_NAME:
+                return this.txRequest(preNodeRegistry, postNodeRegistry, nodeAddress, data, extraData);
+            case constants.POLICY_CREATE_TX_NAME:
+                return this.txRequest(prePolicyCreate, postPolicyCreate, nodeAddress, data, extraData);
+            case constants.POLICY_UPDATE_TX_NAME:
+                return this.txRequest(preUpdateCreate, postUpdateCreate, nodeAddress, data, extraData);
             default:
                 throw new WavesError(`Wrong transaction type: ${type}`, data);
         }
