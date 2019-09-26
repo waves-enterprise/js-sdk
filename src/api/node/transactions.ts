@@ -24,7 +24,7 @@ export default class Transactions {
             fetchInstance
         });
         this.txRequestFromNodeAddress = createTxRequestWrapper(fetchInstance);
-        this.txRequestFromClientAddress = new TransactionsRequests(fetchInstance);
+        this.txRequestFromClientAddress = new TransactionsRequests(this.fetch);
     }
 
     private readonly fetch: IFetchWrapper<any>;
