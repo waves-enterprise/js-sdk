@@ -160,7 +160,7 @@ export const createTxRequestWrapper = (fetchInstance: IFetchWrapper<any>) => {
         body.feeAssetId = null;
       }
 
-      fetchInstance(nodeAddress + SIGN_PATH, {
+      return fetchInstance(nodeAddress + SIGN_PATH, {
         ...POST_TEMPLATE,
         credentials: 'include',
         body: SAFE_JSON_STRINGIFY(body, null, null)
