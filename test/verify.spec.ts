@@ -1,8 +1,8 @@
 import { expect } from './getChai';
 import { libs, utils } from "@vostokplatform/signature-generator";
 
-describe('', () => {
-  it('', () => {
+describe('Verify signature', () => {
+  it('verification function should return true with correct data', () => {
     expect(
       utils.crypto.isValidSignature(
         libs.base58.decode("VEGzYQdCWuTPHr95kUoZ84aEk9tBi9zC8iab2wz6P18Kt1cLAahQdFfYhVp6Ldxxv1SgKxcfcMpuWXXwisEsPzsf6bnyyZkiDSky38GFs8wtegrRF9wYBQ6ywL13aq6qaiGjrYM1nEDpDyYtfumMrmT1viwWfmh2cU5SuZgJCMeQzgCBFBHXgFj5MVRgRwUYuD9QXTpn9XXid1jQGxKQWim5Q1FcaWGX3BwpSqE71bti19gCaqK5QPtNq2ygWWnuqi35JwQ3VhGuZsXTx9QbqhepWGPqgCX3EsPkGR6FjXLBXS9Zejpj88GubWFdRjGgm8icnVmRqdrgi3wUQVESP7B9wnbfLyeykigzmAYAzhRWyh7DGZ3L1NuJP8asba5FVaHDoPtc45E7for5zVjDwdwHXR1EnmvqA8UCH8trEyK6Nm1jM2prir9Dk6mvRZYL4Xz4pA8vDYNL7CkszW3S5eHP5VHnLBhMBh8rNDEqzRYdhKoac2fXRQLQ5GpaEqAcSouRn3tPb3uhmDnVqMswtYLbrC8RNwLdxyosnVeaCxHLwdKSeDFTdsqCi2NqyiLEdHMReqDMHXFptehdwcPXY8d4gSuSUcXkodnxNTD3tB8fH7soYY93syj3W1o5569xeAQ6Gtc21s8bZmHMYHcoqS4YgfHW351S4jD4FgJ2Bqa2Fs7swUbwnGUuvkppkd4p9RhvfDxd8325o8WySNvKVj5uBkofqH1SfSYvw3ae6jpgfaWzj6DBJh2rmVpEDVcn9w67Re5xQCDSeWp7TeiVwGeM3d3KKxf3HYSFwoJKeb6FReYpkkZ3U9ecFSgKSQaiPHFichqXKMr5HbqmmJbN12W4KVWuDcc6Qd7K1VaELN83QPEDFY8xkcnFYLL7nPqSzid8mscBvoLjU8ZMgGybDULHrUdJQDUDjW4TZwrf3tXr1TySexPWP76vex7jisqNMWv1dWZtG7L6WVVafCQpNyomKvvfNqMpH1tbotbRDhsg9EZSM6rmwEuJTzRmEJFgrkukqSB4FzUrhRW9pie47cpySjGfuf4y61EGY46qXa4oxHMLtHThuZqwxFnLWeK2Zv7LFzKusHo1DDoHNarhqBaacaeiVJJ9wScJD67rjLG1RCeJtMUhBbSeBV4pqvvYjzh2YY8hyDWmRtCs2XeTfVhntKzHfnY5ZoMmx8XdyraAqJf61e44E36ZqMXZTMiBhfjUcFefTxngZNT7Nc3PmFioFwxgMZQLWMphBhEArpwjWF2y68QRnLuRxtWJqdnEeV5Gu5WXuZPmphTvb55uitpfMAqCe6Yszo9wgQJioMuV1zPhH4FCb9MeV9ge3XHi4vMeAicnyPSCV6mcsDGcVTFLnX1Vg1w5V5SRzPZyYMNiLee8WifqxDc1UiZ22nuRm4haDrWwVMZaPLwc8rbtTQVfKcjSBWKAgzHhSs8F9YPBWYsGoMM7sgN9arnQ4mtuLp4meH9Nezf4GPDboXvfmDfQ24kDSWncxGZYf6RVzDWixkTtt39oL7Gt9y5LZzRFFuKHhtKLmVBjdZ2qAiapJJG6QRYdfDHzZh4MriFMRrxksA1mkgbqoFP2soG2d8Qm6dn4wfMK2U4mECKvcHLnL79uUgChhw2C7QJG17PpNvEQXSpRusrHCExj1p1GZc3mUYm3Rd1bFWFHeU9sjgndUc5Za9dJ"),
@@ -12,7 +12,7 @@ describe('', () => {
     ).to.true;
   });
 
-  it('', () => {
+  it('verification function should return true with correct data', () => {
     expect(
       utils.cryptoGost.verifySignature(
         "dkdHzPA5VFfxG6KYHNSHAzvzghKEDQBenKSrtxSBHXCncSEwry5eME89WKMbKSLahXRDWhye9jovSVPbYaVRiz2",
