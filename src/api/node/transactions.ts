@@ -95,6 +95,8 @@ export default class Transactions {
                 return this.txRequestFromClientAddress.sendPermissionTx(data, keys);
             case constants.DOCKER_CREATE_TX_NAME:
                 return this.txRequestFromClientAddress.sendDockerCreateTx(data, keys);
+            case constants.DOCKER_CREATE_V2_TX_NAME:
+                return this.txRequestFromClientAddress.sendDockerCreateV2Tx(data, keys);
             case constants.DOCKER_CALL_TX_NAME:
                 return this.txRequestFromClientAddress.sendDockerCallTx(data, keys);
            case constants.DOCKER_DISABLE_TX_NAME:
@@ -139,6 +141,8 @@ export default class Transactions {
                 return this.txRequestFromNodeAddress(requests.prePermit, requests.postPermit, nodeAddress, data, extraData);
             case constants.DOCKER_CREATE_TX_NAME:
                 return this.txRequestFromNodeAddress(requests.preDockerCreate, requests.postDockerCreate, nodeAddress, data, extraData);
+            case constants.DOCKER_CREATE_V2_TX_NAME:
+                return this.txRequestFromNodeAddress(requests.preDockerCreateV2, requests.postDockerCreateV2, nodeAddress, data, extraData);
             case constants.DOCKER_CALL_TX_NAME:
                 return this.txRequestFromNodeAddress(requests.preDockerCall, requests.postDockerCall, nodeAddress, data, extraData);
             case constants.DOCKER_DISABLE_TX_NAME:
@@ -182,6 +186,8 @@ export default class Transactions {
                 return requests.sendSignedPermissionTx(data, keys);
             case constants.DOCKER_CREATE_TX_NAME:
                 return requests.sendSignedDockerCreateTx(data, keys);
+            case constants.DOCKER_CREATE_V2_TX_NAME:
+                return requests.sendSignedDockerCreateV2Tx(data, keys);
             case constants.DOCKER_CALL_TX_NAME:
                 return requests.sendSignedDockerCallTx(data, keys);
             case constants.DOCKER_DISABLE_TX_NAME:
