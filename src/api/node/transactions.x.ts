@@ -90,6 +90,10 @@ export class TransactionsRequests {
     return this._fetch(constants.BROADCAST_PATH, postParams)
   }, true) as TTransactionRequest;
 
+  sendDockerCreateV2Tx = wrapTxRequest(TX_TYPE_MAP.dockerCreateV2, preDockerCreateV2, postDockerCreateV2, (postParams: any) => {
+    return this._fetch(constants.BROADCAST_PATH, postParams)
+  }, true) as TTransactionRequest;
+
   sendDockerCallTx = wrapTxRequest(TX_TYPE_MAP.dockerCall, preDockerCall, postDockerCall, (postParams: any) => {
     return this._fetch(constants.BROADCAST_PATH, postParams)
   }, true) as TTransactionRequest;
@@ -619,7 +623,7 @@ export const sendSignedPermissionTx = wrapTxRequest(TX_TYPE_MAP.permit, prePermi
   return getSignedTx(postParams).data
 }, true) as TTransactionRequest
 
-export const dockerCreateSchema = new Schema({
+const dockerCreateBaseSchema = {
   type: ObjectPart,
   required: true,
   content: {
@@ -661,7 +665,9 @@ export const dockerCreateSchema = new Schema({
     fee: schemaFields.fee, // TODO : validate against the transaction size in bytes
     timestamp: schemaFields.timestamp
   }
-})
+}
+
+export const dockerCreateSchema = new Schema(dockerCreateBaseSchema)
 
 export const preDockerCreate = (data) => {
   return dockerCreateSchema.parse(data)
@@ -690,6 +696,50 @@ export const postDockerCreate = d => {
 }
 
 export const sendSignedDockerCreateTx = wrapTxRequest(TX_TYPE_MAP.dockerCreate, preDockerCreate, postDockerCreate, (postParams: any) => {
+  return getSignedTx(postParams).data
+}, true) as TTransactionRequest
+
+export const dockerCreateV2Schema = new Schema({
+    ...dockerCreateBaseSchema,
+    content: {
+      ...dockerCreateBaseSchema.content,
+      feeAssetId: {
+        ...schemaFields.assetId,
+        required: false,
+        defaultValue: constants.WAVES
+      }
+    }
+  }
+)
+
+export const preDockerCreateV2 = (data) => {
+  return dockerCreateV2Schema.parse(data)
+}
+
+export const postDockerCreateV2 = d => {
+  const data = JSON.parse(JSON.stringify(d.params))
+
+  data.forEach(e => {
+    if (e.type === 'integer' && typeof e.value === 'string') {
+      e.value = new BigNumber(e.value)
+    }
+
+    return e
+  })
+
+  const result = {
+    ...d,
+    feeAssetId: normalizeAssetId(d.feeAssetId),
+    params: data,
+    transactionType: null,
+    type: constants.DOCKER_CREATE_TX_V2,
+    version: constants.DOCKER_CREATE_TX_VERSION_V2
+  }
+
+  return result
+}
+
+export const sendSignedDockerCreateV2Tx = wrapTxRequest(TX_TYPE_MAP.dockerCreateV2, preDockerCreateV2, postDockerCreateV2, (postParams: any) => {
   return getSignedTx(postParams).data
 }, true) as TTransactionRequest
 
