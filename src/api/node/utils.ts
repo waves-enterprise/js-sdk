@@ -1,9 +1,14 @@
-import { IFetchWrapper } from "../../utils/request";
+import { createFetchWrapper, IFetchWrapper, processJSON, PRODUCTS, VERSIONS } from "../../utils/request";
 
 export default class Utils {
 
     constructor(fetchInstance: IFetchWrapper<any>) {
-        this.fetch = fetchInstance;
+        this.fetch = createFetchWrapper({
+            product: PRODUCTS.NODE,
+            version: VERSIONS.V1,
+            pipe: processJSON,
+            fetchInstance
+        });
     }
 
     private readonly fetch: IFetchWrapper<any>;

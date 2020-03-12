@@ -70,7 +70,7 @@ function castFromRawToPrefixed(raw) {
 
 export function createRemapper(rules) {
 
-    return function (data: IHash<any>): IHash<any> {
+    return function (data: any): any {
 
         return Object.keys({...data, ...rules}).reduce((result, key) => {
 

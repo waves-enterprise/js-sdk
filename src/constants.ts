@@ -142,3 +142,5 @@ export const WAVES_V1_ISSUE_TX = {
 };
 
 export const BROADCAST_PATH = '/transactions/broadcast';
+
+export const SIGN_PATH = '/transactions/sign';

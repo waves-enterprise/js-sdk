@@ -1,3 +1,4 @@
+import fetchInstance from "../../libs/fetch";
 import { IKeyPair } from '../../../interfaces';
 import { TTransactionRequest } from '../../utils/request';
 
@@ -9,7 +10,12 @@ import { POST_TEMPLATE } from '../../utils/request';
 import { createOrderSchema } from './orderbooks.x';
 
 
-const fetch = createFetchWrapper(PRODUCTS.MATCHER, VERSIONS.V1, processJSON);
+const fetch = createFetchWrapper({
+    product: PRODUCTS.MATCHER,
+    version: VERSIONS.V1,
+    pipe: processJSON,
+    fetchInstance
+});
 
 const preCreateOrderAsync = (data) => createOrderSchema.parse(data);
 const postCreateOrder = (data) => {

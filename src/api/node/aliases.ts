@@ -1,7 +1,14 @@
+import { createFetchWrapper, processJSON, PRODUCTS, VERSIONS } from "../../utils/request";
+
 export default class Aliases {
 
     constructor(fetchInstance: typeof fetch) {
-        this.fetch = fetchInstance;
+        this.fetch = createFetchWrapper({
+            product: PRODUCTS.NODE,
+            version: VERSIONS.V1,
+            pipe: processJSON,
+            fetchInstance
+        });
     }
 
     private readonly fetch: typeof fetch;
