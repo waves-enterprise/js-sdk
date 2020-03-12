@@ -1,6 +1,6 @@
 {
   "name": "@vostokplatform/waves-api",
-  "version": "1.19.1",
+  "version": "2.0.10",
   "description": "Vostok client-side API library",
   "keywords": [
     "cryptocurrency",
@@ -63,6 +63,7 @@
     "debug": "npm run build && ./node_modules/.bin/tsc -p ./test/tsconfig.json && ./node_modules/.bin/mocha $(find ./tmp-node/test -name 'tx.spec.js')",
     "test-browser": "npm run build && ./node_modules/.bin/tsc -p ./test/tsconfig.browser.json && ./node_modules/.bin/karma start karma.conf.js",
     "test-api": "cd test && mocha -r ts-node/register api/api.spec.ts",
-    "test-api-long-tests": "cd test && mocha -r ts-node/register api/api.spec.ts --with-long-tests"
+    "test-api-long-tests": "cd test && mocha -r ts-node/register api/api.spec.ts --with-long-tests",
+    "test-verify": "cd test && mocha -r ts-node/register verify.spec.ts"
   }
 }

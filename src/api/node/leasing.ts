@@ -1,13 +1,20 @@
-import { createFetchWrapper, PRODUCTS, VERSIONS, processJSON } from '../../utils/request';
+import { createFetchWrapper, IFetchWrapper, processJSON, PRODUCTS, VERSIONS } from "../../utils/request";
 
+export default class Leasing {
 
-const fetch = createFetchWrapper(PRODUCTS.NODE, VERSIONS.V1, processJSON);
+    constructor(fetchInstance: typeof fetch) {
+        this.fetch = createFetchWrapper({
+            product: PRODUCTS.NODE,
+            version: VERSIONS.V1,
+            pipe: processJSON,
+            fetchInstance
+        });
+    }
 
-
-export default {
+    private readonly fetch: IFetchWrapper<any>;
 
     getAllActiveLeases(address) {
-        return fetch(`/leasing/active/${address}`).then((list) => {
+        return this.fetch(`/leasing/active/${address}`).then((list) => {
             return list.map((tx) => {
                 tx.status = 'active';
                 return tx;

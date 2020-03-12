@@ -2,17 +2,17 @@ import {ISignatureGenerator, ISignatureGeneratorConstructor} from '@vostokplatfo
 import {IHash, IKeyPair} from '../../interfaces';
 
 import * as create from 'parse-json-bignumber';
+import { BROADCAST_PATH, SIGN_PATH } from "../constants";
 
 import WavesRequestError from '../errors/WavesRequestError';
 
-import fetch from '../libs/fetch';
 import config from '../config';
 import BigNumber from '../libs/bignumber';
 
-const SAFE_JSON_PARSE = create({
+export const SAFE_JSON_PARSE = create({
     BigNumber
 }).parse;
-const SAFE_JSON_STRINGIFY = create({
+export const SAFE_JSON_STRINGIFY = create({
     BigNumber
 }).stringify;
 
@@ -22,6 +22,12 @@ export interface IFetchWrapper<T> {
     (path: string, options?: IHash<any>): Promise<T>;
 }
 
+export interface IFetchWrapperConfig {
+    product: PRODUCTS;
+    version: VERSIONS;
+    fetchInstance: typeof fetch;
+    pipe?: (value: Response) => Response | PromiseLike<Response>
+}
 
 export const enum PRODUCTS { NODE, MATCHER }
 
@@ -69,7 +75,8 @@ function handleError(url, data) {
 }
 
 
-export function createFetchWrapper(product: PRODUCTS, version: VERSIONS, pipe?: Function): IFetchWrapper<any> {
+export function createFetchWrapper(config: IFetchWrapperConfig): IFetchWrapper<any> {
+    const { product, version, pipe, fetchInstance } = config;
 
     const resolveHost = hostResolvers[key(product, version)];
 
@@ -77,7 +84,7 @@ export function createFetchWrapper(product: PRODUCTS, version: VERSIONS, pipe?: 
 
         const url = resolveHost() + normalizePath(path);
 
-        const request = fetch(url, options);
+        const request = fetchInstance(url, options);
 
         if (pipe) {
             return request.then(pipe).catch((data) => handleError(url, data));
@@ -128,3 +135,45 @@ export function wrapTxRequest(SignatureGenerator: ISignatureGeneratorConstructor
     };
 
 }
+
+export const createTxRequestWrapper = (fetchInstance: IFetchWrapper<any>) => {
+  return (
+    preRemapAsync: (data) => Promise<any>,
+    postRemap: Function,
+    nodeAddress: string,
+    data: IHash<any>,
+    extraData: {
+      sender: string;
+      password: string;
+    }
+  ): Promise<any> => {
+    nodeAddress = nodeAddress.replace(/\/+$/, '');
+    return preRemapAsync(data).then(validatedData => {
+      const body = {
+        ...(postRemap(validatedData)),
+        ...extraData
+      };
+      if (body.assetId === '') {
+        body.assetId = null;
+      }
+      if (body.feeAssetId === '') {
+        body.feeAssetId = null;
+      }
+
+      return fetchInstance(nodeAddress + SIGN_PATH, {
+        ...POST_TEMPLATE,
+        credentials: 'include',
+        body: SAFE_JSON_STRINGIFY(body, null, null)
+      })
+        .then(r => processJSON(r))
+        .then((tx) => fetchInstance(
+          nodeAddress + BROADCAST_PATH,
+          {
+            ...POST_TEMPLATE,
+            credentials: 'include',
+            body: SAFE_JSON_STRINGIFY(tx, null, null)
+          }).then(r => processJSON(r))
+        );
+    })
+  };
+};

@@ -1,5 +1,4 @@
 import { TTransactionRequest } from '../../utils/request'
-import { IHash } from '../../../interfaces'  // TODO : fix this issue with interface
 
 import { Schema, NumberPart, ObjectPart, StringPart, ArrayPart, BasePart } from 'ts-api-validator'
 import { TX_TYPE_MAP } from '@vostokplatform/signature-generator'
@@ -20,8 +19,6 @@ interface signedTxData {
   data?: any
 }
 
-const fetch = createFetchWrapper(PRODUCTS.NODE, VERSIONS.V1, processJSON)
-
 class AnyPart extends BasePart<any> {
   protected getValue<T> (data: T): T {
     return data
@@ -36,6 +33,83 @@ function getSignedTx (data: signedTx): signedTxData {
   }
 }
 
+export class TransactionsRequests {
+  constructor(private readonly _fetch: typeof fetch) {
+    this._fetch = _fetch;
+  }
+
+  sendIssueTx = wrapTxRequest(TX_TYPE_MAP.issue, preIssue, postIssue, (postParams: any) => {
+    return this._fetch(constants.BROADCAST_PATH, postParams)
+  }, true) as TTransactionRequest;
+
+  sendTransferTx = wrapTxRequest(TX_TYPE_MAP.transfer, preTransfer, postTransfer, (postParams: any) => {
+    return this._fetch(constants.BROADCAST_PATH, postParams)
+  }, true) as TTransactionRequest;
+
+  sendReissueTx = wrapTxRequest(TX_TYPE_MAP.reissue, preReissue, postReissue, (postParams: any) => {
+    return this._fetch(constants.BROADCAST_PATH, postParams)
+  }, true) as TTransactionRequest;
+
+  sendBurnTx = wrapTxRequest(TX_TYPE_MAP.burn, preBurn, postBurn, (postParams: any) => {
+    return this._fetch(constants.BROADCAST_PATH, postParams)
+  }, true) as TTransactionRequest;
+
+  sendLeaseTx = wrapTxRequest(TX_TYPE_MAP.lease, preLease, postLease, (postParams: any) => {
+    return this._fetch(constants.BROADCAST_PATH, postParams)
+  }, true) as TTransactionRequest;
+
+  sendCancelLeasingTx = wrapTxRequest(TX_TYPE_MAP.cancelLeasing, preCancelLeasing, postCancelLeasing, (postParams: any) => {
+    return this._fetch(constants.BROADCAST_PATH, postParams)
+  }, true) as TTransactionRequest;
+
+  sendCreateAliasTx = wrapTxRequest(TX_TYPE_MAP.createAlias, preCreateAlias, postCreateAlias, (postParams: any) => {
+    return this._fetch(constants.BROADCAST_PATH, postParams)
+  }, true) as TTransactionRequest;
+
+  sendMassTransferTx = wrapTxRequest(TX_TYPE_MAP.massTransfer, preMassTransfer, postMassTransfer, (postParams: any) => {
+    return this._fetch(constants.BROADCAST_PATH, postParams)
+  }, true) as TTransactionRequest;
+
+  sendDataTx = wrapTxRequest(TX_TYPE_MAP.data, preData, postData, (postParams: any) => {
+    return this._fetch(constants.BROADCAST_PATH, postParams)
+  }, true) as TTransactionRequest;
+
+  sendSetScriptTx = wrapTxRequest(TX_TYPE_MAP.setScript, preSetScript, postSetScript, (postParams: any) => {
+    return this._fetch(constants.BROADCAST_PATH, postParams)
+  }, true) as TTransactionRequest;
+
+  sendSponsorshipTx = wrapTxRequest(TX_TYPE_MAP.sponsorship, preSponsorship, postSponsorship, (postParams: any) => {
+    return this._fetch(constants.BROADCAST_PATH, postParams)
+  }, true) as TTransactionRequest;
+
+  sendPermissionTx = wrapTxRequest(TX_TYPE_MAP.permit, prePermit, postPermit, (postParams: any) => {
+    return this._fetch(constants.BROADCAST_PATH, postParams)
+  }, true) as TTransactionRequest;
+
+  sendDockerCreateTx = wrapTxRequest(TX_TYPE_MAP.dockerCreate, preDockerCreate, postDockerCreate, (postParams: any) => {
+    return this._fetch(constants.BROADCAST_PATH, postParams)
+  }, true) as TTransactionRequest;
+
+  sendDockerCallTx = wrapTxRequest(TX_TYPE_MAP.dockerCall, preDockerCall, postDockerCall, (postParams: any) => {
+    return this._fetch(constants.BROADCAST_PATH, postParams)
+  }, true) as TTransactionRequest;
+
+  sendDockerDisableTx = wrapTxRequest(TX_TYPE_MAP.dockerDisable, preDockerDisable, postDockerDisable, (postParams: any) => {
+    return this._fetch(constants.BROADCAST_PATH, postParams)
+  }, true) as TTransactionRequest;
+
+  sendNodeRegistry = wrapTxRequest(TX_TYPE_MAP.policyRegisterNode, preNodeRegistry, postNodeRegistry, (postParams: any) => {
+    return this._fetch(constants.BROADCAST_PATH, postParams)
+  }, true) as TTransactionRequest;
+
+  sendPolicyCreate = wrapTxRequest(TX_TYPE_MAP.policyCreate, prePolicyCreate, postPolicyCreate, (postParams: any) => {
+    return this._fetch(constants.BROADCAST_PATH, postParams)
+  }, true) as TTransactionRequest;
+
+  sendPolicyUpdate = wrapTxRequest(TX_TYPE_MAP.policyUpdate, preUpdateCreate, postUpdateCreate, (postParams: any) => {
+    return this._fetch(constants.BROADCAST_PATH, postParams)
+  }, true) as TTransactionRequest;
+}
 /* ISSUE */
 
 export const issueSchema = new Schema({
@@ -75,7 +149,7 @@ export const issueSchema = new Schema({
       parseValue: () => config.getNetworkByte()
     }
   }
-})
+});
 
 export const preIssue = (data) => issueSchema.parse(data)
 export const postIssue = createRemapper({
@@ -88,10 +162,6 @@ export const postIssue = createRemapper({
     to: 'bignumber'
   },
 })
-
-export const sendIssueTx = wrapTxRequest(TX_TYPE_MAP.issue, preIssue, postIssue, (postParams: any) => {
-  return fetch(constants.BROADCAST_PATH, postParams)
-}, true) as TTransactionRequest
 
 export const sendSignedIssueTx = wrapTxRequest(TX_TYPE_MAP.issue, preIssue, postIssue, (postParams: any) => {
   return getSignedTx(postParams).data
@@ -147,10 +217,6 @@ export const postTransfer = createRemapper({
   version: constants.TRANSFER_TX_VERSION
 })
 
-export const sendTransferTx = wrapTxRequest(TX_TYPE_MAP.transfer, preTransfer, postTransfer, (postParams: any) => {
-  return fetch(constants.BROADCAST_PATH, postParams)
-}, true) as TTransactionRequest
-
 export const sendSignedTransferTx = wrapTxRequest(TX_TYPE_MAP.transfer, preTransfer, postTransfer, (postParams: any) => {
   return getSignedTx(postParams).data
 }, true) as TTransactionRequest
@@ -189,10 +255,6 @@ export const postReissue = createRemapper({
   }
 })
 
-export const sendReissueTx = wrapTxRequest(TX_TYPE_MAP.reissue, preReissue, postReissue, (postParams: any) => {
-  return fetch(constants.BROADCAST_PATH, postParams)
-}, true) as TTransactionRequest
-
 export const sendSignedReissueTx = wrapTxRequest(TX_TYPE_MAP.reissue, preReissue, postReissue, (postParams: any) => {
   return getSignedTx(postParams).data
 }, true) as TTransactionRequest
@@ -230,10 +292,6 @@ export const postBurn = createRemapper(({
   }
 }))
 
-export const sendBurnTx = wrapTxRequest(TX_TYPE_MAP.burn, preBurn, postBurn, (postParams: any) => {
-  return fetch(constants.BROADCAST_PATH, postParams)
-}, true) as TTransactionRequest
-
 export const sendSignedBurnTx = wrapTxRequest(TX_TYPE_MAP.burn, preBurn, postBurn, (postParams: any) => {
   return getSignedTx(postParams).data
 }, true) as TTransactionRequest
@@ -265,10 +323,6 @@ export const postLease = createRemapper({
   type: constants.LEASE_TX,
   version: constants.LEASE_TX_VERSION
 })
-
-export const sendLeaseTx = wrapTxRequest(TX_TYPE_MAP.lease, preLease, postLease, (postParams: any) => {
-  return fetch(constants.BROADCAST_PATH, postParams)
-}, true) as TTransactionRequest
 
 export const sendSignedLeaseTx = wrapTxRequest(TX_TYPE_MAP.lease, preLease, postLease, (postParams: any) => {
   return getSignedTx(postParams).data
@@ -303,10 +357,6 @@ export const postCancelLeasing = createRemapper({
   version: constants.CANCEL_LEASING_TX_VERSION
 })
 
-export const sendCancelLeasingTx = wrapTxRequest(TX_TYPE_MAP.cancelLeasing, preCancelLeasing, postCancelLeasing, (postParams: any) => {
-  return fetch(constants.BROADCAST_PATH, postParams)
-}, true) as TTransactionRequest
-
 export const sendSignedCancelLeasingTx = wrapTxRequest(TX_TYPE_MAP.cancelLeasing, preCancelLeasing, postCancelLeasing, (postParams: any) => {
   return getSignedTx(postParams).data
 }, true) as TTransactionRequest
@@ -334,10 +384,6 @@ export const postCreateAlias = createRemapper({
   type: constants.CREATE_ALIAS_TX,
   version: constants.CREATE_ALIAS_TX_VERSION
 })
-
-export const sendCreateAliasTx = wrapTxRequest(TX_TYPE_MAP.createAlias, preCreateAlias, postCreateAlias, (postParams: any) => {
-  return fetch(constants.BROADCAST_PATH, postParams)
-}, true) as TTransactionRequest
 
 export const sendSignedCreateAliasTx = wrapTxRequest(TX_TYPE_MAP.createAlias, preCreateAlias, postCreateAlias, (postParams: any) => {
   return getSignedTx(postParams).data
@@ -393,10 +439,6 @@ export const postMassTransfer = createRemapper({
   type: constants.MASS_TRANSFER_TX,
   version: constants.MASS_TRANSFER_TX_VERSION
 })
-
-export const sendMassTransferTx = wrapTxRequest(TX_TYPE_MAP.massTransfer, preMassTransfer, postMassTransfer, (postParams: any) => {
-  return fetch(constants.BROADCAST_PATH, postParams)
-}, true) as TTransactionRequest
 
 export const sendSignedMassTransferTx = wrapTxRequest(TX_TYPE_MAP.massTransfer, preMassTransfer, postMassTransfer, (postParams: any) => {
   return getSignedTx(postParams).data
@@ -465,10 +507,6 @@ export const postData = d => {
   return result
 }
 
-export const sendDataTx = wrapTxRequest(TX_TYPE_MAP.data, preData, postData, (postParams: any) => {
-  return fetch(constants.BROADCAST_PATH, postParams)
-}, true) as TTransactionRequest
-
 export const sendSignedDataTx = wrapTxRequest(TX_TYPE_MAP.data, preData, postData, (postParams: any) => {
   return getSignedTx(postParams).data
 }, true) as TTransactionRequest
@@ -510,10 +548,6 @@ export const postSetScript = createRemapper({
   version: constants.SET_SCRIPT_TX_VERSION
 })
 
-export const sendSetScriptTx = wrapTxRequest(TX_TYPE_MAP.setScript, preSetScript, postSetScript, (postParams: any) => {
-  return fetch(constants.BROADCAST_PATH, postParams)
-}, true) as TTransactionRequest
-
 export const sendSignedSetScriptTx = wrapTxRequest(TX_TYPE_MAP.setScript, preSetScript, postSetScript, (postParams: any) => {
   return getSignedTx(postParams).data
 }, true) as TTransactionRequest
@@ -541,10 +575,6 @@ export const postSponsorship = createRemapper({
   type: constants.SPONSORSHIP_TX,
   version: constants.SPONSORSHIP_TX_VERSION
 })
-
-export const sendSponsorshipTx = wrapTxRequest(TX_TYPE_MAP.sponsorship, preSponsorship, postSponsorship, (postParams: any) => {
-  return fetch(constants.BROADCAST_PATH, postParams)
-}, true) as TTransactionRequest
 
 export const sendSignedSponsorshipTx = wrapTxRequest(TX_TYPE_MAP.sponsorship, preSponsorship, postSponsorship, (postParams: any) => {
   return getSignedTx(postParams).data
@@ -584,10 +614,6 @@ export const postPermit = createRemapper({
   type: constants.PERMISSION_TX,
   version: constants.PERMISSION_TX_VERSION
 })
-
-export const sendPermissionTx = wrapTxRequest(TX_TYPE_MAP.permit, prePermit, postPermit, (postParams: any) => {
-  return fetch(constants.BROADCAST_PATH, postParams)
-}, true) as TTransactionRequest
 
 export const sendSignedPermissionTx = wrapTxRequest(TX_TYPE_MAP.permit, prePermit, postPermit, (postParams: any) => {
   return getSignedTx(postParams).data
@@ -667,10 +693,6 @@ export const sendSignedDockerCreateTx = wrapTxRequest(TX_TYPE_MAP.dockerCreate, 
   return getSignedTx(postParams).data
 }, true) as TTransactionRequest
 
-export const sendDockerCreateTx = wrapTxRequest(TX_TYPE_MAP.dockerCreate, preDockerCreate, postDockerCreate, (postParams: any) => {
-  return fetch(constants.BROADCAST_PATH, postParams)
-}, true) as TTransactionRequest
-
 export const dockerCallSchema = new Schema({
   type: ObjectPart,
   required: true,
@@ -739,10 +761,6 @@ export const sendSignedDockerCallTx = wrapTxRequest(TX_TYPE_MAP.dockerCall, preD
   return getSignedTx(postParams).data
 }, true) as TTransactionRequest
 
-export const sendDockerCallTx = wrapTxRequest(TX_TYPE_MAP.dockerCall, preDockerCall, postDockerCall, (postParams: any) => {
-  return fetch(constants.BROADCAST_PATH, postParams)
-}, true) as TTransactionRequest
-
 export const dockerDisableSchema = new Schema({
   type: ObjectPart,
   required: true,
@@ -772,10 +790,6 @@ export const postDockerDisable = d => {
 
 export const sendSignedDockerDisableTx = wrapTxRequest(TX_TYPE_MAP.dockerDisable, preDockerDisable, postDockerDisable, (postParams: any) => {
   return getSignedTx(postParams).data
-}, true) as TTransactionRequest
-
-export const sendDockerDisableTx = wrapTxRequest(TX_TYPE_MAP.dockerDisable, preDockerDisable, postDockerDisable, (postParams: any) => {
-  return fetch(constants.BROADCAST_PATH, postParams)
 }, true) as TTransactionRequest
 
 export const nodeRegistrySchema = new Schema({
@@ -812,10 +826,6 @@ export const postNodeRegistry = d => {
 
 export const signNodeRegistry = wrapTxRequest(TX_TYPE_MAP.policyRegisterNode, preNodeRegistry, postNodeRegistry, (postParams: any) => {
   return getSignedTx(postParams).data
-}, true) as TTransactionRequest
-
-export const sendNodeRegistry = wrapTxRequest(TX_TYPE_MAP.policyRegisterNode, preNodeRegistry, postNodeRegistry, (postParams: any) => {
-  return fetch(constants.BROADCAST_PATH, postParams)
 }, true) as TTransactionRequest
 
 export const policyCreateScheme = new Schema({
@@ -869,10 +879,6 @@ export const signPolicyCreate = wrapTxRequest(TX_TYPE_MAP.policyCreate, prePolic
   return getSignedTx(postParams).data
 }, true) as TTransactionRequest
 
-export const sendPolicyCreate = wrapTxRequest(TX_TYPE_MAP.policyCreate, prePolicyCreate, postPolicyCreate, (postParams: any) => {
-  return fetch(constants.BROADCAST_PATH, postParams)
-}, true) as TTransactionRequest
-
 export const policyUpdateScheme = new Schema({
   type: ObjectPart,
   required: true,
@@ -922,8 +928,4 @@ export const postUpdateCreate = d => {
 
 export const signPolicyUpdate = wrapTxRequest(TX_TYPE_MAP.policyUpdate, preUpdateCreate, postUpdateCreate, (postParams: any) => {
   return getSignedTx(postParams).data
-}, true) as TTransactionRequest
-
-export const sendPolicyUpdate = wrapTxRequest(TX_TYPE_MAP.policyUpdate, preUpdateCreate, postUpdateCreate, (postParams: any) => {
-  return fetch(constants.BROADCAST_PATH, postParams)
 }, true) as TTransactionRequest

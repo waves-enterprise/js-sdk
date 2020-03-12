@@ -1,17 +1,24 @@
-import { createFetchWrapper, PRODUCTS, VERSIONS, processJSON } from '../../utils/request';
+import { createFetchWrapper, processJSON, PRODUCTS, VERSIONS } from "../../utils/request";
 
+export default class Aliases {
 
-const fetch = createFetchWrapper(PRODUCTS.NODE, VERSIONS.V1, processJSON);
+    constructor(fetchInstance: typeof fetch) {
+        this.fetch = createFetchWrapper({
+            product: PRODUCTS.NODE,
+            version: VERSIONS.V1,
+            pipe: processJSON,
+            fetchInstance
+        });
+    }
 
-
-export default {
+    private readonly fetch: typeof fetch;
 
     byAlias(alias: string) {
-        return fetch(`/alias/by-alias/${alias}`);
-    },
+        return this.fetch(`/alias/by-alias/${alias}`);
+    }
 
     byAddress(address: string) {
-        return fetch(`/alias/by-address/${address}`);
+        return this.fetch(`/alias/by-address/${address}`);
     }
 
 };

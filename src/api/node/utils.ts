@@ -1,19 +1,26 @@
-import { createFetchWrapper, PRODUCTS, VERSIONS, processJSON } from '../../utils/request';
+import { createFetchWrapper, IFetchWrapper, processJSON, PRODUCTS, VERSIONS } from "../../utils/request";
 
+export default class Utils {
 
-const fetch = createFetchWrapper(PRODUCTS.NODE, VERSIONS.V1, processJSON);
+    constructor(fetchInstance: IFetchWrapper<any>) {
+        this.fetch = createFetchWrapper({
+            product: PRODUCTS.NODE,
+            version: VERSIONS.V1,
+            pipe: processJSON,
+            fetchInstance
+        });
+    }
 
-
-export default {
+    private readonly fetch: IFetchWrapper<any>;
 
     time() {
-        return fetch('/utils/time').then((t) => t.system);
-    },
+        return this.fetch('/utils/time').then((t) => t.system);
+    }
 
-    script: {
+    script = {
 
         compile(code: string): Promise<string> {
-            return fetch('/utils/script/compile', {
+            return this.fetch('/utils/script/compile', {
                 method: 'POST',
                 body: code
             }).then((response) => {

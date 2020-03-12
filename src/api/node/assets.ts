@@ -1,27 +1,38 @@
-import { createFetchWrapper, PRODUCTS, VERSIONS, processJSON } from '../../utils/request';
-import addresses from './addresses';
+import { createFetchWrapper, processJSON, PRODUCTS, VERSIONS } from "../../utils/request";
+import Addresses from './addresses';
 import * as constants from '../../constants';
 
 
-const fetch = createFetchWrapper(PRODUCTS.NODE, VERSIONS.V1, processJSON);
+export default class Assets {
 
+    constructor(fetchInstance: typeof fetch) {
+        this.fetch = createFetchWrapper({
+            product: PRODUCTS.NODE,
+            version: VERSIONS.V1,
+            pipe: processJSON,
+            fetchInstance
+        });
+        this.addresses = new Addresses(this.fetch);
+    }
 
-export default {
+    private readonly fetch: typeof fetch;
+
+    private readonly addresses: Addresses;
 
     balances(address: string) {
-        return fetch(`/assets/balance/${address}`);
-    },
+        return this.fetch(`/assets/balance/${address}`);
+    }
 
     balance(address: string, assetId: string) {
         if (assetId === constants.WAVES) {
-            return addresses.balance(address);
+            return this.addresses.balance(address);
         } else {
-            return fetch(`/assets/balance/${address}/${assetId}`);
+            return this.fetch(`/assets/balance/${address}/${assetId}`);
         }
-    },
+    }
 
     distribution(assetId: string) {
-        return fetch(`/assets/${assetId}/distribution`);
+        return this.fetch(`/assets/${assetId}/distribution`);
     }
 
 };
