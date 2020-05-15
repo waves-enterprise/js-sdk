@@ -190,6 +190,8 @@ export default class Transactions {
                 return requests.sendSignedDockerCreateV2Tx(data, keys);
             case constants.DOCKER_CALL_TX_NAME:
                 return requests.sendSignedDockerCallTx(data, keys);
+            case constants.DOCKER_CALL_V2_TX_NAME:
+                return requests.sendSignedDockerCallV2Tx(data, keys);
             case constants.DOCKER_DISABLE_TX_NAME:
                 return requests.sendSignedDockerDisableTx(data, keys);
 

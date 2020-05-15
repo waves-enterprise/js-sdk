@@ -43,7 +43,7 @@
     "ts-node": "^7.0.1"
   },
   "dependencies": {
-    "@vostokplatform/signature-generator": "1.6.7-RC3",
+    "@vostokplatform/signature-generator": "1.6.7-RC4",
     "bignumber.js": "7.2.1",
     "crypto-js": "3.1.9-1",
     "@vostokplatform/crypto-gost-js": "2.0.0",
