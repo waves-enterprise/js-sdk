@@ -1,6 +1,6 @@
 {
   "name": "@vostokplatform/waves-api",
-  "version": "1.3.0-RC15",
+  "version": "1.3.1",
   "description": "Vostok client-side API library",
   "keywords": [
     "cryptocurrency",
@@ -43,7 +43,7 @@
     "ts-node": "^7.0.1"
   },
   "dependencies": {
-    "@vostokplatform/signature-generator": "1.6.7-RC6",
+    "@vostokplatform/signature-generator": "1.6.8",
     "bignumber.js": "7.2.1",
     "crypto-js": "3.1.9-1",
     "@vostokplatform/crypto-gost-js": "2.0.0",

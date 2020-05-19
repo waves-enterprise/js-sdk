@@ -825,11 +825,6 @@ export const dockerCallSchemaV2 = new Schema({
     contractVersion: {
       type: NumberPart,
       required: true
-    },
-    feeAssetId: {
-      ...schemaFields.assetId,
-      required: false,
-      defaultValue: constants.WAVES
     }
   }
 })
@@ -852,7 +847,6 @@ export const postDockerCallV2 = d => {
 
   const result = {
     ...d,
-    feeAssetId: normalizeAssetId(d.feeAssetId),
     params: data,
     transactionType: null,
     type: constants.DOCKER_CALL_TX_V2,
