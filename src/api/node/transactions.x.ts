@@ -102,6 +102,10 @@ export class TransactionsRequests {
     return this._fetch(constants.BROADCAST_PATH, postParams)
   }, true) as TTransactionRequest;
 
+  sendDockerCallV3Tx = wrapTxRequest(TX_TYPE_MAP.dockerCallV3, preDockerCallV3, postDockerCallV3, (postParams: any) => {
+    return this._fetch(constants.BROADCAST_PATH, postParams)
+  }, true) as TTransactionRequest;
+
   sendDockerDisableTx = wrapTxRequest(TX_TYPE_MAP.dockerDisable, preDockerDisable, postDockerDisable, (postParams: any) => {
     return this._fetch(constants.BROADCAST_PATH, postParams)
   }, true) as TTransactionRequest;
@@ -857,6 +861,55 @@ export const postDockerCallV2 = d => {
 }
 
 export const sendSignedDockerCallV2Tx = wrapTxRequest(TX_TYPE_MAP.dockerCallV2, preDockerCallV2, postDockerCallV2, (postParams: any) => {
+  return getSignedTx(postParams).data
+}, true) as TTransactionRequest
+
+
+export const dockerCallSchemaV3 = new Schema({
+  ...dockerCallSchemaBase,
+  content: {
+    ...dockerCallSchemaBase.content,
+    contractVersion: {
+      type: NumberPart,
+      required: true
+    },
+    feeAssetId: {
+      ...schemaFields.assetId,
+      required: false,
+      defaultValue: constants.WAVES
+    }
+  }
+})
+
+export const preDockerCallV3 = (data) => {
+  return dockerCallSchemaV3.parse(data)
+}
+
+// todo DRY
+export const postDockerCallV3 = d => {
+  const data = JSON.parse(JSON.stringify(d.params))
+
+  data.forEach(e => {
+    if (e.type === 'integer' && typeof e.value === 'string') {
+      e.value = new BigNumber(e.value)
+    }
+
+    return e
+  })
+
+  const result = {
+    ...d,
+    feeAssetId: normalizeAssetId(d.feeAssetId),
+    params: data,
+    transactionType: null,
+    type: constants.DOCKER_CALL_TX_V3,
+    version: constants.DOCKER_CALL_TX_VERSION_V3
+  }
+
+  return result
+}
+
+export const sendSignedDockerCallV3Tx = wrapTxRequest(TX_TYPE_MAP.dockerCallV3, preDockerCallV3, postDockerCallV3, (postParams: any) => {
   return getSignedTx(postParams).data
 }, true) as TTransactionRequest
 
