@@ -98,6 +98,10 @@ export class TransactionsRequests {
     return this._fetch(constants.BROADCAST_PATH, postParams)
   }, true) as TTransactionRequest;
 
+  sendDockerCallV2Tx = wrapTxRequest(TX_TYPE_MAP.dockerCallV2, preDockerCallV2, postDockerCallV2, (postParams: any) => {
+    return this._fetch(constants.BROADCAST_PATH, postParams)
+  }, true) as TTransactionRequest;
+
   sendDockerDisableTx = wrapTxRequest(TX_TYPE_MAP.dockerDisable, preDockerDisable, postDockerDisable, (postParams: any) => {
     return this._fetch(constants.BROADCAST_PATH, postParams)
   }, true) as TTransactionRequest;
@@ -743,7 +747,7 @@ export const sendSignedDockerCreateV2Tx = wrapTxRequest(TX_TYPE_MAP.dockerCreate
   return getSignedTx(postParams).data
 }, true) as TTransactionRequest
 
-export const dockerCallSchema = new Schema({
+const dockerCallSchemaBase = {
   type: ObjectPart,
   required: true,
   content: {
@@ -778,7 +782,9 @@ export const dockerCallSchema = new Schema({
     fee: schemaFields.fee, // TODO : validate against the transaction size in bytes
     timestamp: schemaFields.timestamp
   }
-})
+}
+
+export const dockerCallSchema = new Schema(dockerCallSchemaBase)
 
 export const preDockerCall = (data) => {
   return dockerCallSchema.parse(data)
@@ -810,6 +816,50 @@ export const postDockerCall = d => {
 export const sendSignedDockerCallTx = wrapTxRequest(TX_TYPE_MAP.dockerCall, preDockerCall, postDockerCall, (postParams: any) => {
   return getSignedTx(postParams).data
 }, true) as TTransactionRequest
+
+
+export const dockerCallSchemaV2 = new Schema({
+  ...dockerCallSchemaBase,
+  content: {
+    ...dockerCallSchemaBase.content,
+    contractVersion: {
+      type: NumberPart,
+      required: true
+    }
+  }
+})
+
+export const preDockerCallV2 = (data) => {
+  return dockerCallSchemaV2.parse(data)
+}
+
+// todo DRY
+export const postDockerCallV2 = d => {
+  const data = JSON.parse(JSON.stringify(d.params))
+
+  data.forEach(e => {
+    if (e.type === 'integer' && typeof e.value === 'string') {
+      e.value = new BigNumber(e.value)
+    }
+
+    return e
+  })
+
+  const result = {
+    ...d,
+    params: data,
+    transactionType: null,
+    type: constants.DOCKER_CALL_TX_V2,
+    version: constants.DOCKER_CALL_TX_VERSION_V2
+  }
+
+  return result
+}
+
+export const sendSignedDockerCallV2Tx = wrapTxRequest(TX_TYPE_MAP.dockerCallV2, preDockerCallV2, postDockerCallV2, (postParams: any) => {
+  return getSignedTx(postParams).data
+}, true) as TTransactionRequest
+
 
 export const dockerDisableSchema = new Schema({
   type: ObjectPart,
