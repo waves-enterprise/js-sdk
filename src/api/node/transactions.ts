@@ -101,6 +101,8 @@ export default class Transactions {
                 return this.txRequestFromClientAddress.sendDockerCallTx(data, keys);
             case constants.DOCKER_CALL_V2_TX_NAME:
                 return this.txRequestFromClientAddress.sendDockerCallV2Tx(data, keys);
+            case constants.DOCKER_CALL_V3_TX_NAME:
+                return this.txRequestFromClientAddress.sendDockerCallV3Tx(data, keys);
            case constants.DOCKER_DISABLE_TX_NAME:
                 return this.txRequestFromClientAddress.sendDockerDisableTx(data, keys);
 
@@ -149,6 +151,8 @@ export default class Transactions {
                 return this.txRequestFromNodeAddress(requests.preDockerCall, requests.postDockerCall, nodeAddress, data, extraData);
             case constants.DOCKER_CALL_V2_TX_NAME:
                 return this.txRequestFromNodeAddress(requests.preDockerCallV2, requests.postDockerCallV2, nodeAddress, data, extraData);
+            case constants.DOCKER_CALL_V3_TX_NAME:
+                return this.txRequestFromNodeAddress(requests.preDockerCallV3, requests.postDockerCallV3, nodeAddress, data, extraData);
             case constants.DOCKER_DISABLE_TX_NAME:
                 return this.txRequestFromNodeAddress(requests.preDockerDisable, requests.postDockerDisable, nodeAddress, data, extraData);
             case constants.POLICY_REGISTER_NODE_TX_NAME:
@@ -196,6 +200,8 @@ export default class Transactions {
                 return requests.sendSignedDockerCallTx(data, keys);
             case constants.DOCKER_CALL_V2_TX_NAME:
                 return requests.sendSignedDockerCallV2Tx(data, keys);
+            case constants.DOCKER_CALL_V3_TX_NAME:
+                return requests.sendSignedDockerCallV3Tx(data, keys);
             case constants.DOCKER_DISABLE_TX_NAME:
                 return requests.sendSignedDockerDisableTx(data, keys);
 
