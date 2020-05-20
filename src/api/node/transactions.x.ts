@@ -110,6 +110,10 @@ export class TransactionsRequests {
     return this._fetch(constants.BROADCAST_PATH, postParams)
   }, true) as TTransactionRequest;
 
+  sendDockerUpdateV2Tx = wrapTxRequest(TX_TYPE_MAP.dockerUpdateV2, preDockerUpdateV2, postDockerUpdateV2, (postParams: any) => {
+    return this._fetch(constants.BROADCAST_PATH, postParams)
+  }, true) as TTransactionRequest;
+
   sendNodeRegistry = wrapTxRequest(TX_TYPE_MAP.policyRegisterNode, preNodeRegistry, postNodeRegistry, (postParams: any) => {
     return this._fetch(constants.BROADCAST_PATH, postParams)
   }, true) as TTransactionRequest;
@@ -942,6 +946,50 @@ export const postDockerDisable = d => {
 }
 
 export const sendSignedDockerDisableTx = wrapTxRequest(TX_TYPE_MAP.dockerDisable, preDockerDisable, postDockerDisable, (postParams: any) => {
+  return getSignedTx(postParams).data
+}, true) as TTransactionRequest
+
+export const dockerUpdateV2Schema = new Schema({
+  type: ObjectPart,
+  required: true,
+  content: {
+    senderPublicKey: schemaFields.publicKey,
+    contractId: {
+      type: StringPart,
+      required: true
+    },
+    image: {
+      type: StringPart,
+      required: true
+    },
+    imageHash: {
+      type: StringPart,
+      required: true
+    },
+    fee: schemaFields.fee,
+    timestamp: schemaFields.timestamp,
+    feeAssetId: {
+      ...schemaFields.assetId,
+      required: false,
+      defaultValue: constants.WAVES
+    }
+  }
+})
+
+export const preDockerUpdateV2 = (data) => {
+  return dockerUpdateV2Schema.parse(data)
+}
+
+export const postDockerUpdateV2 = d => {
+  return {
+    ...d,
+    transactionType: null,
+    type: constants.DOCKER_UPDATE_TX_V2,
+    version: constants.DOCKER_UPDATE_TX_VERSION_V2
+  }
+}
+
+export const sendSignedDockerUpdateV2Tx = wrapTxRequest(TX_TYPE_MAP.dockerUpdateV2, preDockerUpdateV2, postDockerUpdateV2, (postParams: any) => {
   return getSignedTx(postParams).data
 }, true) as TTransactionRequest
 

@@ -103,8 +103,10 @@ export default class Transactions {
                 return this.txRequestFromClientAddress.sendDockerCallV2Tx(data, keys);
             case constants.DOCKER_CALL_V3_TX_NAME:
                 return this.txRequestFromClientAddress.sendDockerCallV3Tx(data, keys);
-           case constants.DOCKER_DISABLE_TX_NAME:
+            case constants.DOCKER_DISABLE_TX_NAME:
                 return this.txRequestFromClientAddress.sendDockerDisableTx(data, keys);
+            case constants.DOCKER_UPDATE_V2_TX_NAME:
+                return this.txRequestFromClientAddress.sendDockerUpdateV2Tx(data, keys);
 
             case constants.POLICY_REGISTER_NODE_TX_NAME:
                 return this.txRequestFromClientAddress.sendNodeRegistry(data, keys);
@@ -155,6 +157,8 @@ export default class Transactions {
                 return this.txRequestFromNodeAddress(requests.preDockerCallV3, requests.postDockerCallV3, nodeAddress, data, extraData);
             case constants.DOCKER_DISABLE_TX_NAME:
                 return this.txRequestFromNodeAddress(requests.preDockerDisable, requests.postDockerDisable, nodeAddress, data, extraData);
+            case constants.DOCKER_UPDATE_V2_TX_NAME:
+                return this.txRequestFromNodeAddress(requests.preDockerUpdateV2, requests.postDockerUpdateV2, nodeAddress, data, extraData);
             case constants.POLICY_REGISTER_NODE_TX_NAME:
                 return this.txRequestFromNodeAddress(requests.preNodeRegistry, requests.postNodeRegistry, nodeAddress, data, extraData);
             case constants.POLICY_CREATE_TX_NAME:
@@ -204,6 +208,8 @@ export default class Transactions {
                 return requests.sendSignedDockerCallV3Tx(data, keys);
             case constants.DOCKER_DISABLE_TX_NAME:
                 return requests.sendSignedDockerDisableTx(data, keys);
+            case constants.DOCKER_UPDATE_V2_TX_NAME:
+                return requests.sendSignedDockerUpdateV2Tx(data, keys);
 
             case constants.POLICY_REGISTER_NODE_TX_NAME:
                 return requests.signNodeRegistry(data, keys);
