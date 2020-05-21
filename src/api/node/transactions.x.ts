@@ -983,6 +983,7 @@ export const preDockerUpdateV2 = (data) => {
 export const postDockerUpdateV2 = d => {
   return {
     ...d,
+    feeAssetId: normalizeAssetId(d.feeAssetId),
     transactionType: null,
     type: constants.DOCKER_UPDATE_TX_V2,
     version: constants.DOCKER_UPDATE_TX_VERSION_V2
