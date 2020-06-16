@@ -141,7 +141,7 @@ export const issueSchema = new Schema({
     script: {
       type: StringPart,
       required: false,
-      defaultValue: 'base64:AQa3b8tH'
+      defaultValue: null
     },
     quantity: { // todo accept as string OR as bignumber
       type: StringPart,
