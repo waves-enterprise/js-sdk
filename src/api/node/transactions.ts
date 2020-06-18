@@ -70,7 +70,11 @@ export default class Transactions {
     broadcastFromClientAddress(type: string, data, keys) {
         switch (type) {
             case constants.ISSUE_TX_NAME:
-                return this.txRequestFromClientAddress.sendIssueTx(data, keys);
+                if (data.script) {
+                    return this.txRequestFromClientAddress.sendIssueTx(data, keys);
+                } else {
+                    return this.txRequestFromClientAddress.sendIssueNoScriptTx(data, keys)
+                }
             case constants.TRANSFER_TX_NAME:
                 return this.txRequestFromClientAddress.sendTransferTx(data, keys);
             case constants.REISSUE_TX_NAME:
