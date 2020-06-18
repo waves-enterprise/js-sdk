@@ -42,6 +42,10 @@ export class TransactionsRequests {
     return this._fetch(constants.BROADCAST_PATH, postParams)
   }, true) as TTransactionRequest;
 
+  sendIssueNoScriptTx = wrapTxRequest(TX_TYPE_MAP.issue_no_script, preIssue, postIssue, (postParams: any) => {
+    return this._fetch(constants.BROADCAST_PATH, postParams)
+  }, true) as TTransactionRequest;
+
   sendTransferTx = wrapTxRequest(TX_TYPE_MAP.transfer, preTransfer, postTransfer, (postParams: any) => {
     return this._fetch(constants.BROADCAST_PATH, postParams)
   }, true) as TTransactionRequest;
@@ -180,6 +184,10 @@ export const postIssue = createRemapper({
 })
 
 export const sendSignedIssueTx = wrapTxRequest(TX_TYPE_MAP.issue, preIssue, postIssue, (postParams: any) => {
+  return getSignedTx(postParams).data
+}, true) as TTransactionRequest
+
+export const sendSignedIssueNoScriptTx = wrapTxRequest(TX_TYPE_MAP.issue_no_script, preIssue, postIssue, (postParams: any) => {
   return getSignedTx(postParams).data
 }, true) as TTransactionRequest
 
