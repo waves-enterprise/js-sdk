@@ -173,7 +173,11 @@ export default class Transactions {
     sign(type: string, data, keys) {
         switch (type) {
             case constants.ISSUE_TX_NAME:
-                return requests.sendSignedIssueTx(data, keys);
+                if (data.script) {
+                    return requests.sendSignedIssueTx(data, keys);
+                } else {
+                    return requests.sendSignedIssueNoScriptTx(data, keys)
+                }
             case constants.TRANSFER_TX_NAME:
                 return requests.sendSignedTransferTx(data, keys);
             case constants.REISSUE_TX_NAME:
