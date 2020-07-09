@@ -1,4 +1,4 @@
-# Waves API GOST implementation (russian state standart) [![npm version](https://badge.fury.io/js/%40waves%2Fwaves-api.svg)](https://www.npmjs.com/package/@waves/waves-api) [![downloads/month](https://img.shields.io/npm/dm/%40waves%2Fwaves-api.svg)](https://www.npmjs.com/package/@waves/waves-api)
+# Waves API GOST implementation (russian state standart) [![npm version](https://badge.fury.io/js/%40waves%2Fwaves-api.svg)](https://www.npmjs.com/package/@vostokplatform/waves-api) [![downloads/month](https://img.shields.io/npm/dm/%40waves%2Fwaves-api.svg)](https://www.npmjs.com/package/@vostokplatform/waves-api)
 
 Waves Platform core features and Waves API library for both Node.js and browser.
 
@@ -7,22 +7,22 @@ The latest and most actual version of this documentation [is hosted on GitHub](h
 ## Installation
 
 ```
-npm install @waves/waves-api --save
+npm install @vostokplatform/waves-api --save
 ```
 
 In Node.js:
 
 ```
-const WavesAPI = require('@waves/waves-api');
+const WavesAPI = require('@vostokplatform/waves-api');
 ```
 
 In browser:
 
 ```
-<script src="./node_modules/@waves/waves-api/dist/waves-api.min.js"></script>
+<script src="./node_modules/@vostokplatform/waves-api/dist/waves-api.min.js"></script>
 ```
 
-You can use `@waves/waves-api` even within Web Workers.
+You can use `@vostokplatform/waves-api` even within Web Workers.
 
 ## Usage
 
@@ -575,7 +575,7 @@ Generating balance gives you mining power.
 ## Tests
 
 ```
-cd ./node_modules/@waves/waves-api/
+cd ./node_modules/@vostokplatform/waves-api/
 npm install
 npm run test # to run tests in Node.js
 npm run test-browser # to run test in Chrome browser
@@ -583,7 +583,7 @@ npm run test-api # run transactions tests
 npm run test-api-long-tests # run transactions with tests as getBalance, which has long update time in blockchain.
 ```
 
-Test configuration may be changed in the _./node_modules/@waves/waves-api/karma.conf.js_ file.
+Test configuration may be changed in the _./node_modules/@vostokplatform/waves-api/karma.conf.js_ file.
 
 Tests: 'npm run test-api' and 'test-api-long-tests' may be broken, because data and seeds on testnet removed.
 You can generate new seeds and update tests. Soon, we fix this problem and set main seed with roles and balance.
