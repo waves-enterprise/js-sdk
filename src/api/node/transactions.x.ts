@@ -749,7 +749,7 @@ export const postDockerCreateV2 = d => {
 
   const result = {
     ...d,
-    feeAssetId: null,
+    feeAssetId: normalizeAssetId(d.feeAssetId),
     params: data,
     transactionType: null,
     type: constants.DOCKER_CREATE_TX_V2,
