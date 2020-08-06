@@ -67,7 +67,16 @@ export default class Transactions {
         return this.fetch('/transactions/unconfirmed');
     }
 
-    broadcastFromClientAddress(type: string, data, keys) {
+    broadcastFromClientAddress (type: string, data, keys) {
+        console.warn(`
+            Warning: broadcastFromClientAddress has been renamed, and is not recommended for use.
+            It will be removed in next major version.
+            Use broadcast method instead.
+        `)
+        return this.broadcast(type, data, keys)
+    }
+
+    broadcast (type: string, data, keys) {
         switch (type) {
             case constants.ISSUE_TX_NAME:
                 if (data.script) {
@@ -124,6 +133,15 @@ export default class Transactions {
     }
 
     async broadcastFromNodeAddress(type: string, nodeAddress: string, data, extraData) {
+        console.warn(`
+            Warning: broadcastFromNodeAddress has been renamed, and is not recommended for use.
+            It will be removed in next major version.
+            Use broadcastNode method instead.
+        `)
+        return this.broadcastNode(type, nodeAddress, data, extraData)
+    }
+
+    async broadcastNode(type: string, nodeAddress: string, data, extraData) {
         switch (type) {
             case constants.ISSUE_TX_NAME:
                 return this.txRequestFromNodeAddress(requests.preIssue, requests.postIssue, nodeAddress, data, extraData);
