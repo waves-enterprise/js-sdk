@@ -1,13 +1,28 @@
-# Waves API GOST implementation (russian state standart) [![npm version](https://badge.fury.io/js/%40waves%2Fwaves-api.svg)](https://www.npmjs.com/package/@vostokplatform/waves-api) [![downloads/month](https://img.shields.io/npm/dm/%40waves%2Fwaves-api.svg)](https://www.npmjs.com/package/@vostokplatform/waves-api)
+# Waves API [![npm version](https://badge.fury.io/js/%40waves%2Fwaves-api.svg)](https://www.npmjs.com/package/@vostokplatform/waves-api) [![downloads/month](https://img.shields.io/npm/dm/%40waves%2Fwaves-api.svg)](https://www.npmjs.com/package/@vostokplatform/waves-api)
 
-Waves Platform core features and Waves API library for both Node.js and browser.
+WavesAPI is a javascript library for signing and sending transactions on the Waves Enterprise network.
 
-The latest and most actual version of this documentation [is hosted on GitHub](https://github.com/wavesplatform/waves-api/blob/master/README.md).
+* Works both in browser and in the Node.js environment
+* Supports [GOST](https://en.wikipedia.org/wiki/GOST) standards
+* Supports the signing of [all types](https://docs.wavesenterprise.com/en/1.2.3/how-the-platform-works/data-structures/transactions-structure.html) of Waves Enterprise network transactions
+
+You can find a lot of waves-api usage examples in [this repository](https://github.com/larsan12/waves-api-test).
 
 ## Installation
 
 ```
 npm install @vostokplatform/waves-api --save
+```
+
+In browser, using import statement:
+```
+import { create } from '@vostokplatform/waves-api'
+```
+
+Or include directly:
+
+```
+<script src="./node_modules/@vostokplatform/waves-api/dist/waves-api.min.js"></script>
 ```
 
 In Node.js:
@@ -16,18 +31,23 @@ In Node.js:
 const WavesAPI = require('@vostokplatform/waves-api');
 ```
 
-In browser:
-
-```
-<script src="./node_modules/@vostokplatform/waves-api/dist/waves-api.min.js"></script>
-```
-
 You can use `@vostokplatform/waves-api` even within Web Workers.
 
-## Usage
-
+## Initialization
 ```
-const Waves = WavesAPI.create(WavesAPI.TESTNET_CONFIG);
+const { create, MAINNET_CONFIG } = require('@vostokplatform/waves-api');
+
+conts config = {
+    ...MAINNET_CONFIG,
+    nodeAddress: 'https://partner-net.vostokservices.com/node-1',
+    crypto: 'waves',
+    networkByte: 'V'
+}
+
+const Waves = create({
+    initialConfiguration: config,
+    fetchInstance: window.fetch
+});
 ```
 
 ### Seed
@@ -51,7 +71,7 @@ const encrypted = seed.encrypt(password);
 console.log(encrypted); // 'U2FsdGVkX1+5TpaxcK/eJyjht7bSpjLYlSU8gVXNapU3MG8xgWm3uavW37aPz/KTcROK7OjOA3dpCLXfZ4YjCV3OW2r1CCaUhOMPBCX64QA/iAlgPJNtfMvjLKTHZko/JDgrxBHgQkz76apORWdKEQ=='
 ```
 
-And decrypted (with the same password, of course):
+...and decrypted using the same password:
 
 ```
 const restoredPhrase = Waves.Seed.decryptSeedPhrase(encrypted, password);
@@ -70,53 +90,6 @@ console.log(seed.phrase); // 'a seed which was backed up some time ago'
 console.log(seed.address); // '3N3dy1P8Dccup5WnYsrC6VmaGHF6wMxdLn4'
 console.log(seed.keyPair); // { privateKey: '2gSboTPsiQfi1i3zNtFppVJVgjoCA9P4HE9K95y8yCMm', publicKey: 'CFr94paUnDSTRk8jz6Ep3bzhXb9LKarNmLYXW6gqw6Y3' }
 ```
-
-### Node API
-
-Although the structure and naming of this API may seem strange, they reflect those of the backend Node API.
-
-First, a quick introduction into the structure:
-
-* addresses
-    * balance — your regular WAVES balance
-    * balanceDetails — the details on your WAVES balance ([see below](#different-types-of-waves-balance))
-* aliases
-    * byAlias — Waves address related to a given alias
-    * byAddress — a list of aliases related to a given Waves address
-* assets
-    * balances — your token balances
-    * balance — your balance for a given token
-    * distribution — the distribution of a given token between addresses
-* blocks
-    * get — get a block by its signature (ID)
-    * at — get the block at a certain height
-    * first — get the first block
-    * last — get the last block
-    * height — get the current height of the blockchain
-* leasing
-    * getAllActiveLeases — get all your active Lease transactions
-* transactions
-    * get — get a transaction by its signature (ID)
-    * getList — get the list of last N transactions for a given Waves address
-    * utxSize — get the current size of the unconfirmed transactions pool
-    * utxGet — get an unconfirmed transaction by its signature (ID)
-    * utxGetList — get the list of unconfirmed transactions for a given Waves address
-    * broadcast — POST-methods to send the following transaction types
-        * [issue](#issue-transaction)
-        * [transfer](#transfer-transaction)
-        * [reissue](#reissue-transaction)
-        * [burn](#burn-transaction)
-        * [lease](#lease-transaction)
-        * [cancelLeasing](#cancel-leasing-transaction)
-        * [createAlias](#create-alias-transaction)
-        * [massTransfer](#mass-tranfer-transaction)
-        * data
-        * setScript
-        * sponsorship
-    * sign - method return signed TX, after that you can pass data to rawBroadcast method
-    * rawBroadcast — POST-method to send any JSON to the `/transactions/broadcast` path
-* utils
-    * time — get the current Node timestamp
 
 #### Get signed transactions
 
