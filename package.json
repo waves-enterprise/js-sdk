@@ -64,6 +64,10 @@
     "test-browser": "npm run build && ./node_modules/.bin/tsc -p ./test/tsconfig.browser.json && ./node_modules/.bin/karma start karma.conf.js",
     "test-api": "cd test && mocha -r ts-node/register api/api.spec.ts",
     "test-api-long-tests": "cd test && mocha -r ts-node/register api/api.spec.ts --with-long-tests",
-    "test-verify": "cd test && mocha -r ts-node/register verify.spec.ts"
+    "test-verify": "cd test && mocha -r ts-node/register verify.spec.ts",
+    "examples:transfer": "node examples/transfer",
+    "examples:issue_burn": "node examples/issue_burn",
+    "examples:policy": "node examples/policy",
+    "examples:permission": "node examples/permission"
   }
 }

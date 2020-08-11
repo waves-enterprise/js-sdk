@@ -6,8 +6,6 @@ WavesAPI is a javascript library for signing and sending transactions on the Wav
 * Supports [GOST](https://en.wikipedia.org/wiki/GOST) standards
 * Supports the signing of [all types](https://docs.wavesenterprise.com/en/1.2.3/how-the-platform-works/data-structures/transactions-structure.html) of Waves Enterprise network transactions
 
-You can find a lot of waves-api usage examples in [this repository](https://github.com/larsan12/waves-api-test).
-
 ## Installation
 
 ```
@@ -49,6 +47,15 @@ const Waves = create({
     fetchInstance: window.fetch
 });
 ```
+
+## Usage examples
+
+
+Before starting development, look at the /examples directory. It contains complete examples for signing and sending the following transactions:
+ + Transfer (`npm run examples:transfer`)
+ + Create Policy (`npm run examples:policy`)
+ + Permission (`npm run examples:permission`)
+ + Issue / Burn (`npm run examples:issue_burn`)
 
 ### Seed
 
@@ -506,30 +513,6 @@ In the blockchain every token is stored with its explicitly specified precision 
 The same goes for the fees, and issue transactions, and leasing amounts, and so on.
 
 Waves precision equals 8. Therefore there are `100000000 * 10^8` of Waves coins (Wavelets) in Waves blockchain.
-
-### Reissuability and the additive nature of it
-
-The amount in reissue transactions refer not to the final amount of asset after reissuing but to the amount which will be added to the current token amount.
-
-### Waves ID in the library and in the blockchain
-
-One of the trickiest things about Waves blockchain is that Waves ID equals empty string. In the first version on Node API it also equals to empty string. That is an unobvious and potentially dangerous behavior. Therefore in this library Waves ID strictly equals string `WAVES`. Please mind that fact.
-
-### Fee asset choice for transfer transactions
-
-There is only one type of transactions (currently) in which we can use arbitrary tokens as fees. The only limitation is that the Node to which you connect must support the token you use as fees. Please note that transactions with the Waves fee will be prior over transactions with fees in other tokens.
-
-### Impossibility of transactions with the absolutely same data
-
-Transaction IDs are built from all the data in a transaction except the signature. That process is deterministic. So there cannot be two transactions with the absolutely same data.
-
-### Delays in the leasing process
-
-For the security reasons all leased Waves take effect only after 1000 blocks. Don't worry when your generating balance isn't updated right away.
-
-### Mess with balances in the first version of API
-
-It happened so that Waves balance and token balances are served through different API methods in the first version of Waves API. That's not very useful and we designed the new version otherwise.
 
 ### Different types of Waves balance
 
