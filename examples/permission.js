@@ -2,7 +2,7 @@ const { create: createApiInstance, MAINNET_CONFIG } = require('../dist/waves-api
 const nodeFetch = require('node-fetch');
 
 const nodeAddress = 'https://trump.vostokservices.com/node-1';
-const seedPhrase = 'Создание адреса';
+const seedPhrase = 'examples seed phrase';
 
 const fetch = (url, options = {}) => {
     const headers = options.headers || {}
@@ -39,7 +39,7 @@ const fetch = (url, options = {}) => {
         const result = await Waves.API.Node.transactions.broadcast('permit', tx, seed.keyPair);
         console.log('Broadcast ADD PERMIT: ', result)
 
-        const waitTimeout = 5
+        const waitTimeout = 10
 
         console.log(`Wait ${waitTimeout} seconds while tx mining...`)
 

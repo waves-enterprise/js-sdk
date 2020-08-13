@@ -2,7 +2,7 @@ const { create: createApiInstance, MAINNET_CONFIG } = require('../dist/waves-api
 const nodeFetch = require('node-fetch');
 
 const nodeAddress = 'https://trump.vostokservices.com/node-1';
-const seedPhrase = 'Создание адреса';
+const seedPhrase = 'examples seed phrase';
 
 const fetch = (url, options = {}) => {
   const headers = options.headers || {}
@@ -28,11 +28,11 @@ const fetch = (url, options = {}) => {
   const seed = Waves.Seed.fromExistingPhrase(seedPhrase);
 
   const tx = {
-    recipient: '3MzEnF4gkeuvFKb4uypzXWWkTBCkJDBCWJi',
+    recipient: seed.address,
     assetId: 'WAVES',
     amount: '10000',
     fee: minimumFee[4],
-    attachment: 'Some text',
+    attachment: 'Examples transfer attachment',
     timestamp: Date.now()
   }
 

@@ -1,61 +1,70 @@
 # Waves API [![npm version](https://badge.fury.io/js/%40waves%2Fwaves-api.svg)](https://www.npmjs.com/package/@vostokplatform/waves-api) [![downloads/month](https://img.shields.io/npm/dm/%40waves%2Fwaves-api.svg)](https://www.npmjs.com/package/@vostokplatform/waves-api)
 
-WavesAPI is a javascript library for signing and sending transactions on the Waves Enterprise network.
+WavesAPI is a javascript library for signing and broadcasting transactions on the Waves Enterprise network.
 
 * Works both in browser and in the Node.js environment
 * Supports [GOST](https://en.wikipedia.org/wiki/GOST) standards
-* Supports the signing of [all types](https://docs.wavesenterprise.com/en/1.2.3/how-the-platform-works/data-structures/transactions-structure.html) of Waves Enterprise network transactions
+* Supports the signing of [all types](https://docs.wavesenterprise.com/en/1.3.0/how-the-platform-works/data-structures/transactions-structure.html#id26) of Waves Enterprise network transactions
 
-## Installation
+## Quickstart
 
+##### 1. Install package using npm:
 ```
 npm install @vostokplatform/waves-api --save
 ```
 
-In browser, using import statement:
+##### 2. Import package
 ```
-import { create } from '@vostokplatform/waves-api'
+import WavesAPI from '@vostokplatform/waves-api'
 ```
+or using require:
 
-Or include directly:
+`const WavesAPI = require('@vostokplatform/waves-api');`
 
+##### 3. Initialize library
 ```
-<script src="./node_modules/@vostokplatform/waves-api/dist/waves-api.min.js"></script>
-```
-
-In Node.js:
-
-```
-const WavesAPI = require('@vostokplatform/waves-api');
-```
-
-You can use `@vostokplatform/waves-api` even within Web Workers.
-
-## Initialization
-```
-const { create, MAINNET_CONFIG } = require('@vostokplatform/waves-api');
-
-conts config = {
-    ...MAINNET_CONFIG,
-    nodeAddress: 'https://partner-net.vostokservices.com/node-1',
+const config = {
+    ...WavesAPI.MAINNET_CONFIG,
+    nodeAddress: 'https://trump.vostokservices.com/node-1',
     crypto: 'waves',
-    networkByte: 'V'
+    networkByte: 'T'.charCodeAt(0)
 }
 
-const Waves = create({
+const Waves = WavesAPI.create({
     initialConfiguration: config,
-    fetchInstance: window.fetch
+    fetchInstance: window.fetch // use node-fetch instance for Node.js
 });
 ```
 
-## Usage examples
+##### 4. Create and broadcast transaction
+```
+const seed = Waves.Seed.fromExistingPhrase('examples seed phrase');
+
+const transferTx = {
+    recipient: seed.address, // Send tokens to own address
+    assetId: 'WAVES',
+    amount: '10000',
+    fee: 0,
+    attachment: 'Examples transfer attachment',
+    timestamp: Date.now()
+}
+
+Waves.API.Node.transactions.broadcast('transfer', tx, seed.keyPair);
+```
+
+## More examples
+In the /examples folder you can find complete examples of sending the most popular transactions.
 
 
-Before starting development, look at the /examples directory. It contains complete examples for signing and sending the following transactions:
- + Transfer (`npm run examples:transfer`)
- + Create Policy (`npm run examples:policy`)
- + Permission (`npm run examples:permission`)
- + Issue / Burn (`npm run examples:issue_burn`)
+To run examples:
+1. Once make a project build: `npm run build`
+2. Broadcast following transactions:
+     + Transfer (`npm run examples:transfer`)
+     + Create Policy (`npm run examples:policy`)
+     + Permission (`npm run examples:permission`)
+     + Issue / Burn (`npm run examples:issue_burn`)
+     
+Using this examples, you can sign any other type of transaction using the transaction structure from [docs](https://docs.wavesenterprise.com/en/1.3.0/how-the-platform-works/data-structures/transactions-structure.html#id26).
 
 ### Seed
 
@@ -120,217 +129,6 @@ Transaction should be [signed](#get-signed-transactions) before you can pass to 
 
 ```
 const txData = await Waves.API.Node.transactions.rawBroadcast(singedTx);
-```
-
-#### Sending transactions
-
-You will need a pair of keys from an account with a balance to send transactions:
-
-```
-const seed = Waves.Seed.fromExistingPhrase('a seed from an account with some funds');
-```
-
-##### Issue transaction
-
-This is the way to create your own token which can be traded, distributed amongst users and used for your business purposes.
-
-```
-const issueData = {
-
-    name: 'Your token name',
-    description: 'Some words about it',
-
-    // With given options you'll have 100000.00000 tokens
-    quantity: '10000000000', // use string to represent a 64bit integer here
-    precision: 5,
-
-    // This flag defines whether additional emission is possible
-    reissuable: false,
-
-    fee: 100000000,
-    timestamp: Date.now(),
-    script: 'base64:AQa3b8tH' // or no script field for the same result
-
-};
-
-Waves.API.Node.transactions.broadcast('issue', issueData, seed.keyPair).then((responseData) => {
-    console.log(responseData);
-});
-```
-
-##### Transfer transaction
-
-The Transfer transaction allows you to send WAVES or any token you possess to another Waves address. 
-
-```
-const transferData = {
-
-    // An arbitrary address; mine, in this example
-    recipient: '3PMgh8ra7v9USWUJxUCxKQKr6PM3MgqNVR8',
-
-    // ID of a token, or WAVES
-    assetId: 'WAVES',
-
-    // The real amount is the given number divided by 10^(precision of the token)
-    amount: 10000000,
-
-    // The same rules for these two fields
-    feeAssetId: 'WAVES',
-    fee: 100000,
-
-    // 140 bytes of data (it's allowed to use Uint8Array here)
-    attachment: '',
-
-    timestamp: Date.now()
-
-};
-
-Waves.API.Node.transactions.broadcast('transfer', transferData, seed.keyPair).then((responseData) => {
-    console.log(responseData);
-});
-```
-
-##### Mass transfer transaction
-```const massTransfer = {
-    timestamp: Date.now(),
-    transfers: [
-        {
-            recipient: 'alias',
-            amount: '20000'
-        }
-    ],
-    attachment: undefined,
-    assetId: 'WAVES',
-    fee: 200000
-};
-
-Waves.API.Node.transactions.broadcast('massTransfer', massTransfer, seed.keyPair).then((responseData) => {
-    console.log(responseData);
-});```
-
-##### Reissue transaction
-
-Despite this transaction name, it allows you to issue an additional amount of a token which was initially issued by you.
-
-```
-const reissueData = {
-
-    // Asset ID which is to be additionnaly emitted
-    assetId: '5xN8XPkKi7RoYUAT5hNKC26FKCcX6Rj6epASpgFEYZss',
-
-    // Additional quantity is the given number divided by 10^(precision of the token)
-    quantity: '100000000',
-
-    reissuable: false,
-    fee: 100000000,
-    timestamp: Date.now()
-
-};
-
-Waves.API.Node.transactions.broadcast('reissue', reissueData, seed.keyPair).then((responseData) => {
-    console.log(responseData);
-});
-```
-
-##### Burn transaction
-
-Here you can burn any amount of token which was issued by you *and is still on your balance*.
-
-```
-const burnData = {
-
-    // Asset ID and its quantity to be burned
-    assetId: '5xN8XPkKi7RoYUAT5hNKC26FKCcX6Rj6epASpgFEYZss',
-    quantity: '20000000000',
-
-    fee: 100000,
-    timestamp: Date.now()
-
-};
-
-Waves.API.Node.transactions.broadcast('burn', burnData, seed.keyPair).then((responseData) => {
-    console.log(responseData);
-});
-```
-
-##### Lease transaction
-
-This is the way you can lease your WAVES to a different address.
-
-```
-const leaseData = {
-
-    recipient: '5xN8XPkKi7RoYUAT5hNKC26FKCcX6Rj6epASpgFEYZss',
-
-    // Both amount and fee may be presented as divided by 10^8 (8 is Waves precision)
-    amount: 1000000000, // 10 Waves
-    fee: 100000, // 0.001 Waves
-
-    timestamp: Date.now()
-
-};
-
-Waves.API.Node.transactions.broadcast('lease', leaseData, seed.keyPair).then((responseData) => {
-    console.log(responseData);
-});
-```
-
-##### Cancel Leasing transaction
-
-This transaction gives you a mean to cancel previously sent Lease transactions.
-
-```
-const cancelLeasingData = {
-
-    // Related Lease transaction ID
-    leaseId: '2kPvxtAit2nsumxBL7xYjvaWYmvmMfDL5oPgs4nZsHvZ',
-
-    fee: 100000,
-    timestamp: Date.now()
-
-};
-
-Waves.API.Node.transactions.broadcast('cancelLeasing', cancelLeasingData, seed.keyPair).then((responseData) => {
-    console.log(responseData);
-});
-```
-
-##### Create Alias transaction
-
-A Waves address can have aliases — short readable names which can be used instead of address. This transaction creates an alias. 
-
-```
-const createAliasData = {
-
-    // That's a kind of a nickname you attach to your address
-    alias: 'xenohunter',
-
-    fee: 100000,
-    timestamp: Date.now()
-
-};
-
-Waves.API.Node.transactions.broadcast('createAlias', createAliasData, seed.keyPair).then((responseData) => {
-    console.log(responseData);
-});
-```
-
-##### Create Permission transaction
-
-Vostok permission transaction 
-
-```
-const createPermissionData ={
-    timestamp: Date.now(),
-    opType: 'add',
-    role: 'banned',
-    target: '3FV34HcWJEq7eQEvzWdwyhsxrMr2qHBN5k6',
-    dueTimestamp: 0 // empty or timestamp in the future Date.now() + 100000
-};
-
-Waves.API.Node.transactions.broadcast('permit', createPermissionData, seed.keyPair).then((responseData) => {
-    console.log(responseData);
-});
 ```
 
 #### Getting the information from Node
@@ -433,23 +231,9 @@ Waves.API.Node.transactions.utxGet('Bn2opYvcmYAMCaJHKP1uXYCHFGnAyrzGoiboBLT8RALt
 });
 ```
 
-##### Aliases
-
-Aside from creating an alias, you also can get the list of aliases bound to an address, or get the address related to the given alias.
-
-```
-Waves.API.Node.aliases.byAddress('3PMgh8ra7v9USWUJxUCxKQKr6PM3MgqNVR8').then((aliasesList) => {
-    console.log(aliasesList);
-});
-
-Waves.API.Node.aliases.byAlias('xenohunter').then((address) => {
-    console.log(address);
-});
-```
-
 ##### Blocks
 
-Everything is simple here. You can get the whole block by its signature (`get()`) or height (`at()`). Method `height()` returns the current height of the Waves blockchain. The names of the remaining methods speak for themselves.
+You can get the whole block by its signature (`get()`) or height (`at()`). Method `height()` returns the current height of the Waves blockchain. The names of the remaining methods speak for themselves.
 
 ```
 Waves.API.Node.blocks.get(signature).then((block) => console.log(block));
@@ -527,22 +311,6 @@ There is the most understandable type of Waves balance. It is the regular balanc
 Available balance you can lease and spend.
 
 Generating balance gives you mining power.
-
-## Tests
-
-```
-cd ./node_modules/@vostokplatform/waves-api/
-npm install
-npm run test # to run tests in Node.js
-npm run test-browser # to run test in Chrome browser
-npm run test-api # run transactions tests
-npm run test-api-long-tests # run transactions with tests as getBalance, which has long update time in blockchain.
-```
-
-Test configuration may be changed in the _./node_modules/@vostokplatform/waves-api/karma.conf.js_ file.
-
-Tests: 'npm run test-api' and 'test-api-long-tests' may be broken, because data and seeds on testnet removed.
-You can generate new seeds and update tests. Soon, we fix this problem and set main seed with roles and balance.
 
 ## Authors
 

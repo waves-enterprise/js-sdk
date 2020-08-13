@@ -2,7 +2,7 @@ const { create: createApiInstance, MAINNET_CONFIG } = require('../dist/waves-api
 const nodeFetch = require('node-fetch');
 
 const nodeAddress = 'https://trump.vostokservices.com/node-1';
-const seedPhrase = 'Создание адреса';
+const seedPhrase = 'examples seed phrase';
 
 const fetch = (url, options = {}) => {
     const headers = options.headers || {}
