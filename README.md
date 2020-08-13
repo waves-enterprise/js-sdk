@@ -57,7 +57,7 @@ In the /examples folder you can find complete examples of sending the most popul
 
 
 To run examples:
-1. Once make a project build: `npm run build`
+1. Once make a project build: `npm i && npm run build`
 2. Broadcast following transactions:
      + Transfer (`npm run examples:transfer`)
      + Create Policy (`npm run examples:policy`)
