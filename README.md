@@ -8,12 +8,14 @@ WavesAPI is a javascript library for signing and broadcasting transactions on th
 
 ## Quickstart
 
-##### 1. Install package using npm:
+##### 1. Download and install Node.js (LTS version) from [official website](https://nodejs.org/en/download/)
+
+##### 2. Install waves-api package using npm:
 ```
 npm install @vostokplatform/waves-api --save
 ```
 
-##### 2. Import package
+##### 3. Import waves-api package:
 ```
 import WavesAPI from '@vostokplatform/waves-api'
 ```
@@ -21,7 +23,7 @@ or using require:
 
 `const WavesAPI = require('@vostokplatform/waves-api');`
 
-##### 3. Initialize library
+##### 4. Initialize library:
 ```
 const config = {
     ...WavesAPI.MAINNET_CONFIG,
@@ -36,7 +38,7 @@ const Waves = WavesAPI.create({
 });
 ```
 
-##### 4. Create and broadcast transaction
+##### 5. Create and broadcast transaction:
 ```
 const seed = Waves.Seed.fromExistingPhrase('examples seed phrase');
 
