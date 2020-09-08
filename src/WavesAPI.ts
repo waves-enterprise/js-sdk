@@ -1,10 +1,10 @@
 import { ByteProcessor as byteProcessors, Seed, utils } from '@vostokplatform/signature-generator';
-import { IHash, IWavesConfig } from '../interfaces';
+import { IWavesConfig } from '../interfaces';
 
-import * as MatcherAPI from './api/matcher/index';
-import { IMatcherAPI } from './api/matcher/index';
+import * as MatcherAPI from './api/matcher';
+import { IMatcherAPI } from './api/matcher';
 
-import NodeAPI, { INodeAPI } from './api/node/index';
+import NodeAPI from './api/node/index';
 import config from './config';
 
 import * as constants from './constants';
@@ -12,29 +12,13 @@ import fetchSubstitute from "./libs/fetch";
 import fetch from './libs/fetch';
 import tools from './tools';
 import * as request from "./utils/request";
-import { createFetchWrapper, processJSON, PRODUCTS, VERSIONS } from "./utils/request";
-
-export interface IAPIVersions {
-    Node: INodeAPI,
-    Matcher: IMatcherAPI
-}
-
-export interface IWavesAPI {
-    Seed: typeof Seed;
-    byteProcessors: typeof byteProcessors;
-    constants: IHash<any>;
-    crypto: IHash<any>;
-    request: IHash<any>;
-    tools: IHash<any>;
-    API: IAPIVersions;
-}
 
 export interface IWavesAPICtr {
     initialConfiguration: IWavesConfig;
     fetchInstance?: typeof fetch;
 }
 
-class WavesAPI implements IWavesAPI {
+class WavesAPI {
     public readonly Seed = Seed;
     public readonly byteProcessors = byteProcessors;
     public readonly config = config;
@@ -44,7 +28,7 @@ class WavesAPI implements IWavesAPI {
     public readonly tools = tools;
 
     public readonly API: {
-        Node: INodeAPI;
+        Node: NodeAPI;
         Matcher: IMatcherAPI;
     };
 
@@ -82,7 +66,7 @@ class WavesAPI implements IWavesAPI {
 }
 
 
-export function create({ initialConfiguration, fetchInstance }: IWavesAPICtr): IWavesAPI {
+export function create({ initialConfiguration, fetchInstance }: IWavesAPICtr): WavesAPI {
     return new WavesAPI({ initialConfiguration, fetchInstance });
 }
 

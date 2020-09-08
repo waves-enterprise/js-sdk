@@ -1,23 +1,29 @@
-import { TTransactionRequest } from '../../utils/request'
-
+import { TRANSACTIONS } from '@vostokplatform/transactions-factory'
 import { Schema, NumberPart, ObjectPart, StringPart, ArrayPart, BasePart } from 'ts-api-validator'
-import { TX_TYPE_MAP } from '@vostokplatform/signature-generator'
-
 import schemaFields from '../schemaFields'
 import { createRemapper, normalizeAssetId, precisionCheck, removeAliasPrefix } from '../../utils/remap'
-import { createFetchWrapper, processJSON, PRODUCTS, VERSIONS, wrapTxRequest } from '../../utils/request'
 import * as constants from '../../constants'
 import config from '../../config'
 import BigNumber from '../../libs/bignumber'
+import { IHash } from '../../../interfaces';
 
-interface signedTx {
-  headers: any,
-  body: string
+
+type TRANSACTIONS_REMAPS_TYPES = {
+  [key in keyof typeof TRANSACTIONS]?: {
+    [key1 in keyof typeof TRANSACTIONS[key]]?: {
+      pre: (data: IHash<any>) => Promise<IHash<any>>,
+      post: (data: IHash<any>) => IHash<any>,
+    }
+  }
 }
 
-interface signedTxData {
-  data?: any
-}
+const TRANSACTIONS_REMAPS: TRANSACTIONS_REMAPS_TYPES = {}
+Object.keys(TRANSACTIONS).forEach(key => {
+  TRANSACTIONS_REMAPS[key] = {}
+  Object.keys(TRANSACTIONS[key]).forEach(key1 => {
+    TRANSACTIONS_REMAPS[key][key1] = {}
+  })
+})
 
 class AnyPart extends BasePart<any> {
   protected getValue<T> (data: T): T {
@@ -25,114 +31,10 @@ class AnyPart extends BasePart<any> {
   }
 }
 
-function getSignedTx (data: signedTx): signedTxData {
-  return {
-    data: new Promise((resolve) => {
-      resolve(JSON.parse(data.body))
-    })
-  }
-}
 
-export class TransactionsRequests {
-  constructor(private readonly _fetch: typeof fetch) {
-    this._fetch = _fetch;
-  }
-
-  sendIssueTx = wrapTxRequest(TX_TYPE_MAP.issue, preIssue, postIssue, (postParams: any) => {
-    return this._fetch(constants.BROADCAST_PATH, postParams)
-  }, true) as TTransactionRequest;
-
-  sendIssueNoScriptTx = wrapTxRequest(TX_TYPE_MAP.issue_no_script, preIssue, postIssue, (postParams: any) => {
-    return this._fetch(constants.BROADCAST_PATH, postParams)
-  }, true) as TTransactionRequest;
-
-  sendTransferTx = wrapTxRequest(TX_TYPE_MAP.transfer, preTransfer, postTransfer, (postParams: any) => {
-    return this._fetch(constants.BROADCAST_PATH, postParams)
-  }, true) as TTransactionRequest;
-
-  sendReissueTx = wrapTxRequest(TX_TYPE_MAP.reissue, preReissue, postReissue, (postParams: any) => {
-    return this._fetch(constants.BROADCAST_PATH, postParams)
-  }, true) as TTransactionRequest;
-
-  sendBurnTx = wrapTxRequest(TX_TYPE_MAP.burn, preBurn, postBurn, (postParams: any) => {
-    return this._fetch(constants.BROADCAST_PATH, postParams)
-  }, true) as TTransactionRequest;
-
-  sendLeaseTx = wrapTxRequest(TX_TYPE_MAP.lease, preLease, postLease, (postParams: any) => {
-    return this._fetch(constants.BROADCAST_PATH, postParams)
-  }, true) as TTransactionRequest;
-
-  sendCancelLeasingTx = wrapTxRequest(TX_TYPE_MAP.cancelLeasing, preCancelLeasing, postCancelLeasing, (postParams: any) => {
-    return this._fetch(constants.BROADCAST_PATH, postParams)
-  }, true) as TTransactionRequest;
-
-  sendCreateAliasTx = wrapTxRequest(TX_TYPE_MAP.createAlias, preCreateAlias, postCreateAlias, (postParams: any) => {
-    return this._fetch(constants.BROADCAST_PATH, postParams)
-  }, true) as TTransactionRequest;
-
-  sendMassTransferTx = wrapTxRequest(TX_TYPE_MAP.massTransfer, preMassTransfer, postMassTransfer, (postParams: any) => {
-    return this._fetch(constants.BROADCAST_PATH, postParams)
-  }, true) as TTransactionRequest;
-
-  sendDataTx = wrapTxRequest(TX_TYPE_MAP.data, preData, postData, (postParams: any) => {
-    return this._fetch(constants.BROADCAST_PATH, postParams)
-  }, true) as TTransactionRequest;
-
-  sendSetScriptTx = wrapTxRequest(TX_TYPE_MAP.setScript, preSetScript, postSetScript, (postParams: any) => {
-    return this._fetch(constants.BROADCAST_PATH, postParams)
-  }, true) as TTransactionRequest;
-
-  sendSponsorshipTx = wrapTxRequest(TX_TYPE_MAP.sponsorship, preSponsorship, postSponsorship, (postParams: any) => {
-    return this._fetch(constants.BROADCAST_PATH, postParams)
-  }, true) as TTransactionRequest;
-
-  sendPermissionTx = wrapTxRequest(TX_TYPE_MAP.permit, prePermit, postPermit, (postParams: any) => {
-    return this._fetch(constants.BROADCAST_PATH, postParams)
-  }, true) as TTransactionRequest;
-
-  sendDockerCreateTx = wrapTxRequest(TX_TYPE_MAP.dockerCreate, preDockerCreate, postDockerCreate, (postParams: any) => {
-    return this._fetch(constants.BROADCAST_PATH, postParams)
-  }, true) as TTransactionRequest;
-
-  sendDockerCreateV2Tx = wrapTxRequest(TX_TYPE_MAP.dockerCreateV2, preDockerCreateV2, postDockerCreateV2, (postParams: any) => {
-    return this._fetch(constants.BROADCAST_PATH, postParams)
-  }, true) as TTransactionRequest;
-
-  sendDockerCallTx = wrapTxRequest(TX_TYPE_MAP.dockerCall, preDockerCall, postDockerCall, (postParams: any) => {
-    return this._fetch(constants.BROADCAST_PATH, postParams)
-  }, true) as TTransactionRequest;
-
-  sendDockerCallV2Tx = wrapTxRequest(TX_TYPE_MAP.dockerCallV2, preDockerCallV2, postDockerCallV2, (postParams: any) => {
-    return this._fetch(constants.BROADCAST_PATH, postParams)
-  }, true) as TTransactionRequest;
-
-  sendDockerCallV3Tx = wrapTxRequest(TX_TYPE_MAP.dockerCallV3, preDockerCallV3, postDockerCallV3, (postParams: any) => {
-    return this._fetch(constants.BROADCAST_PATH, postParams)
-  }, true) as TTransactionRequest;
-
-  sendDockerDisableTx = wrapTxRequest(TX_TYPE_MAP.dockerDisable, preDockerDisable, postDockerDisable, (postParams: any) => {
-    return this._fetch(constants.BROADCAST_PATH, postParams)
-  }, true) as TTransactionRequest;
-
-  sendDockerUpdateV2Tx = wrapTxRequest(TX_TYPE_MAP.dockerUpdateV2, preDockerUpdateV2, postDockerUpdateV2, (postParams: any) => {
-    return this._fetch(constants.BROADCAST_PATH, postParams)
-  }, true) as TTransactionRequest;
-
-  sendNodeRegistry = wrapTxRequest(TX_TYPE_MAP.policyRegisterNode, preNodeRegistry, postNodeRegistry, (postParams: any) => {
-    return this._fetch(constants.BROADCAST_PATH, postParams)
-  }, true) as TTransactionRequest;
-
-  sendPolicyCreate = wrapTxRequest(TX_TYPE_MAP.policyCreate, prePolicyCreate, postPolicyCreate, (postParams: any) => {
-    return this._fetch(constants.BROADCAST_PATH, postParams)
-  }, true) as TTransactionRequest;
-
-  sendPolicyUpdate = wrapTxRequest(TX_TYPE_MAP.policyUpdate, preUpdateCreate, postUpdateCreate, (postParams: any) => {
-    return this._fetch(constants.BROADCAST_PATH, postParams)
-  }, true) as TTransactionRequest;
-}
 /* ISSUE */
 
-export const issueSchema = new Schema({
+const issueSchema = new Schema({
   type: ObjectPart,
   required: true,
   content: {
@@ -171,8 +73,8 @@ export const issueSchema = new Schema({
   }
 });
 
-export const preIssue = (data) => issueSchema.parse(data)
-export const postIssue = createRemapper({
+const preIssue = (data) => issueSchema.parse(data)
+const postIssue = createRemapper({
   transactionType: null,
   precision: 'decimals',
   type: constants.ISSUE_TX,
@@ -183,17 +85,16 @@ export const postIssue = createRemapper({
   },
 })
 
-export const sendSignedIssueTx = wrapTxRequest(TX_TYPE_MAP.issue, preIssue, postIssue, (postParams: any) => {
-  return getSignedTx(postParams).data
-}, true) as TTransactionRequest
+// TODO issue no script
+TRANSACTIONS_REMAPS.ISSUE.V2 = {
+  pre: preIssue,
+  post: postIssue
+}
 
-export const sendSignedIssueNoScriptTx = wrapTxRequest(TX_TYPE_MAP.issue_no_script, preIssue, postIssue, (postParams: any) => {
-  return getSignedTx(postParams).data
-}, true) as TTransactionRequest
 
 /* TRANSFER */
 
-export const transferSchema = new Schema({
+const transferSchema = new Schema({
   type: ObjectPart,
   required: true,
   content: {
@@ -220,8 +121,8 @@ export const transferSchema = new Schema({
   }
 })
 
-export const preTransfer = (data) => transferSchema.parse(data)
-export const postTransfer = createRemapper({
+const preTransfer = (data) => transferSchema.parse(data)
+const postTransfer = createRemapper({
   transactionType: null,
   assetId: normalizeAssetId,
   feeAssetId: normalizeAssetId,
@@ -241,13 +142,14 @@ export const postTransfer = createRemapper({
   version: constants.TRANSFER_TX_VERSION
 })
 
-export const sendSignedTransferTx = wrapTxRequest(TX_TYPE_MAP.transfer, preTransfer, postTransfer, (postParams: any) => {
-  return getSignedTx(postParams).data
-}, true) as TTransactionRequest
+TRANSACTIONS_REMAPS.TRANSFER.V2 = {
+  pre: preTransfer,
+  post: postTransfer
+}
 
 /* REISSUE */
 
-export const reissueSchema = new Schema({
+const reissueSchema = new Schema({
   type: ObjectPart,
   required: true,
   content: {
@@ -268,8 +170,8 @@ export const reissueSchema = new Schema({
   }
 })
 
-export const preReissue = (data) => reissueSchema.parse(data)
-export const postReissue = createRemapper({
+const preReissue = (data) => reissueSchema.parse(data)
+const postReissue = createRemapper({
   transactionType: null,
   type: constants.REISSUE_TX,
   version: constants.REISSUE_TX_VERSION,
@@ -279,13 +181,14 @@ export const postReissue = createRemapper({
   }
 })
 
-export const sendSignedReissueTx = wrapTxRequest(TX_TYPE_MAP.reissue, preReissue, postReissue, (postParams: any) => {
-  return getSignedTx(postParams).data
-}, true) as TTransactionRequest
+TRANSACTIONS_REMAPS.REISSUE.V2 = {
+  pre: preReissue,
+  post: postReissue
+}
 
 /* BURN */
 
-export const burnSchema = new Schema({
+const burnSchema = new Schema({
   type: ObjectPart,
   required: true,
   content: {
@@ -305,8 +208,8 @@ export const burnSchema = new Schema({
   }
 })
 
-export const preBurn = (data) => burnSchema.parse(data)
-export const postBurn = createRemapper(({
+const preBurn = (data) => burnSchema.parse(data)
+const postBurn = createRemapper(({
   transactionType: null,
   type: constants.BURN_TX,
   version: constants.BURN_TX_VERSION,
@@ -316,13 +219,14 @@ export const postBurn = createRemapper(({
   }
 }))
 
-export const sendSignedBurnTx = wrapTxRequest(TX_TYPE_MAP.burn, preBurn, postBurn, (postParams: any) => {
-  return getSignedTx(postParams).data
-}, true) as TTransactionRequest
+TRANSACTIONS_REMAPS.BURN.V2 = {
+  pre: preBurn,
+  post: postBurn
+}
 
 /* LEASE */
 
-export const leaseSchema = new Schema({
+const leaseSchema = new Schema({
   type: ObjectPart,
   required: true,
   content: {
@@ -337,8 +241,8 @@ export const leaseSchema = new Schema({
   }
 })
 
-export const preLease = (data) => leaseSchema.parse(data)
-export const postLease = createRemapper({
+const preLease = (data) => leaseSchema.parse(data)
+const postLease = createRemapper({
   transactionType: null,
   recipient: {
     from: 'raw',
@@ -348,13 +252,14 @@ export const postLease = createRemapper({
   version: constants.LEASE_TX_VERSION
 })
 
-export const sendSignedLeaseTx = wrapTxRequest(TX_TYPE_MAP.lease, preLease, postLease, (postParams: any) => {
-  return getSignedTx(postParams).data
-}, true) as TTransactionRequest
+TRANSACTIONS_REMAPS.LEASE.V2 = {
+  pre: preLease,
+  post: postLease
+}
 
 /* CANCEL LEASING */
 
-export const cancelLeasingSchema = new Schema({
+const cancelLeasingSchema = new Schema({
   type: ObjectPart,
   required: true,
   content: {
@@ -373,21 +278,22 @@ export const cancelLeasingSchema = new Schema({
   }
 })
 
-export const preCancelLeasing = (data) => cancelLeasingSchema.parse(data)
-export const postCancelLeasing = createRemapper({
+const preCancelLeasing = (data) => cancelLeasingSchema.parse(data)
+const postCancelLeasing = createRemapper({
   transactionType: null,
   transactionId: 'txId',
   type: constants.CANCEL_LEASING_TX,
   version: constants.CANCEL_LEASING_TX_VERSION
 })
 
-export const sendSignedCancelLeasingTx = wrapTxRequest(TX_TYPE_MAP.cancelLeasing, preCancelLeasing, postCancelLeasing, (postParams: any) => {
-  return getSignedTx(postParams).data
-}, true) as TTransactionRequest
+TRANSACTIONS_REMAPS.LEASE_CANCEL.V2 = {
+  pre: preCancelLeasing,
+  post: postCancelLeasing
+}
 
 /* CREATE ALIAS */
 
-export const createAliasSchema = new Schema({
+const createAliasSchema = new Schema({
   type: ObjectPart,
   required: true,
   content: {
@@ -402,20 +308,21 @@ export const createAliasSchema = new Schema({
   }
 })
 
-export const preCreateAlias = (data) => createAliasSchema.parse(data)
-export const postCreateAlias = createRemapper({
+const preCreateAlias = (data) => createAliasSchema.parse(data)
+const postCreateAlias = createRemapper({
   transactionType: null,
   type: constants.CREATE_ALIAS_TX,
   version: constants.CREATE_ALIAS_TX_VERSION
 })
 
-export const sendSignedCreateAliasTx = wrapTxRequest(TX_TYPE_MAP.createAlias, preCreateAlias, postCreateAlias, (postParams: any) => {
-  return getSignedTx(postParams).data
-}, true) as TTransactionRequest
+TRANSACTIONS_REMAPS.CREATE_ALIAS.V2 = {
+  pre: preCreateAlias,
+  post: postCreateAlias
+}
 
 /* MASS TRANSFER */
 
-export const massTransferSchema = new Schema({
+const massTransferSchema = new Schema({
   type: ObjectPart,
   required: true,
   content: {
@@ -447,8 +354,8 @@ export const massTransferSchema = new Schema({
   }
 })
 
-export const preMassTransfer = (data) => massTransferSchema.parse(data)
-export const postMassTransfer = createRemapper({
+const preMassTransfer = (data) => massTransferSchema.parse(data)
+const postMassTransfer = createRemapper({
   transactionType: null,
   assetId: normalizeAssetId,
   attachment: {
@@ -464,13 +371,14 @@ export const postMassTransfer = createRemapper({
   version: constants.MASS_TRANSFER_TX_VERSION
 })
 
-export const sendSignedMassTransferTx = wrapTxRequest(TX_TYPE_MAP.massTransfer, preMassTransfer, postMassTransfer, (postParams: any) => {
-  return getSignedTx(postParams).data
-}, true) as TTransactionRequest
+TRANSACTIONS_REMAPS.MASS_TRANSFER.V1 = {
+  pre: preMassTransfer,
+  post: postMassTransfer
+}
 
 /* DATA */
 
-export const dataSchema = new Schema({
+const dataSchema = new Schema({
   type: ObjectPart,
   required: true,
   content: {
@@ -503,13 +411,9 @@ export const dataSchema = new Schema({
   }
 })
 
-export const preData = (data) => dataSchema.parse(data)
-/*export const postData = createRemapper({
-    transactionType: null,
-    type: constants.DATA_TX,
-    version: constants.DATA_TX_VERSION
-});*/
-export const postData = d => {
+const preData = (data) => dataSchema.parse(data)
+
+const postData = d => {
   const data = JSON.parse(JSON.stringify(d.data))
 
   data.forEach(e => {
@@ -531,13 +435,14 @@ export const postData = d => {
   return result
 }
 
-export const sendSignedDataTx = wrapTxRequest(TX_TYPE_MAP.data, preData, postData, (postParams: any) => {
-  return getSignedTx(postParams).data
-}, true) as TTransactionRequest
+TRANSACTIONS_REMAPS.DATA.V1 = {
+  pre: preData,
+  post: postData
+}
 
 /* SET SCRIPT */
 
-export const setScriptSchema = new Schema({
+const setScriptSchema = new Schema({
   type: ObjectPart,
   required: true,
   content: {
@@ -565,20 +470,18 @@ export const setScriptSchema = new Schema({
   }
 })
 
-export const preSetScript = (data) => setScriptSchema.parse(data)
-export const postSetScript = createRemapper({
+const preSetScript = (data) => setScriptSchema.parse(data)
+const postSetScript = createRemapper({
   transactionType: null,
   type: constants.SET_SCRIPT_TX,
   version: constants.SET_SCRIPT_TX_VERSION
 })
 
-export const sendSignedSetScriptTx = wrapTxRequest(TX_TYPE_MAP.setScript, preSetScript, postSetScript, (postParams: any) => {
-  return getSignedTx(postParams).data
-}, true) as TTransactionRequest
+// TODO - ???
 
 /* SPONSORSHIP */
 
-export const sponsorshipSchema = new Schema({
+const sponsorshipSchema = new Schema({
   type: ObjectPart,
   required: true,
   content: {
@@ -593,20 +496,21 @@ export const sponsorshipSchema = new Schema({
   }
 })
 
-export const preSponsorship = (data) => sponsorshipSchema.parse(data)
-export const postSponsorship = createRemapper({
+const preSponsorship = (data) => sponsorshipSchema.parse(data)
+const postSponsorship = createRemapper({
   transactionType: null,
   type: constants.SPONSORSHIP_TX,
   version: constants.SPONSORSHIP_TX_VERSION
 })
 
-export const sendSignedSponsorshipTx = wrapTxRequest(TX_TYPE_MAP.sponsorship, preSponsorship, postSponsorship, (postParams: any) => {
-  return getSignedTx(postParams).data
-}, true) as TTransactionRequest
+TRANSACTIONS_REMAPS.SPONSOR_FEE.V1 = {
+  pre: preSponsorship,
+  post: postSponsorship
+}
 
 /* PERMISSION */
 
-export const permissionSchema = new Schema({
+const permissionSchema = new Schema({
   type: ObjectPart,
   required: true,
   content: {
@@ -632,16 +536,19 @@ export const permissionSchema = new Schema({
   }
 })
 
-export const prePermit = (data) => permissionSchema.parse(data)
-export const postPermit = createRemapper({
+const prePermit = (data) => permissionSchema.parse(data)
+const postPermit = createRemapper({
   transactionType: null,
   type: constants.PERMISSION_TX,
   version: constants.PERMISSION_TX_VERSION
 })
 
-export const sendSignedPermissionTx = wrapTxRequest(TX_TYPE_MAP.permit, prePermit, postPermit, (postParams: any) => {
-  return getSignedTx(postParams).data
-}, true) as TTransactionRequest
+TRANSACTIONS_REMAPS.PERMIT.V1 = {
+  pre: prePermit,
+  post: postPermit
+}
+
+/* DOCKER CREATE */
 
 const dockerCreateBaseSchema = {
   type: ObjectPart,
@@ -687,13 +594,13 @@ const dockerCreateBaseSchema = {
   }
 }
 
-export const dockerCreateSchema = new Schema(dockerCreateBaseSchema)
+const dockerCreateSchema = new Schema(dockerCreateBaseSchema)
 
-export const preDockerCreate = (data) => {
+const preDockerCreate = (data) => {
   return dockerCreateSchema.parse(data)
 }
 
-export const postDockerCreate = d => {
+const postDockerCreate = d => {
   const data = JSON.parse(JSON.stringify(d.params))
 
   data.forEach(e => {
@@ -715,11 +622,13 @@ export const postDockerCreate = d => {
   return result
 }
 
-export const sendSignedDockerCreateTx = wrapTxRequest(TX_TYPE_MAP.dockerCreate, preDockerCreate, postDockerCreate, (postParams: any) => {
-  return getSignedTx(postParams).data
-}, true) as TTransactionRequest
+TRANSACTIONS_REMAPS.CREATE_CONTRACT.V1 = {
+  pre: preDockerCreate,
+  post: postDockerCreate
+}
 
-export const dockerCreateV2Schema = new Schema({
+
+const dockerCreateV2Schema = new Schema({
     ...dockerCreateBaseSchema,
     content: {
       ...dockerCreateBaseSchema.content,
@@ -732,11 +641,11 @@ export const dockerCreateV2Schema = new Schema({
   }
 )
 
-export const preDockerCreateV2 = (data) => {
+const preDockerCreateV2 = (data) => {
   return dockerCreateV2Schema.parse(data)
 }
 
-export const postDockerCreateV2 = d => {
+const postDockerCreateV2 = d => {
   const data = JSON.parse(JSON.stringify(d.params))
 
   data.forEach(e => {
@@ -759,9 +668,12 @@ export const postDockerCreateV2 = d => {
   return result
 }
 
-export const sendSignedDockerCreateV2Tx = wrapTxRequest(TX_TYPE_MAP.dockerCreateV2, preDockerCreateV2, postDockerCreateV2, (postParams: any) => {
-  return getSignedTx(postParams).data
-}, true) as TTransactionRequest
+TRANSACTIONS_REMAPS.CREATE_CONTRACT.V2 = {
+  pre: preDockerCreateV2,
+  post: postDockerCreateV2
+}
+
+/* DOCKER CALL */
 
 const dockerCallSchemaBase = {
   type: ObjectPart,
@@ -800,14 +712,14 @@ const dockerCallSchemaBase = {
   }
 }
 
-export const dockerCallSchema = new Schema(dockerCallSchemaBase)
+const dockerCallSchema = new Schema(dockerCallSchemaBase)
 
-export const preDockerCall = (data) => {
+const preDockerCall = (data) => {
   return dockerCallSchema.parse(data)
 }
 
 // todo DRY
-export const postDockerCall = d => {
+const postDockerCall = d => {
   const data = JSON.parse(JSON.stringify(d.params))
 
   data.forEach(e => {
@@ -829,12 +741,12 @@ export const postDockerCall = d => {
   return result
 }
 
-export const sendSignedDockerCallTx = wrapTxRequest(TX_TYPE_MAP.dockerCall, preDockerCall, postDockerCall, (postParams: any) => {
-  return getSignedTx(postParams).data
-}, true) as TTransactionRequest
+TRANSACTIONS_REMAPS.CALL_CONTRACT.V1 = {
+  pre: preDockerCall,
+  post: postDockerCall
+}
 
-
-export const dockerCallSchemaV2 = new Schema({
+const dockerCallSchemaV2 = new Schema({
   ...dockerCallSchemaBase,
   content: {
     ...dockerCallSchemaBase.content,
@@ -845,12 +757,11 @@ export const dockerCallSchemaV2 = new Schema({
   }
 })
 
-export const preDockerCallV2 = (data) => {
+const preDockerCallV2 = (data) => {
   return dockerCallSchemaV2.parse(data)
 }
 
-// todo DRY
-export const postDockerCallV2 = d => {
+const postDockerCallV2 = d => {
   const data = JSON.parse(JSON.stringify(d.params))
 
   data.forEach(e => {
@@ -872,12 +783,12 @@ export const postDockerCallV2 = d => {
   return result
 }
 
-export const sendSignedDockerCallV2Tx = wrapTxRequest(TX_TYPE_MAP.dockerCallV2, preDockerCallV2, postDockerCallV2, (postParams: any) => {
-  return getSignedTx(postParams).data
-}, true) as TTransactionRequest
+TRANSACTIONS_REMAPS.CALL_CONTRACT.V2 = {
+  pre: preDockerCallV2,
+  post: postDockerCallV2
+}
 
-
-export const dockerCallSchemaV3 = new Schema({
+const dockerCallSchemaV3 = new Schema({
   ...dockerCallSchemaBase,
   content: {
     ...dockerCallSchemaBase.content,
@@ -893,12 +804,12 @@ export const dockerCallSchemaV3 = new Schema({
   }
 })
 
-export const preDockerCallV3 = (data) => {
+const preDockerCallV3 = (data) => {
   return dockerCallSchemaV3.parse(data)
 }
 
 // todo DRY
-export const postDockerCallV3 = d => {
+const postDockerCallV3 = d => {
   const data = JSON.parse(JSON.stringify(d.params))
 
   data.forEach(e => {
@@ -921,12 +832,14 @@ export const postDockerCallV3 = d => {
   return result
 }
 
-export const sendSignedDockerCallV3Tx = wrapTxRequest(TX_TYPE_MAP.dockerCallV3, preDockerCallV3, postDockerCallV3, (postParams: any) => {
-  return getSignedTx(postParams).data
-}, true) as TTransactionRequest
+TRANSACTIONS_REMAPS.CALL_CONTRACT.V3 = {
+  pre: preDockerCallV3,
+  post: postDockerCallV3
+}
 
+/* DOCKER DISABLE */
 
-export const dockerDisableSchema = new Schema({
+const dockerDisableSchema = new Schema({
   type: ObjectPart,
   required: true,
   content: {
@@ -940,11 +853,11 @@ export const dockerDisableSchema = new Schema({
   }
 })
 
-export const preDockerDisable = (data) => {
+const preDockerDisable = (data) => {
   return dockerDisableSchema.parse(data)
 }
 
-export const postDockerDisable = d => {
+const postDockerDisable = d => {
   return {
     ...d,
     transactionType: null,
@@ -953,11 +866,14 @@ export const postDockerDisable = d => {
   }
 }
 
-export const sendSignedDockerDisableTx = wrapTxRequest(TX_TYPE_MAP.dockerDisable, preDockerDisable, postDockerDisable, (postParams: any) => {
-  return getSignedTx(postParams).data
-}, true) as TTransactionRequest
+TRANSACTIONS_REMAPS.DISABLE_CONTRACT.V1 = {
+  pre: preDockerDisable,
+  post: postDockerDisable
+}
 
-export const dockerUpdateV2Schema = new Schema({
+/* DOCKER UPDATE */
+
+const dockerUpdateV2Schema = new Schema({
   type: ObjectPart,
   required: true,
   content: {
@@ -984,11 +900,11 @@ export const dockerUpdateV2Schema = new Schema({
   }
 })
 
-export const preDockerUpdateV2 = (data) => {
+const preDockerUpdateV2 = (data) => {
   return dockerUpdateV2Schema.parse(data)
 }
 
-export const postDockerUpdateV2 = d => {
+const postDockerUpdateV2 = d => {
   return {
     ...d,
     feeAssetId: normalizeAssetId(d.feeAssetId),
@@ -998,11 +914,14 @@ export const postDockerUpdateV2 = d => {
   }
 }
 
-export const sendSignedDockerUpdateV2Tx = wrapTxRequest(TX_TYPE_MAP.dockerUpdateV2, preDockerUpdateV2, postDockerUpdateV2, (postParams: any) => {
-  return getSignedTx(postParams).data
-}, true) as TTransactionRequest
+TRANSACTIONS_REMAPS.UPDATE_CONTRACT.V2 = {
+  pre: preDockerUpdateV2,
+  post: postDockerUpdateV2
+}
 
-export const nodeRegistrySchema = new Schema({
+/* REGISTRY */
+
+const nodeRegistrySchema = new Schema({
   type: ObjectPart,
   required: true,
   content: {
@@ -1021,11 +940,11 @@ export const nodeRegistrySchema = new Schema({
   }
 })
 
-export const preNodeRegistry = (data) => {
+const preNodeRegistry = (data) => {
   return nodeRegistrySchema.parse(data)
 }
 
-export const postNodeRegistry = d => {
+const postNodeRegistry = d => {
   return {
     ...d,
     transactionType: null,
@@ -1034,11 +953,14 @@ export const postNodeRegistry = d => {
   }
 }
 
-export const signNodeRegistry = wrapTxRequest(TX_TYPE_MAP.policyRegisterNode, preNodeRegistry, postNodeRegistry, (postParams: any) => {
-  return getSignedTx(postParams).data
-}, true) as TTransactionRequest
+TRANSACTIONS_REMAPS.REGISTER_NODE.V1 = {
+  pre: preNodeRegistry,
+  post: postNodeRegistry
+}
 
-export const policyCreateScheme = new Schema({
+/* POLICY CREATE */
+
+const policyCreateScheme = new Schema({
   type: ObjectPart,
   required: true,
   content: {
@@ -1072,11 +994,11 @@ export const policyCreateScheme = new Schema({
   }
 })
 
-export const prePolicyCreate = (data) => {
+const prePolicyCreate = (data) => {
   return policyCreateScheme.parse(data)
 }
 
-export const postPolicyCreate = d => {
+const postPolicyCreate = d => {
   return {
     ...d,
     transactionType: null,
@@ -1085,11 +1007,14 @@ export const postPolicyCreate = d => {
   }
 }
 
-export const signPolicyCreate = wrapTxRequest(TX_TYPE_MAP.policyCreate, prePolicyCreate, postPolicyCreate, (postParams: any) => {
-  return getSignedTx(postParams).data
-}, true) as TTransactionRequest
+TRANSACTIONS_REMAPS.CREATE_POLICY.V1 = {
+  pre: prePolicyCreate,
+  post: postPolicyCreate
+}
 
-export const policyUpdateScheme = new Schema({
+/* POLICY UPDATE */
+
+const policyUpdateScheme = new Schema({
   type: ObjectPart,
   required: true,
   content: {
@@ -1123,11 +1048,11 @@ export const policyUpdateScheme = new Schema({
   }
 })
 
-export const preUpdateCreate = (data) => {
+const preUpdateCreate = (data) => {
   return policyUpdateScheme.parse(data)
 }
 
-export const postUpdateCreate = d => {
+const postUpdateCreate = d => {
   return {
     ...d,
     transactionType: null,
@@ -1136,6 +1061,10 @@ export const postUpdateCreate = d => {
   }
 }
 
-export const signPolicyUpdate = wrapTxRequest(TX_TYPE_MAP.policyUpdate, preUpdateCreate, postUpdateCreate, (postParams: any) => {
-  return getSignedTx(postParams).data
-}, true) as TTransactionRequest
+TRANSACTIONS_REMAPS.UPDATE_POLICY.V1 = {
+  pre: preUpdateCreate,
+  post: postUpdateCreate
+}
+
+
+export default TRANSACTIONS_REMAPS

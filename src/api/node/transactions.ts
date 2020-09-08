@@ -1,6 +1,6 @@
 import { IHash } from "../../../interfaces";
 import config from '../../config';
-import * as constants from '../../constants';
+import { LEGACY_TX_TYPES } from '../../constants';
 import WavesError from '../../errors/WavesError';
 import {
     createFetchWrapper,
