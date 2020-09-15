@@ -413,7 +413,7 @@ Waves.API.Node.assets.distribution(assetId).then((distributionMap) => {
 });
 ```
 
-##### Transactions
+##### Index
 
 Every transaction in the blockchain has its own ID. You can both get one by ID, or get a list of all recent transactions.
 

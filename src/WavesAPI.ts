@@ -1,10 +1,8 @@
-import { ByteProcessor as byteProcessors, Seed, utils } from '@vostokplatform/signature-generator';
+import { ByteProcessor as byteProcessors, Seed, utils } from '@vostokplatform/transactions-factory';
 import { IWavesConfig } from '../interfaces';
 
-import * as MatcherAPI from './api/matcher';
-import { IMatcherAPI } from './api/matcher';
 
-import NodeAPI from './api/node/index';
+import NodeAPI from './api';
 import config from './config';
 
 import * as constants from './constants';
@@ -29,7 +27,6 @@ class WavesAPI {
 
     public readonly API: {
         Node: NodeAPI;
-        Matcher: IMatcherAPI;
     };
 
     private static _instance;
@@ -38,7 +35,6 @@ class WavesAPI {
         const { initialConfiguration, fetchInstance = fetchSubstitute } = params;
         this.API = {
             Node: new NodeAPI(fetchInstance),
-            Matcher: MatcherAPI
         };
 
         if (this instanceof WavesAPI) {

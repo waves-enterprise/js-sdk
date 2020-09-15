@@ -16,7 +16,7 @@ export const ALIAS_BYTE = 2;
  */
 export const LEGACY_TX_TYPES = {
     issue: { type: 3, v: 2 },
-    issue_no_script: { type: 3, v: 3 },
+    issue_no_script: { type: 3, v: 2 },
     transfer: { type: 4, v: 2 },
     reissue: { type: 5, v: 2 },
     burn: { type: 6, v: 2 },

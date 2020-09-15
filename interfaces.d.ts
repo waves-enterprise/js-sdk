@@ -3,10 +3,6 @@ export type TBuffer = Uint8Array | number[];
 export type TLogLevel = 'none' | 'error' | 'warning' | 'info';
 export type TCrypto = 'waves' | 'gost'
 
-export interface IHash<T> {
-    [key: string]: T;
-}
-
 export interface IKeyPair {
     readonly privateKey: string;
     readonly publicKey: string;

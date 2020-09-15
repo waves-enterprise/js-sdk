@@ -1,6 +1,6 @@
 {
   "name": "@vostokplatform/waves-api",
-  "version": "1.3.5",
+  "version": "2.1.0",
   "description": "Vostok client-side API library",
   "keywords": [
     "cryptocurrency",
@@ -22,7 +22,7 @@
     "url": "https://github.com/wavesplatform/waves-api.git"
   },
   "main": "dist/waves-api.min.js",
-  "types": "raw/src/WavesAPI.d.ts",
+  "types": "raw/WavesAPI.d.ts",
   "devDependencies": {
     "@types/chai": "4.1.5",
     "@types/mocha": "5.2.5",
@@ -38,24 +38,22 @@
     "mocha": "5.2.0",
     "mock-require": "3.0.2",
     "requirejs": "2.3.6",
-    "typescript": "2.5.3",
+    "typescript": "^4.0.2",
     "uglify-es": "3.3.9",
     "ts-node": "^7.0.1"
   },
   "dependencies": {
-    "@vostokplatform/transactions-factory": "file:../transactions-factory",
-    "@vostokplatform/signature-generator": "file:../waves-signature-generator",
+    "@vostokplatform/transactions-factory": "1.0.2",
     "bignumber.js": "7.2.1",
     "crypto-js": "3.1.9-1",
-    "@vostokplatform/crypto-gost-js": "2.0.0",
     "node-fetch": "2.2.0",
     "parse-json-bignumber": "^0.1.2",
     "ts-api-validator": "2.1.3",
     "ts-utils": "6.0.4"
   },
   "scripts": {
-    "_build-partial": "node_modules/.bin/browserify raw/src/WavesAPI.js --node -s WavesAPI -u parse-json-bignumber -u bignumber.js -u crypto -u node-fetch -u ts-utils -u @vostokplatform/signature-generator -u ts-api-validator > ./dist/waves-api.partial.js",
-    "_build-full": "node_modules/.bin/browserify raw/src/WavesAPI.js --node -s WavesAPI -u crypto -u node-fetch > ./dist/waves-api.js",
+    "_build-partial": "node_modules/.bin/browserify raw/WavesAPI.js --node -s WavesAPI -u parse-json-bignumber -u bignumber.js -u crypto -u node-fetch -u ts-utils -u @vostokplatform/transactions-factory -u ts-api-validator > ./dist/waves-api.partial.js",
+    "_build-full": "node_modules/.bin/browserify raw/WavesAPI.js --node -s WavesAPI -u crypto -u node-fetch -u ts-api-validator > ./dist/waves-api.js",
     "build": "npm run compile && mkdir -p dist && npm run _build-partial && npm run _build-full && npm run uglifyjs && cp ./interfaces.d.ts ./raw/interfaces.d.ts",
     "compile": "mkdir -p raw && ./node_modules/.bin/tsc -p ./tsconfig.json --declaration --outDir raw",
     "uglifyjs": "node_modules/.bin/uglifyjs ./dist/waves-api.js -o ./dist/waves-api.min.js && node_modules/.bin/uglifyjs ./dist/waves-api.partial.js -o ./dist/waves-api.partial.min.js",

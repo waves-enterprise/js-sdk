@@ -1,38 +1,31 @@
-import {ISignatureGenerator, ISignatureGeneratorConstructor} from '@vostokplatform/signature-generator';
-import {IHash, IKeyPair} from '../../interfaces';
-
+import { TransactionFactory, TransactionType } from '@vostokplatform/transactions-factory';
+import {IKeyPair} from '../../interfaces';
 import * as create from 'parse-json-bignumber';
 import { BROADCAST_PATH, SIGN_PATH } from "../constants";
-
 import WavesRequestError from '../errors/WavesRequestError';
-
 import config from '../config';
 import BigNumber from '../libs/bignumber';
 
 export const SAFE_JSON_PARSE = create({
     BigNumber
 }).parse;
+
 export const SAFE_JSON_STRINGIFY = create({
     BigNumber
 }).stringify;
 
-export type TTransactionRequest = (data: IHash<any>, keyPair: IKeyPair) => Promise<any>;
-
+export type TTransactionRequest = (data: object, keyPair: IKeyPair) => Promise<any>;
 export interface IFetchWrapper<T> {
-    (path: string, options?: IHash<any>): Promise<T>;
+    (path: string, options?: object): Promise<T>;
 }
-
 export interface IFetchWrapperConfig {
     product: PRODUCTS;
     version: VERSIONS;
     fetchInstance: typeof fetch;
     pipe?: (value: Response) => Response | PromiseLike<Response>
 }
-
 export const enum PRODUCTS { NODE, MATCHER }
-
 export const enum VERSIONS { V1 }
-
 
 export const POST_TEMPLATE = {
     method: 'POST',
@@ -42,16 +35,14 @@ export const POST_TEMPLATE = {
     }
 };
 
-
 const key = (product, version) => {
     return `${product}/${version}`;
 };
 
-const hostResolvers: IHash<() => string> = {
+const hostResolvers: {[key: string]: () => string} = {
     [key(PRODUCTS.NODE, VERSIONS.V1)]: () => config.getNodeAddress(),
     [key(PRODUCTS.MATCHER, VERSIONS.V1)]: () => config.getMatcherAddress()
 };
-
 
 export function normalizeHost(host): string {
     return host.replace(/\/+$/, '');
@@ -69,7 +60,6 @@ export function processJSON(res) {
     }
 }
 
-
 function handleError(url, data) {
     throw new WavesRequestError(url, data);
 }
@@ -80,7 +70,7 @@ export function createFetchWrapper(config: IFetchWrapperConfig): IFetchWrapper<a
 
     const resolveHost = hostResolvers[key(product, version)];
 
-    return function (path: string, options?: IHash<any>): Promise<any> {
+    return function (path: string, options?: object): Promise<any> {
 
         const url = resolveHost() + normalizePath(path);
 
@@ -96,84 +86,84 @@ export function createFetchWrapper(config: IFetchWrapperConfig): IFetchWrapper<a
 
 }
 
-export function wrapTxRequest(SignatureGenerator: ISignatureGeneratorConstructor<any>,
-                              preRemapAsync: (data: IHash<any>) => Promise<IHash<any>>,
-                              postRemap: (data: IHash<any>) => IHash<any>,
-                              callback: (postParams: IHash<any>) => Promise<any>,
-                              withProofs: boolean = false) {
-    return function (data: IHash<any>, keyPair: IKeyPair): Promise<any> {
-        return preRemapAsync({
+export const wrapTxRequest = (
+    factory: TransactionFactory<any>,
+    preRemapAsync: (data: object) => Promise<object>,
+    postRemap: (data: object) => object,
+    callback: (postParams: object) => Promise<any>,
+    withProofs: boolean = false
+  ) =>
+  async (data: object, keyPair: IKeyPair): Promise<any> => {
+    let preData: any = {...data, senderPublicKey: keyPair.publicKey }
+    if (preRemapAsync) {
+      preData = await preRemapAsync(preData)
+    }
 
-            // The order is required for `senderPublicKey` must be rewritten if it exists in `data`
-            ...data,
-            senderPublicKey: keyPair.publicKey
+    const signature = await factory(preData).getSignature(keyPair.privateKey)
 
-        }).then((validatedData) => {
+    let postData: any = {...preData, ...(withProofs ? {proofs: [signature]} : {signature})}
+    if (postRemap) {
+      postData = postRemap(postData)
+    }
 
-            const transaction: ISignatureGenerator = new SignatureGenerator(validatedData);
-            return transaction.getSignature(keyPair.privateKey)
-                .then((signature) => postRemap({
-                    ...validatedData,
-                    ...(withProofs ? {proofs: [signature]} : {signature})
-                }))
-                .then((tx) => {
-                    let sendData: any = {
-                        ...POST_TEMPLATE,
-                        rejectUnauthorized: false,
-                        // allow cookies
-                        // used to implement sticky sessions
-                        // by kubernetes ingress balancer
-                        // https://kubernetes.github.io/ingress-nginx/examples/affinity/cookie/
-                        credentials: 'include',
-                        body: SAFE_JSON_STRINGIFY(tx, null, null)
-                    };
-                    console.log(sendData);
-                    return callback(sendData);
-                });
-        });
+    const sendData = {
+      ...POST_TEMPLATE,
+      rejectUnauthorized: false,
+      // allow cookies
+      // used to implement sticky sessions
+      // by kubernetes ingress balancer
+      // https://kubernetes.github.io/ingress-nginx/examples/affinity/cookie/
+      credentials: 'include',
+      body: SAFE_JSON_STRINGIFY(postData, null, null)
+    }
 
-    };
+    return callback(sendData)
+};
 
-}
 
 export const createTxRequestWrapper = (fetchInstance: IFetchWrapper<any>) => {
-  return (
-    preRemapAsync: (data) => Promise<any>,
-    postRemap: Function,
+  return async (
+    preRemapAsync: (data: object) => Promise<object>,
+    postRemap: (data: object) => object,
     nodeAddress: string,
-    data: IHash<any>,
+    data: object,
     extraData: {
       sender: string;
       password: string;
     }
   ): Promise<any> => {
     nodeAddress = nodeAddress.replace(/\/+$/, '');
-    return preRemapAsync(data).then(validatedData => {
-      const body = {
-        ...(postRemap(validatedData)),
-        ...extraData
-      };
-      if (body.assetId === '') {
-        body.assetId = null;
-      }
-      if (body.feeAssetId === '') {
-        body.feeAssetId = null;
-      }
+    let newData = data
+    if (preRemapAsync) {
+      newData = await preRemapAsync(newData)
+    }
+    if (postRemap) {
+      newData = postRemap(newData)
+    }
 
-      return fetchInstance(nodeAddress + SIGN_PATH, {
+    const body: any = {
+      ...newData,
+      ...extraData
+    };
+    if (body.assetId === '') {
+      body.assetId = null;
+    }
+    if (body.feeAssetId === '') {
+      body.feeAssetId = null;
+    }
+
+    const tx = await fetchInstance(nodeAddress + SIGN_PATH, {
+      ...POST_TEMPLATE,
+      credentials: 'include',
+      body: SAFE_JSON_STRINGIFY(body, null, null)
+    }).then(processJSON)
+
+    return fetchInstance(
+      nodeAddress + BROADCAST_PATH,
+      {
         ...POST_TEMPLATE,
         credentials: 'include',
-        body: SAFE_JSON_STRINGIFY(body, null, null)
-      })
-        .then(r => processJSON(r))
-        .then((tx) => fetchInstance(
-          nodeAddress + BROADCAST_PATH,
-          {
-            ...POST_TEMPLATE,
-            credentials: 'include',
-            body: SAFE_JSON_STRINGIFY(tx, null, null)
-          }).then(r => processJSON(r))
-        );
-    })
+        body: SAFE_JSON_STRINGIFY(tx, null, null)
+      }).then(processJSON)
   };
 };
