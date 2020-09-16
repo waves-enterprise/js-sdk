@@ -1,7 +1,7 @@
 import { TRANSACTIONS } from '@vostokplatform/transactions-factory';
 import { ArrayPart, BasePart, NumberPart, ObjectPart, Schema, StringPart } from 'ts-api-validator';
 import schemaFields from './schemaFields';
-import { createRemapper, normalizeAssetId, precisionCheck, removeAliasPrefix } from '../../utils/remap';
+import { createRemapper, precisionCheck, removeAliasPrefix } from '../../utils/remap';
 import * as constants from '../../constants';
 import config from '../../config';
 import BigNumber from '../../libs/bignumber';
@@ -102,11 +102,7 @@ const transferSchema = new Schema({
       type: StringPart,
       required: true
     },
-    feeAssetId: {
-      type: StringPart,
-      required: false,
-      defaultValue: constants.WAVES
-    },
+    feeAssetId: schemaFields.feeAssetId,
     fee: schemaFields.fee,
     attachment: {
       // TODO : make it possible to pass a byte array
@@ -121,8 +117,6 @@ const transferSchema = new Schema({
 const preTransfer = (data) => transferSchema.parse(data)
 const postTransfer = createRemapper({
   transactionType: null,
-  assetId: normalizeAssetId,
-  feeAssetId: normalizeAssetId,
   attachment: {
     from: 'string',
     to: 'base58'
@@ -342,7 +336,6 @@ const massTransferSchema = new Schema({
 const preMassTransfer = (data) => massTransferSchema.parse(data)
 const postMassTransfer = createRemapper({
   transactionType: null,
-  assetId: normalizeAssetId,
   attachment: {
     from: 'string',
     to: 'base58'
@@ -605,11 +598,7 @@ const dockerCreateV2Schema = new Schema({
     ...dockerCreateBaseSchema,
     content: {
       ...dockerCreateBaseSchema.content,
-      feeAssetId: {
-        ...schemaFields.assetId,
-        required: false,
-        defaultValue: constants.WAVES
-      }
+      feeAssetId: schemaFields.feeAssetId
     }
   }
 )
@@ -631,7 +620,6 @@ const postDockerCreateV2 = d => {
 
   return {
     ...d,
-    feeAssetId: normalizeAssetId(d.feeAssetId),
     params: data,
     transactionType: null,
   }
@@ -757,11 +745,7 @@ const dockerCallSchemaV3 = new Schema({
       type: NumberPart,
       required: true
     },
-    feeAssetId: {
-      ...schemaFields.assetId,
-      required: false,
-      defaultValue: constants.WAVES
-    }
+    feeAssetId: schemaFields.feeAssetId
   }
 })
 
@@ -783,7 +767,6 @@ const postDockerCallV3 = d => {
 
   return {
     ...d,
-    feeAssetId: normalizeAssetId(d.feeAssetId),
     params: data,
     transactionType: null,
   }
@@ -847,11 +830,7 @@ const dockerUpdateV2Schema = new Schema({
     },
     fee: schemaFields.fee,
     timestamp: schemaFields.timestamp,
-    feeAssetId: {
-      ...schemaFields.assetId,
-      required: false,
-      defaultValue: constants.WAVES
-    }
+    feeAssetId: schemaFields.feeAssetId
   }
 })
 
@@ -862,7 +841,6 @@ const preDockerUpdateV2 = (data) => {
 const postDockerUpdateV2 = d => {
   return {
     ...d,
-    feeAssetId: normalizeAssetId(d.feeAssetId),
     transactionType: null,
   }
 }

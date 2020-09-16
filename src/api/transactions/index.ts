@@ -82,7 +82,13 @@ export default class Transactions {
             throw new WavesError(`Wrong transaction type: ${type}`, data);
         }
         const {pre: preRemap, post: postRemap} = TRANSFORMS[key][`V${version}`]
-        return this.txRequestFromNodeAddress(preRemap, postRemap, nodeAddress, data, extraData);
+        return this.txRequestFromNodeAddress(
+          preRemap,
+          postRemap,
+          nodeAddress,
+          {...data, type, version},
+          extraData
+        );
     }
 
     sign(txType: string, data, keys) {

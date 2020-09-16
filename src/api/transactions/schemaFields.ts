@@ -1,5 +1,5 @@
 import { BooleanPart, NumberPart, StringPart } from 'ts-api-validator';
-import { getTimestamp, removeRecipientPrefix } from '../../utils/remap';
+import { getTimestamp, removeRecipientPrefix, normalizeAssetId } from '../../utils/remap';
 import * as constants from '../../constants';
 
 
@@ -12,7 +12,14 @@ export default {
 
     assetId: {
         type: StringPart,
-        required: true
+        required: true,
+        parseValue: normalizeAssetId
+    },
+
+    feeAssetId: {
+        type: StringPart,
+        required: false,
+        parseValue: normalizeAssetId
     },
 
     fee: {

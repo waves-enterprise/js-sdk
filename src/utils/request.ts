@@ -99,9 +99,15 @@ export const wrapTxRequest = (
       preData = await preRemapAsync(preData)
     }
 
-    const signature = await factory(preData).getSignature(keyPair.privateKey)
+    const tx = factory(preData)
+    const signature = await tx.getSignature(keyPair.privateKey)
 
-    let postData: any = {...preData, ...(withProofs ? {proofs: [signature]} : {signature})}
+    let postData: any = {
+      ...preData,
+      ...(withProofs ? {proofs: [signature]} : {signature}),
+      version: tx.version,
+      type: tx.tx_type
+    }
     if (postRemap) {
       postData = postRemap(postData)
     }
