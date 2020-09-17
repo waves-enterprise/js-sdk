@@ -1,4 +1,4 @@
-# Waves API GOST implementation (russian state standart) [![npm version](https://badge.fury.io/js/%40waves%2Fwaves-api.svg)](https://www.npmjs.com/package/@vostokplatform/waves-api) [![downloads/month](https://img.shields.io/npm/dm/%40waves%2Fwaves-api.svg)](https://www.npmjs.com/package/@vostokplatform/waves-api)
+# Waves API [![npm version](https://badge.fury.io/js/%40waves%2Fwaves-api.svg)](https://www.npmjs.com/package/@vostokplatform/waves-api) [![downloads/month](https://img.shields.io/npm/dm/%40waves%2Fwaves-api.svg)](https://www.npmjs.com/package/@vostokplatform/waves-api)
 
 Waves Platform core features and Waves API library for both Node.js and browser.
 
