@@ -52,8 +52,8 @@
     "ts-utils": "6.0.4"
   },
   "scripts": {
-    "_build-partial": "node_modules/.bin/browserify raw/WavesAPI.js --node -s WavesAPI -u parse-json-bignumber -u bignumber.js -u crypto -u node-fetch -u ts-utils -u @vostokplatform/transactions-factory -u ts-api-validator > ./dist/waves-api.partial.js",
-    "_build-full": "node_modules/.bin/browserify raw/WavesAPI.js --node -s WavesAPI -u crypto -u node-fetch > ./dist/waves-api.js",
+    "_build-partial": "node_modules/.bin/browserify raw/src/WavesAPI.js --node -s WavesAPI -u parse-json-bignumber -u bignumber.js -u crypto -u node-fetch -u ts-utils -u @vostokplatform/transactions-factory -u ts-api-validator > ./dist/waves-api.partial.js",
+    "_build-full": "node_modules/.bin/browserify raw/src/WavesAPI.js --node -s WavesAPI -u crypto -u node-fetch > ./dist/waves-api.js",
     "build": "rm -rf ./raw && rm -rf ./dist && npm run compile && mkdir -p dist && npm run _build-partial && npm run _build-full && npm run uglifyjs && cp ./interfaces.d.ts ./raw/interfaces.d.ts",
     "compile": "mkdir -p raw && ./node_modules/.bin/tsc -p ./tsconfig.json --declaration --outDir raw",
     "uglifyjs": "node_modules/.bin/uglifyjs ./dist/waves-api.js -o ./dist/waves-api.min.js && node_modules/.bin/uglifyjs ./dist/waves-api.partial.js -o ./dist/waves-api.partial.min.js",
