@@ -132,7 +132,7 @@ export const createTxRequestWrapper = (fetchInstance: IFetchWrapper<any>) => {
     preRemapAsync: (data: object) => Promise<object>,
     postRemap: (data: object) => object,
     nodeAddress: string,
-    data: object,
+    data: any,
     extraData: {
       sender: string;
       password: string;
@@ -149,7 +149,9 @@ export const createTxRequestWrapper = (fetchInstance: IFetchWrapper<any>) => {
 
     const body: any = {
       ...newData,
-      ...extraData
+      ...extraData,
+      type: data.type,
+      version: data.version
     };
     if (body.assetId === '') {
       body.assetId = null;
