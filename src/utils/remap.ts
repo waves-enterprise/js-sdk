@@ -1,4 +1,4 @@
-import {libs} from '@vostokplatform/transactions-factory';
+import {libs} from '@wavesenterprise/transactions-factory';
 
 import {WAVES} from '../constants';
 import config from '../config';

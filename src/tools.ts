@@ -1,4 +1,4 @@
-import { libs, utils } from '@vostokplatform/transactions-factory';
+import { libs, utils } from '@wavesenterprise/transactions-factory';
 import config from './config'
 import { base58ToString } from './utils/base58ToString';
 

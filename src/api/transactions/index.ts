@@ -11,7 +11,7 @@ import {
     VERSIONS
 } from '../../utils/request';
 import TRANSFORMS from "./transactions.transforms";
-import {getTransactionFactory, TRANSACTION_TYPES} from '@vostokplatform/transactions-factory'
+import {getTransactionFactory, TRANSACTION_TYPES} from '@wavesenterprise/transactions-factory'
 import { wrapTxRequest } from '../../utils/request';
 
 export default class Transactions {

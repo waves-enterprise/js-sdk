@@ -1,6 +1,6 @@
 import { IWavesConfig } from '../interfaces';
 
-import { config as outerConfig } from '@vostokplatform/transactions-factory';
+import { config as outerConfig } from '@wavesenterprise/transactions-factory';
 
 import { DEFAULT_BASIC_CONFIG } from './constants';
 import { normalizeHost } from './utils/request';

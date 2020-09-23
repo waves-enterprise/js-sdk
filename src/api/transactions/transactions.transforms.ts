@@ -1,4 +1,4 @@
-import { TRANSACTIONS } from '@vostokplatform/transactions-factory';
+import { TRANSACTIONS } from '@wavesenterprise/transactions-factory';
 import { ArrayPart, BasePart, NumberPart, ObjectPart, Schema, StringPart } from 'ts-api-validator';
 import schemaFields from './schemaFields';
 import { createRemapper, precisionCheck, removeAliasPrefix } from '../../utils/remap';

@@ -1,4 +1,4 @@
-import {libs} from '@vostokplatform/transactions-factory';
+import {libs} from '@wavesenterprise/transactions-factory';
 
 declare function escape(s: string): string;
 

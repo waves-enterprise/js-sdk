@@ -1,4 +1,4 @@
-import { ByteProcessor as byteProcessors, Seed, utils } from '@vostokplatform/transactions-factory';
+import { ByteProcessor as byteProcessors, Seed, utils } from '@wavesenterprise/transactions-factory';
 import { IWavesConfig } from '../interfaces';
 
 
