@@ -16,7 +16,7 @@ export interface IWavesAPICtr {
     fetchInstance?: typeof fetch;
 }
 
-class WavesAPI {
+export class WavesAPI {
     public readonly Seed = Seed;
     public readonly byteProcessors = byteProcessors;
     public readonly config = config;
