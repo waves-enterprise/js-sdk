@@ -57,6 +57,13 @@ function castFromStringToBase58(str, sliceIndex) {
     return libs.base58.encode(processedBytes);
 }
 
+export const convertAttachmentToBase58 = (value: string) => {
+    if (value) {
+        return castFromStringToBase58(value, 0)
+    }
+    return ''
+}
+
 function castFromRawToPrefixed(raw) {
     if (raw.length > 30) {
         return `address:${raw}`;

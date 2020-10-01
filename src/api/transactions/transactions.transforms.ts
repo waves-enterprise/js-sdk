@@ -1,7 +1,7 @@
 import { TRANSACTIONS } from '@wavesenterprise/transactions-factory';
 import { ArrayPart, BasePart, NumberPart, ObjectPart, Schema, StringPart } from 'ts-api-validator';
 import schemaFields from './schemaFields';
-import { createRemapper, precisionCheck, removeAliasPrefix } from '../../utils/remap';
+import { createRemapper, precisionCheck, removeAliasPrefix, convertAttachmentToBase58 } from '../../utils/remap';
 import * as constants from '../../constants';
 import config from '../../config';
 import BigNumber from '../../libs/bignumber';
@@ -56,7 +56,7 @@ const issueSchema = new Schema({
       type: StringPart,
       required: true
     },
-    precision: {
+    decimals: {
       type: NumberPart,
       required: true,
       isValid: precisionCheck
@@ -75,7 +75,6 @@ const issueSchema = new Schema({
 const preIssue = (data) => issueSchema.parse(data)
 const postIssue = createRemapper({
   transactionType: null,
-  precision: 'decimals',
   quantity: {
     from: 'string',
     to: 'bignumber'
@@ -108,7 +107,8 @@ const transferSchema = new Schema({
       // TODO : make it possible to pass a byte array
       type: StringPart,
       required: false,
-      defaultValue: ''
+      defaultValue: '',
+      parseValue: convertAttachmentToBase58
     },
     timestamp: schemaFields.timestamp
   }
@@ -117,10 +117,11 @@ const transferSchema = new Schema({
 const preTransfer = (data) => transferSchema.parse(data)
 const postTransfer = createRemapper({
   transactionType: null,
-  attachment: {
-    from: 'string',
-    to: 'base58'
-  },
+  // Attachment should be encoded to base58 before calculate signature
+  // attachment: {
+  //   from: 'string',
+  //   to: 'base58'
+  // },
   recipient: {
     from: 'raw',
     to: 'prefixed'
@@ -181,7 +182,7 @@ const burnSchema = new Schema({
   content: {
     senderPublicKey: schemaFields.publicKey,
     assetId: schemaFields.assetId,
-    quantity: {
+    amount: {
       type: StringPart,
       required: true
     },
@@ -198,7 +199,7 @@ const burnSchema = new Schema({
 const preBurn = (data) => burnSchema.parse(data)
 const postBurn = createRemapper({
   transactionType: null,
-  quantity: {
+  amount: {
     from: 'string',
     to: 'bignumber'
   }
@@ -328,7 +329,8 @@ const massTransferSchema = new Schema({
       // TODO : make it possible to pass a byte array
       type: StringPart,
       required: false,
-      defaultValue: ''
+      defaultValue: '',
+      parseValue: convertAttachmentToBase58
     }
   }
 })
@@ -336,10 +338,11 @@ const massTransferSchema = new Schema({
 const preMassTransfer = (data) => massTransferSchema.parse(data)
 const postMassTransfer = createRemapper({
   transactionType: null,
-  attachment: {
-    from: 'string',
-    to: 'base58'
-  },
+  // Attachment should be encoded to base58 before calculate signature
+  // attachment: {
+  //   from: 'string',
+  //   to: 'base58'
+  // },
   transfers: {
     from: 'raw',
     to: 'prefixed',
