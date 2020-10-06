@@ -1,8 +1,7 @@
 import { TRANSACTIONS } from '@wavesenterprise/transactions-factory';
 import { ArrayPart, BasePart, NumberPart, ObjectPart, Schema, StringPart } from 'ts-api-validator';
 import schemaFields from './schemaFields';
-import { createRemapper, precisionCheck, removeAliasPrefix, convertAttachmentToBase58 } from '../../utils/remap';
-import * as constants from '../../constants';
+import { convertAttachmentToBase58, createRemapper, precisionCheck, removeAliasPrefix } from '../../utils/remap';
 import config from '../../config';
 import BigNumber from '../../libs/bignumber';
 
@@ -26,7 +25,7 @@ Object.keys(TRANSACTIONS).forEach(key => {
 })
 
 class AnyPart extends BasePart<any> {
-  protected getValue<T> (data: T): T {
+  protected getValue<T>(data: T): T {
     return data
   }
 }
@@ -176,10 +175,17 @@ const postReissue = createRemapper({
     to: 'bignumber'
   }
 })
+const postSignReissue = createRemapper({
+  quantity: {
+    from: 'string',
+    to: 'bignumber'
+  }
+})
 
 TRANSFORMS.REISSUE.V2 = {
   pre: preReissue,
-  post: postReissue
+  post: postReissue,
+  postSign: postSignReissue
 }
 
 /* BURN */
@@ -235,7 +241,7 @@ const leaseSchema = new Schema({
     senderPublicKey: schemaFields.publicKey,
     recipient: schemaFields.recipient,
     amount: {
-      type: NumberPart,
+      type: StringPart,
       required: true
     },
     fee: schemaFields.fee,
@@ -250,11 +256,22 @@ const postLease = createRemapper({
     from: 'raw',
     to: 'prefixed'
   },
+  amount: {
+    from: 'string',
+    to: 'bignumber'
+  }
+})
+const postSignLease = createRemapper({
+  amount: {
+    from: 'string',
+    to: 'bignumber'
+  }
 })
 
 TRANSFORMS.LEASE.V2 = {
   pre: preLease,
-  post: postLease
+  post: postLease,
+  postSign: postSignLease,
 }
 
 /* CANCEL LEASING */
