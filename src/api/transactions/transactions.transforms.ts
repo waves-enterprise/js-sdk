@@ -12,6 +12,7 @@ type TRANSFORMS_TYPES = {
     [key1 in keyof typeof TRANSACTIONS[key]]?: {
       pre: (data: object) => Promise<object>,
       post: (data: object) => object,
+      postSign?: (data: object) => object,
     }
   }
 }
@@ -80,11 +81,18 @@ const postIssue = createRemapper({
     to: 'bignumber'
   },
 })
+const postSignIssue = createRemapper({
+  quantity: {
+    from: 'string',
+    to: 'bignumber'
+  },
+})
 
 // TODO issue no script
 TRANSFORMS.ISSUE.V2 = {
   pre: preIssue,
-  post: postIssue
+  post: postIssue,
+  postSign: postSignIssue,
 }
 
 
