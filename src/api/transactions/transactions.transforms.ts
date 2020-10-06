@@ -186,6 +186,10 @@ const burnSchema = new Schema({
       type: StringPart,
       required: true
     },
+    quantity: { // Legacy field to support in {node}/sign method
+      type: StringPart,
+      required: false
+    },
     fee: schemaFields.fee,
     timestamp: schemaFields.timestamp,
     chainId: {
@@ -200,6 +204,10 @@ const preBurn = (data) => burnSchema.parse(data)
 const postBurn = createRemapper({
   transactionType: null,
   amount: {
+    from: 'string',
+    to: 'bignumber'
+  },
+  quantity: {
     from: 'string',
     to: 'bignumber'
   }
