@@ -138,10 +138,17 @@ const postTransfer = createRemapper({
     to: 'bignumber'
   },
 })
+const postSignTransfer = createRemapper({
+  amount: {
+    from: 'string',
+    to: 'bignumber'
+  },
+})
 
 TRANSFORMS.TRANSFER.V2 = {
   pre: preTransfer,
-  post: postTransfer
+  post: postTransfer,
+  postSign: postSignTransfer
 }
 
 /* REISSUE */
@@ -226,10 +233,21 @@ const postBurn = createRemapper({
     to: 'bignumber'
   }
 })
+const postSignBurn = createRemapper({
+  amount: {
+    from: 'string',
+    to: 'bignumber'
+  },
+  quantity: {
+    from: 'string',
+    to: 'bignumber'
+  }
+})
 
 TRANSFORMS.BURN.V2 = {
   pre: preBurn,
-  post: postBurn
+  post: postBurn,
+  postSign: postSignBurn,
 }
 
 /* LEASE */
