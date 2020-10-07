@@ -1,8 +1,7 @@
 import { TRANSACTIONS } from '@wavesenterprise/transactions-factory';
 import { ArrayPart, BasePart, NumberPart, ObjectPart, Schema, StringPart } from 'ts-api-validator';
 import schemaFields from './schemaFields';
-import { createRemapper, precisionCheck, removeAliasPrefix, convertAttachmentToBase58 } from '../../utils/remap';
-import * as constants from '../../constants';
+import { convertAttachmentToBase58, createRemapper, precisionCheck, removeAliasPrefix } from '../../utils/remap';
 import config from '../../config';
 import BigNumber from '../../libs/bignumber';
 
@@ -12,6 +11,7 @@ type TRANSFORMS_TYPES = {
     [key1 in keyof typeof TRANSACTIONS[key]]?: {
       pre: (data: object) => Promise<object>,
       post: (data: object) => object,
+      postSign?: (data: object) => object,
     }
   }
 }
@@ -25,7 +25,7 @@ Object.keys(TRANSACTIONS).forEach(key => {
 })
 
 class AnyPart extends BasePart<any> {
-  protected getValue<T> (data: T): T {
+  protected getValue<T>(data: T): T {
     return data
   }
 }
@@ -80,11 +80,18 @@ const postIssue = createRemapper({
     to: 'bignumber'
   },
 })
+const postSignIssue = createRemapper({
+  quantity: {
+    from: 'string',
+    to: 'bignumber'
+  },
+})
 
 // TODO issue no script
 TRANSFORMS.ISSUE.V2 = {
   pre: preIssue,
-  post: postIssue
+  post: postIssue,
+  postSign: postSignIssue,
 }
 
 
@@ -131,10 +138,17 @@ const postTransfer = createRemapper({
     to: 'bignumber'
   },
 })
+const postSignTransfer = createRemapper({
+  amount: {
+    from: 'string',
+    to: 'bignumber'
+  },
+})
 
 TRANSFORMS.TRANSFER.V2 = {
   pre: preTransfer,
-  post: postTransfer
+  post: postTransfer,
+  postSign: postSignTransfer
 }
 
 /* REISSUE */
@@ -168,10 +182,17 @@ const postReissue = createRemapper({
     to: 'bignumber'
   }
 })
+const postSignReissue = createRemapper({
+  quantity: {
+    from: 'string',
+    to: 'bignumber'
+  }
+})
 
 TRANSFORMS.REISSUE.V2 = {
   pre: preReissue,
-  post: postReissue
+  post: postReissue,
+  postSign: postSignReissue
 }
 
 /* BURN */
@@ -212,10 +233,21 @@ const postBurn = createRemapper({
     to: 'bignumber'
   }
 })
+const postSignBurn = createRemapper({
+  amount: {
+    from: 'string',
+    to: 'bignumber'
+  },
+  quantity: {
+    from: 'string',
+    to: 'bignumber'
+  }
+})
 
 TRANSFORMS.BURN.V2 = {
   pre: preBurn,
-  post: postBurn
+  post: postBurn,
+  postSign: postSignBurn,
 }
 
 /* LEASE */
@@ -227,7 +259,7 @@ const leaseSchema = new Schema({
     senderPublicKey: schemaFields.publicKey,
     recipient: schemaFields.recipient,
     amount: {
-      type: NumberPart,
+      type: StringPart,
       required: true
     },
     fee: schemaFields.fee,
@@ -242,11 +274,22 @@ const postLease = createRemapper({
     from: 'raw',
     to: 'prefixed'
   },
+  amount: {
+    from: 'string',
+    to: 'bignumber'
+  }
+})
+const postSignLease = createRemapper({
+  amount: {
+    from: 'string',
+    to: 'bignumber'
+  }
 })
 
 TRANSFORMS.LEASE.V2 = {
   pre: preLease,
-  post: postLease
+  post: postLease,
+  postSign: postSignLease,
 }
 
 /* CANCEL LEASING */

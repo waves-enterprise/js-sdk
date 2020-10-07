@@ -1,5 +1,5 @@
-import { TransactionFactory, TransactionType } from '@wavesenterprise/transactions-factory';
-import {IKeyPair} from '../../interfaces';
+import { TransactionFactory } from '@wavesenterprise/transactions-factory';
+import { IKeyPair } from '../../interfaces';
 import * as create from 'parse-json-bignumber';
 import { BROADCAST_PATH, SIGN_PATH } from "../constants";
 import WavesRequestError from '../errors/WavesRequestError';
@@ -7,94 +7,98 @@ import config from '../config';
 import BigNumber from '../libs/bignumber';
 
 export const SAFE_JSON_PARSE = create({
-    BigNumber
+  BigNumber
 }).parse;
 
 export const SAFE_JSON_STRINGIFY = create({
-    BigNumber
+  BigNumber
 }).stringify;
 
 export type TTransactionRequest = (data: object, keyPair: IKeyPair) => Promise<any>;
+
 export interface IFetchWrapper<T> {
-    (path: string, options?: object): Promise<T>;
+  (path: string, options?: object): Promise<T>;
 }
+
 export interface IFetchWrapperConfig {
-    product: PRODUCTS;
-    version: VERSIONS;
-    fetchInstance: typeof fetch;
-    pipe?: (value: Response) => Response | PromiseLike<Response>
+  product: PRODUCTS;
+  version: VERSIONS;
+  fetchInstance: typeof fetch;
+  pipe?: (value: Response) => Response | PromiseLike<Response>
 }
+
 export const enum PRODUCTS { NODE, MATCHER }
+
 export const enum VERSIONS { V1 }
 
 export const POST_TEMPLATE = {
-    method: 'POST',
-    headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json;charset=UTF-8'
-    }
+  method: 'POST',
+  headers: {
+    'Accept': 'application/json',
+    'Content-Type': 'application/json;charset=UTF-8'
+  }
 };
 
 const key = (product, version) => {
-    return `${product}/${version}`;
+  return `${product}/${version}`;
 };
 
-const hostResolvers: {[key: string]: () => string} = {
-    [key(PRODUCTS.NODE, VERSIONS.V1)]: () => config.getNodeAddress(),
-    [key(PRODUCTS.MATCHER, VERSIONS.V1)]: () => config.getMatcherAddress()
+const hostResolvers: { [key: string]: () => string } = {
+  [key(PRODUCTS.NODE, VERSIONS.V1)]: () => config.getNodeAddress(),
+  [key(PRODUCTS.MATCHER, VERSIONS.V1)]: () => config.getMatcherAddress()
 };
 
 export function normalizeHost(host): string {
-    return host.replace(/\/+$/, '');
+  return host.replace(/\/+$/, '');
 }
 
 export function normalizePath(path): string {
-    return `/${path}`.replace(/\/+/g, '/').replace(/\/$/, '');
+  return `/${path}`.replace(/\/+/g, '/').replace(/\/$/, '');
 }
 
 export function processJSON(res) {
-    if (res.ok) {
-        return res.text().then(SAFE_JSON_PARSE);
-    } else {
-        return res.json().then(Promise.reject.bind(Promise));
-    }
+  if (res.ok) {
+    return res.text().then(SAFE_JSON_PARSE);
+  } else {
+    return res.json().then(Promise.reject.bind(Promise));
+  }
 }
 
 function handleError(url, data) {
-    throw new WavesRequestError(url, data);
+  throw new WavesRequestError(url, data);
 }
 
 
 export function createFetchWrapper(config: IFetchWrapperConfig): IFetchWrapper<any> {
-    const { product, version, pipe, fetchInstance } = config;
+  const { product, version, pipe, fetchInstance } = config;
 
-    const resolveHost = hostResolvers[key(product, version)];
+  const resolveHost = hostResolvers[key(product, version)];
 
-    return function (path: string, options?: object): Promise<any> {
+  return function (path: string, options?: object): Promise<any> {
 
-        const url = resolveHost() + normalizePath(path);
+    const url = resolveHost() + normalizePath(path);
 
-        const request = fetchInstance(url, options);
+    const request = fetchInstance(url, options);
 
-        if (pipe) {
-            return request.then(pipe).catch((data) => handleError(url, data));
-        } else {
-            return request.catch((data) => handleError(url, data));
-        }
+    if (pipe) {
+      return request.then(pipe).catch((data) => handleError(url, data));
+    } else {
+      return request.catch((data) => handleError(url, data));
+    }
 
-    };
+  };
 
 }
 
 export const wrapTxRequest = (
-    factory: TransactionFactory<any>,
-    preRemapAsync: (data: object) => Promise<object>,
-    postRemap: (data: object) => object,
-    callback: (postParams: object) => Promise<any>,
-    withProofs: boolean = false
-  ) =>
+  factory: TransactionFactory<any>,
+  preRemapAsync: (data: object) => Promise<object>,
+  postRemap: (data: object) => object,
+  callback: (postParams: object) => Promise<any>,
+  withProofs: boolean = false
+) =>
   async (data: object, keyPair: IKeyPair): Promise<any> => {
-    let preData: any = {...data, senderPublicKey: keyPair.publicKey }
+    let preData: any = { ...data, senderPublicKey: keyPair.publicKey }
     if (preRemapAsync) {
       preData = await preRemapAsync(preData)
     }
@@ -104,7 +108,7 @@ export const wrapTxRequest = (
 
     let postData: any = {
       ...preData,
-      ...(withProofs ? {proofs: [signature]} : {signature}),
+      ...(withProofs ? { proofs: [signature] } : { signature }),
       version: tx.version,
       type: tx.tx_type
     }
@@ -124,13 +128,14 @@ export const wrapTxRequest = (
     }
 
     return callback(sendData)
-};
+  };
 
 
 export const createTxRequestWrapper = (fetchInstance: IFetchWrapper<any>) => {
   return async (
     preRemapAsync: (data: object) => Promise<object>,
     postRemap: (data: object) => object,
+    postSignRemap: (data: object) => object,
     nodeAddress: string,
     data: any,
     extraData: {
@@ -160,11 +165,15 @@ export const createTxRequestWrapper = (fetchInstance: IFetchWrapper<any>) => {
       body.feeAssetId = null;
     }
 
-    const tx = await fetchInstance(nodeAddress + SIGN_PATH, {
+    let tx = await fetchInstance(nodeAddress + SIGN_PATH, {
       ...POST_TEMPLATE,
       credentials: 'include',
       body: SAFE_JSON_STRINGIFY(body, null, null)
     }).then(processJSON)
+
+    if (postSignRemap) {
+      tx = postSignRemap(tx)
+    }
 
     return fetchInstance(
       nodeAddress + BROADCAST_PATH,

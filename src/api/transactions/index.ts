@@ -31,6 +31,7 @@ export default class Transactions {
     private readonly txRequestFromNodeAddress: (
       preRemapAsync: Function,
       postRemap: Function,
+      postSignRemap: Function,
       nodeAddress: string,
       data: object,
       extraData: {
@@ -81,10 +82,11 @@ export default class Transactions {
         if (!type || !key) {
             throw new WavesError(`Wrong transaction type: ${type}`, data);
         }
-        const {pre: preRemap, post: postRemap} = TRANSFORMS[key][`V${version}`]
+        const {pre: preRemap, post: postRemap, postSign: postSignRemap} = TRANSFORMS[key][`V${version}`]
         return this.txRequestFromNodeAddress(
           preRemap,
           postRemap,
+          postSignRemap,
           nodeAddress,
           {...data, type, version},
           extraData
