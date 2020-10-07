@@ -1,179 +1,186 @@
-import {ISignatureGenerator, ISignatureGeneratorConstructor} from '@vostokplatform/signature-generator';
-import {IHash, IKeyPair} from '../../interfaces';
-
+import { TransactionFactory } from '@wavesenterprise/transactions-factory';
+import { IKeyPair } from '../../interfaces';
 import * as create from 'parse-json-bignumber';
 import { BROADCAST_PATH, SIGN_PATH } from "../constants";
-
 import WavesRequestError from '../errors/WavesRequestError';
-
 import config from '../config';
 import BigNumber from '../libs/bignumber';
 
 export const SAFE_JSON_PARSE = create({
-    BigNumber
+  BigNumber
 }).parse;
+
 export const SAFE_JSON_STRINGIFY = create({
-    BigNumber
+  BigNumber
 }).stringify;
 
-export type TTransactionRequest = (data: IHash<any>, keyPair: IKeyPair) => Promise<any>;
+export type TTransactionRequest = (data: object, keyPair: IKeyPair) => Promise<any>;
 
 export interface IFetchWrapper<T> {
-    (path: string, options?: IHash<any>): Promise<T>;
+  (path: string, options?: object): Promise<T>;
 }
 
 export interface IFetchWrapperConfig {
-    product: PRODUCTS;
-    version: VERSIONS;
-    fetchInstance: typeof fetch;
-    pipe?: (value: Response) => Response | PromiseLike<Response>
+  product: PRODUCTS;
+  version: VERSIONS;
+  fetchInstance: typeof fetch;
+  pipe?: (value: Response) => Response | PromiseLike<Response>
 }
 
 export const enum PRODUCTS { NODE, MATCHER }
 
 export const enum VERSIONS { V1 }
 
-
 export const POST_TEMPLATE = {
-    method: 'POST',
-    headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json;charset=UTF-8'
-    }
+  method: 'POST',
+  headers: {
+    'Accept': 'application/json',
+    'Content-Type': 'application/json;charset=UTF-8'
+  }
 };
-
 
 const key = (product, version) => {
-    return `${product}/${version}`;
+  return `${product}/${version}`;
 };
 
-const hostResolvers: IHash<() => string> = {
-    [key(PRODUCTS.NODE, VERSIONS.V1)]: () => config.getNodeAddress(),
-    [key(PRODUCTS.MATCHER, VERSIONS.V1)]: () => config.getMatcherAddress()
+const hostResolvers: { [key: string]: () => string } = {
+  [key(PRODUCTS.NODE, VERSIONS.V1)]: () => config.getNodeAddress(),
+  [key(PRODUCTS.MATCHER, VERSIONS.V1)]: () => config.getMatcherAddress()
 };
-
 
 export function normalizeHost(host): string {
-    return host.replace(/\/+$/, '');
+  return host.replace(/\/+$/, '');
 }
 
 export function normalizePath(path): string {
-    return `/${path}`.replace(/\/+/g, '/').replace(/\/$/, '');
+  return `/${path}`.replace(/\/+/g, '/').replace(/\/$/, '');
 }
 
 export function processJSON(res) {
-    if (res.ok) {
-        return res.text().then(SAFE_JSON_PARSE);
-    } else {
-        return res.json().then(Promise.reject.bind(Promise));
-    }
+  if (res.ok) {
+    return res.text().then(SAFE_JSON_PARSE);
+  } else {
+    return res.json().then(Promise.reject.bind(Promise));
+  }
 }
 
-
 function handleError(url, data) {
-    throw new WavesRequestError(url, data);
+  throw new WavesRequestError(url, data);
 }
 
 
 export function createFetchWrapper(config: IFetchWrapperConfig): IFetchWrapper<any> {
-    const { product, version, pipe, fetchInstance } = config;
+  const { product, version, pipe, fetchInstance } = config;
 
-    const resolveHost = hostResolvers[key(product, version)];
+  const resolveHost = hostResolvers[key(product, version)];
 
-    return function (path: string, options?: IHash<any>): Promise<any> {
+  return function (path: string, options?: object): Promise<any> {
 
-        const url = resolveHost() + normalizePath(path);
+    const url = resolveHost() + normalizePath(path);
 
-        const request = fetchInstance(url, options);
+    const request = fetchInstance(url, options);
 
-        if (pipe) {
-            return request.then(pipe).catch((data) => handleError(url, data));
-        } else {
-            return request.catch((data) => handleError(url, data));
-        }
+    if (pipe) {
+      return request.then(pipe).catch((data) => handleError(url, data));
+    } else {
+      return request.catch((data) => handleError(url, data));
+    }
 
-    };
-
-}
-
-export function wrapTxRequest(SignatureGenerator: ISignatureGeneratorConstructor<any>,
-                              preRemapAsync: (data: IHash<any>) => Promise<IHash<any>>,
-                              postRemap: (data: IHash<any>) => IHash<any>,
-                              callback: (postParams: IHash<any>) => Promise<any>,
-                              withProofs: boolean = false) {
-    return function (data: IHash<any>, keyPair: IKeyPair): Promise<any> {
-        return preRemapAsync({
-
-            // The order is required for `senderPublicKey` must be rewritten if it exists in `data`
-            ...data,
-            senderPublicKey: keyPair.publicKey
-
-        }).then((validatedData) => {
-
-            const transaction: ISignatureGenerator = new SignatureGenerator(validatedData);
-            return transaction.getSignature(keyPair.privateKey)
-                .then((signature) => postRemap({
-                    ...validatedData,
-                    ...(withProofs ? {proofs: [signature]} : {signature})
-                }))
-                .then((tx) => {
-                    let sendData: any = {
-                        ...POST_TEMPLATE,
-                        rejectUnauthorized: false,
-                        // allow cookies
-                        // used to implement sticky sessions
-                        // by kubernetes ingress balancer
-                        // https://kubernetes.github.io/ingress-nginx/examples/affinity/cookie/
-                        credentials: 'include',
-                        body: SAFE_JSON_STRINGIFY(tx, null, null)
-                    };
-                    console.log(sendData);
-                    return callback(sendData);
-                });
-        });
-
-    };
+  };
 
 }
+
+export const wrapTxRequest = (
+  factory: TransactionFactory<any>,
+  preRemapAsync: (data: object) => Promise<object>,
+  postRemap: (data: object) => object,
+  callback: (postParams: object) => Promise<any>,
+  withProofs: boolean = false
+) =>
+  async (data: object, keyPair: IKeyPair): Promise<any> => {
+    let preData: any = { ...data, senderPublicKey: keyPair.publicKey }
+    if (preRemapAsync) {
+      preData = await preRemapAsync(preData)
+    }
+
+    const tx = factory(preData)
+    const signature = await tx.getSignature(keyPair.privateKey)
+
+    let postData: any = {
+      ...preData,
+      ...(withProofs ? { proofs: [signature] } : { signature }),
+      version: tx.version,
+      type: tx.tx_type
+    }
+    if (postRemap) {
+      postData = postRemap(postData)
+    }
+
+    const sendData = {
+      ...POST_TEMPLATE,
+      rejectUnauthorized: false,
+      // allow cookies
+      // used to implement sticky sessions
+      // by kubernetes ingress balancer
+      // https://kubernetes.github.io/ingress-nginx/examples/affinity/cookie/
+      credentials: 'include',
+      body: SAFE_JSON_STRINGIFY(postData, null, null)
+    }
+
+    return callback(sendData)
+  };
+
 
 export const createTxRequestWrapper = (fetchInstance: IFetchWrapper<any>) => {
-  return (
-    preRemapAsync: (data) => Promise<any>,
-    postRemap: Function,
+  return async (
+    preRemapAsync: (data: object) => Promise<object>,
+    postRemap: (data: object) => object,
+    postSignRemap: (data: object) => object,
     nodeAddress: string,
-    data: IHash<any>,
+    data: any,
     extraData: {
       sender: string;
       password: string;
     }
   ): Promise<any> => {
     nodeAddress = nodeAddress.replace(/\/+$/, '');
-    return preRemapAsync(data).then(validatedData => {
-      const body = {
-        ...(postRemap(validatedData)),
-        ...extraData
-      };
-      if (body.assetId === '') {
-        body.assetId = null;
-      }
-      if (body.feeAssetId === '') {
-        body.feeAssetId = null;
-      }
+    let newData = data
+    if (preRemapAsync) {
+      newData = await preRemapAsync(newData)
+    }
+    if (postRemap) {
+      newData = postRemap(newData)
+    }
 
-      return fetchInstance(nodeAddress + SIGN_PATH, {
+    const body: any = {
+      ...newData,
+      ...extraData,
+      type: data.type,
+      version: data.version
+    };
+    if (body.assetId === '') {
+      body.assetId = null;
+    }
+    if (body.feeAssetId === '') {
+      body.feeAssetId = null;
+    }
+
+    let tx = await fetchInstance(nodeAddress + SIGN_PATH, {
+      ...POST_TEMPLATE,
+      credentials: 'include',
+      body: SAFE_JSON_STRINGIFY(body, null, null)
+    }).then(processJSON)
+
+    if (postSignRemap) {
+      tx = postSignRemap(tx)
+    }
+
+    return fetchInstance(
+      nodeAddress + BROADCAST_PATH,
+      {
         ...POST_TEMPLATE,
         credentials: 'include',
-        body: SAFE_JSON_STRINGIFY(body, null, null)
-      })
-        .then(r => processJSON(r))
-        .then((tx) => fetchInstance(
-          nodeAddress + BROADCAST_PATH,
-          {
-            ...POST_TEMPLATE,
-            credentials: 'include',
-            body: SAFE_JSON_STRINGIFY(tx, null, null)
-          }).then(r => processJSON(r))
-        );
-    })
+        body: SAFE_JSON_STRINGIFY(tx, null, null)
+      }).then(processJSON)
   };
 };

@@ -1,6 +1,6 @@
-import { IHash, IWavesConfig } from '../interfaces';
+import { IWavesConfig } from '../interfaces';
 
-import { config as outerConfig } from '@vostokplatform/signature-generator';
+import { config as outerConfig } from '@wavesenterprise/transactions-factory';
 
 import { DEFAULT_BASIC_CONFIG } from './constants';
 import { normalizeHost } from './utils/request';
@@ -37,7 +37,7 @@ export default {
         return config.minimumSeedLength;
     },
 
-    getRequestParams(): IHash<any> {
+    getRequestParams() {
         return {
             offset: config.requestOffset,
             limit: config.requestLimit

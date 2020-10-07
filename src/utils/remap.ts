@@ -1,6 +1,4 @@
-import {IHash} from '../../interfaces';
-
-import {libs} from '@vostokplatform/signature-generator';
+import {libs} from '@wavesenterprise/transactions-factory';
 
 import {WAVES} from '../constants';
 import config from '../config';
@@ -57,6 +55,13 @@ function castFromStringToBase58(str, sliceIndex) {
     const processedBytes = Uint8Array.from(Array.prototype.slice.call(unescape(encodeURIComponent(str))
         .split('').map(e => e.charCodeAt(0)), sliceIndex));
     return libs.base58.encode(processedBytes);
+}
+
+export const convertAttachmentToBase58 = (value: string) => {
+    if (value) {
+        return castFromStringToBase58(value, 0)
+    }
+    return ''
 }
 
 function castFromRawToPrefixed(raw) {

@@ -1,4 +1,4 @@
-import {libs} from '@vostokplatform/signature-generator';
+import {libs} from '@wavesenterprise/transactions-factory';
 
 declare function escape(s: string): string;
 

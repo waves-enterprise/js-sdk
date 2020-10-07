@@ -2,13 +2,6 @@
 
 import * as WavesAPI from '../dist/waves-api'
 
-import {
-  utils,
-  Seed,
-  ByteProcessor as byteProcessors,
-  TX_NUMBER_MAP
-} from '@vostokplatform/signature-generator'
-import BigNumber from '../src/libs/bignumber'
 
 // export NODE_TLS_REJECT_UNAUTHORIZED=0
 let requiredConfigValues = {
