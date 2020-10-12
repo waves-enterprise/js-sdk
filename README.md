@@ -34,7 +34,7 @@ const config = {
 
 const Waves = WavesAPI.create({
     initialConfiguration: config,
-    fetchInstance: window.fetch // use node-fetch instance for Node.js
+    fetchInstance: window.fetch // For Node.js use node-fetch: check /examples
 });
 ```
 
@@ -42,16 +42,18 @@ const Waves = WavesAPI.create({
 ```
 const seed = Waves.Seed.fromExistingPhrase('examples seed phrase');
 
-const transferTx = {
+const tx = {
     recipient: seed.address, // Send tokens to the same address
     assetId: 'WAVES',
     amount: '10000',
-    fee: 0,
+    fee: '1000000',
     attachment: 'Examples transfer attachment',
     timestamp: Date.now()
 }
 
-Waves.API.Node.transactions.broadcast('transfer', tx, seed.keyPair);
+Waves.API.Node.transactions.broadcastFromClientAddress('transfer', tx, seed.keyPair).then(result => {
+    console.log('Broadcast result:', result)
+});
 ```
 
 ## More examples
