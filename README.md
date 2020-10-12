@@ -75,6 +75,9 @@ To run examples:
      + Issue and Burn tokens
      
         `npm run example:issue_burn`
+     + Call docker contract
+     
+        `npm run example:docker-call`
      
 Using this examples, you can sign any other type of transaction using the transaction structure from [docs](https://docs.wavesenterprise.com/en/1.3.0/how-the-platform-works/data-structures/transactions-structure.html#id26).
 
@@ -147,8 +150,8 @@ Waves.config.set(newConfig);
 ## Authors
 
 * [**Mikhail Tokarev**](https://github.com/mtfj) - *Initial refactoring*
-* [**Alexander Kuvakin**](https://github.com/larsan12) - *Refactoring, support*
-* [**Artem Kolodko**](https://github.com/ArtemKolodko) - *Refactoring, support*
+* [**Alexander Kuvakin**](https://github.com/larsan12) - *Refactoring, add new transactions*
+* [**Artem Kolodko**](https://github.com/ArtemKolodko) - *Refactoring, add new transactions*
 
 ## License
 
