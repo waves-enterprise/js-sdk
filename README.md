@@ -49,7 +49,7 @@ const tx = {
     fee: '1000000',
     attachment: 'Examples transfer attachment',
     timestamp: Date.now()
-}
+};
 
 Waves.API.Node.transactions.broadcastFromClientAddress('transfer', tx, seed.keyPair).then(result => {
     console.log('Broadcast result:', result)
@@ -85,6 +85,30 @@ To run examples:
         `npm run example:docker-call`
      
 Using this examples, you can sign any other type of transaction using the transaction structure from [docs](https://docs.wavesenterprise.com/en/1.3.0/how-the-platform-works/data-structures/transactions-structure.html#id26).
+
+## Using with oAuth
+If blockchain Node using oAuth authorization, waves-api should be initialized with auth headers provided to fetch.
+
+In our projects we use library api-token-refresher, provides automatic tokens refresh if access token is became expired.
+
+Initialization is pretty simple:
+```
+import { init: initRefresher } from '@wavesenterprise/api-token-refresher/dist/fetch'
+
+const { fetch } = initRefresher({
+  authorization: {
+    access_token, // JWT access token
+    refresh_token // JWT refresh token
+  }
+});
+
+const Waves = WavesAPI.create({
+    initialConfiguration: config,
+    fetchInstance: fetch
+});
+```
+
+You can also use custom solution for integration with oAuth.
 
 ### Seed
 
