@@ -68,6 +68,7 @@
     "example:issue_burn": "node examples/issue_burn",
     "example:policy": "node examples/policy",
     "example:permission": "node examples/permission",
+    "example:docker-create": "node examples/create-contract",
     "example:docker-call": "node examples/call-contract"
   }
 }

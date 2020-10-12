@@ -75,6 +75,9 @@ To run examples:
      + Issue and Burn tokens
      
         `npm run example:issue_burn`
+     + Create docker contract
+     
+        `npm run example:docker-create`
      + Call docker contract
      
         `npm run example:docker-call`
