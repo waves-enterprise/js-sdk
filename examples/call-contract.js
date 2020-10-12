@@ -27,40 +27,21 @@ const fetch = (url, options = {}) => {
     // Create Seed object from phrase
     const seed = Waves.Seed.fromExistingPhrase(seedPhrase);
 
-    const quantity = '1000000'
+    const timestamp  = Date.now()
 
     const tx = {
-        name: 'Sample token',
-        description: 'The best token ever made',
-        quantity,
-        decimals: 8,
-        reissuable: false,
-        fee: minimumFee[3],
-        timestamp: Date.now(),
-        script: null
-    }
+        senderPublicKey: seed.keyPair.publicKey,
+        authorPublicKey: seed.keyPair.publicKey,
+        contractId: '4pSJoWsaYvT8iCSAxUYdc7LwznFexnBGPRoUJX7Lw3sh', // Predefined contract
+        contractVersion: 1,
+        timestamp,
+        params: [],
+        fee: minimumFee[104]
+    };
 
     try {
-        const result = await Waves.API.Node.transactions.broadcastFromClientAddress('issue', tx, seed.keyPair);
-        console.log('Broadcast ISSUE result: ', result)
-
-        const waitTimeout = 30
-
-        console.log(`Wait ${waitTimeout} seconds while tx is mining...`)
-
-        await new Promise(resolve => {
-            setTimeout(resolve, waitTimeout * 1000)
-        })
-
-        const burnTx = {
-            assetId: result.assetId,
-            amount: quantity,
-            fee: minimumFee[6],
-            timestamp: Date.now()
-        }
-
-        const burnResult = await Waves.API.Node.transactions.broadcastFromClientAddress('burn', burnTx, seed.keyPair);
-        console.log('Broadcast BURN result: ', burnResult)
+        const result = await Waves.API.Node.transactions.broadcastFromClientAddress('dockerCallV2', tx, seed.keyPair);
+        console.log('Broadcast docker call result: ', result)
     } catch (err) {
         console.log('Broadcast error:', err)
     }

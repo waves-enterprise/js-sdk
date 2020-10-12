@@ -1,7 +1,7 @@
 const { create: createApiInstance, MAINNET_CONFIG } = require('../dist/waves-api');
 const nodeFetch = require('node-fetch');
 
-const nodeAddress = 'https://trump.vostokservices.com/node-1';
+const nodeAddress = 'https://hoover.welocal.dev/node-0';
 const seedPhrase = 'examples seed phrase';
 
 const fetch = (url, options = {}) => {
@@ -26,22 +26,23 @@ const fetch = (url, options = {}) => {
 
     // Create Seed object from phrase
     const seed = Waves.Seed.fromExistingPhrase(seedPhrase);
+    const targetSeed = Waves.Seed.create(15);
 
     const tx = {
-        target: seed.address,
+        target: targetSeed.address,
         opType: 'add',
-        role: 'contract_developer',
+        role: 'issuer',
         fee: minimumFee[102],
         timestamp: Date.now(),
     }
 
     try {
-        const result = await Waves.API.Node.transactions.broadcast('permit', tx, seed.keyPair);
+        const result = await Waves.API.Node.transactions.broadcastFromClientAddress('permit', tx, seed.keyPair);
         console.log('Broadcast ADD PERMIT: ', result)
 
-        const waitTimeout = 10
+        const waitTimeout = 30
 
-        console.log(`Wait ${waitTimeout} seconds while tx mining...`)
+        console.log(`Wait ${waitTimeout} seconds while tx is mining...`)
 
         await new Promise(resolve => {
             setTimeout(resolve, waitTimeout * 1000)
@@ -53,7 +54,7 @@ const fetch = (url, options = {}) => {
             timestamp: Date.now()
         }
 
-        const removePermitResult = await Waves.API.Node.transactions.broadcast('permit', removePermit, seed.keyPair);
+        const removePermitResult = await Waves.API.Node.transactions.broadcastFromClientAddress('permit', removePermit, seed.keyPair);
         console.log('Broadcast REMOVE PERMIT: ', removePermitResult)
     } catch (err) {
         console.log('Broadcast error:', err)

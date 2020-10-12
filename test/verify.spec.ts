@@ -1,5 +1,5 @@
 import { expect } from './getChai';
-import { libs, utils } from "@vostokplatform/signature-generator";
+import { libs, utils } from "@wavesenterprise/signature-generator";
 
 describe('Verify signature', () => {
   it('verification function should return true with correct data', () => {
