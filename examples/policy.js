@@ -1,7 +1,7 @@
 const { create: createApiInstance, MAINNET_CONFIG } = require('../dist/waves-api');
 const nodeFetch = require('node-fetch');
 
-const nodeAddress = 'https://trump.vostokservices.com/node-1';
+const nodeAddress = 'https://hoover.welocal.dev/node-0';
 const seedPhrase = 'examples seed phrase';
 
 const fetch = (url, options = {}) => {
@@ -39,7 +39,7 @@ const fetch = (url, options = {}) => {
     }
 
     try {
-        const result = await Waves.API.Node.transactions.broadcast('policyCreate', tx, seed.keyPair);
+        const result = await Waves.API.Node.transactions.broadcastFromClientAddress('policyCreate', tx, seed.keyPair);
         console.log('Broadcast PolicyCreate result: ', result)
     } catch (err) {
         console.log('Broadcast error:', err)

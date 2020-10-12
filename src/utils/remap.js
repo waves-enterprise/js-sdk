@@ -11,8 +11,7 @@ var __assign = (this && this.__assign) || function () {
     return __assign.apply(this, arguments);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.createRemapper = exports.precisionCheck = exports.getTimestamp = exports.removeAliasPrefix = exports.removeRecipientPrefix = exports.normalizeAssetId = void 0;
-var transactions_factory_1 = require("@vostokplatform/transactions-factory");
+var transactions_factory_1 = require("@wavesenterprise/transactions-factory");
 var constants_1 = require("../constants");
 var config_1 = require("../config");
 var bignumber_1 = require("../libs/bignumber");
@@ -67,6 +66,12 @@ function castFromStringToBase58(str, sliceIndex) {
         .split('').map(function (e) { return e.charCodeAt(0); }), sliceIndex));
     return transactions_factory_1.libs.base58.encode(processedBytes);
 }
+exports.convertAttachmentToBase58 = function (value) {
+    if (value) {
+        return castFromStringToBase58(value, 0);
+    }
+    return '';
+};
 function castFromRawToPrefixed(raw) {
     if (raw.length > 30) {
         return "address:" + raw;
@@ -78,7 +83,7 @@ function castFromRawToPrefixed(raw) {
 }
 function createRemapper(rules) {
     return function (data) {
-        return Object.keys(__assign(__assign({}, data), rules)).reduce(function (result, key) {
+        return Object.keys(__assign({}, data, rules)).reduce(function (result, key) {
             var rule = rules[key];
             if (typeof rule === 'function') {
                 // Process with a function
@@ -101,7 +106,7 @@ function createRemapper(rules) {
                 }
                 else if (rule.from === 'raw' && rule.to === 'prefixed') {
                     if (data[key].length && data[key][0].recipient) { // if mass transfers [{recipient: 'address', amount: '100'}] amount = long
-                        result[rule.path || key] = data[key].map(function (o) { return (__assign(__assign({}, o), { amount: new bignumber_1.default(o.amount), recipient: castFromRawToPrefixed(o.recipient) })); });
+                        result[rule.path || key] = data[key].map(function (o) { return (__assign({}, o, { amount: new bignumber_1.default(o.amount), recipient: castFromRawToPrefixed(o.recipient) })); });
                     }
                     else {
                         result[rule.path || key] = castFromRawToPrefixed(data[key]);

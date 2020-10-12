@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-var transactions_factory_1 = require("@vostokplatform/transactions-factory");
+var transactions_factory_1 = require("@wavesenterprise/transactions-factory");
 var config_1 = require("./config");
 var base58ToString_1 = require("./utils/base58ToString");
 exports.default = {

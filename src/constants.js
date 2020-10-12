@@ -11,7 +11,6 @@ var __assign = (this && this.__assign) || function () {
     return __assign.apply(this, arguments);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.SIGN_PATH = exports.BROADCAST_PATH = exports.WAVES_V1_ISSUE_TX = exports.DEFAULT_TESTNET_CONFIG = exports.DEFAULT_MAINNET_CONFIG = exports.DEFAULT_BASIC_CONFIG = exports.DEFAULT_PAGING_OFFSET = exports.DEFAULT_PAGING_LIMIT = exports.DEFAULT_ORDER_EXPIRATION_DAYS = exports.DEFAULT_MIN_SEED_LENGTH = exports.TRANSFER_ATTACHMENT_BYTE_LIMIT = exports.MINIMUM_DATA_FEE_PER_KB = exports.MINIMUM_MATCHER_FEE = exports.MINIMUM_ISSUE_FEE = exports.MINIMUM_FEE = exports.PUBLIC_KEY_GOST_LENGTH = exports.PUBLIC_KEY_LENGTH = exports.PRIVATE_KEY_LENGTH = exports.LEGACY_TX_TYPES = exports.ALIAS_BYTE = exports.ADDRESS_BYTE = exports.INITIAL_NONCE = exports.TESTNET_BYTE = exports.MAINNET_BYTE = exports.WAVES = void 0;
 exports.WAVES = 'WAVES';
 exports.MAINNET_BYTE = 'D'.charCodeAt(0); // todo
 exports.TESTNET_BYTE = 'D'.charCodeAt(0);
@@ -70,8 +69,8 @@ exports.DEFAULT_BASIC_CONFIG = {
     timeDiff: 0,
     crypto: 'waves'
 };
-exports.DEFAULT_MAINNET_CONFIG = __assign(__assign({}, exports.DEFAULT_BASIC_CONFIG), { networkByte: exports.MAINNET_BYTE, nodeAddress: 'https://nodes.wavesplatform.com', matcherAddress: 'https://matcher.wavesplatform.com/matcher' });
-exports.DEFAULT_TESTNET_CONFIG = __assign(__assign({}, exports.DEFAULT_BASIC_CONFIG), { networkByte: exports.TESTNET_BYTE, nodeAddress: 'https://testnet1.wavesnodes.com', matcherAddress: 'https://testnet1.wavesnodes.com/matcher' });
+exports.DEFAULT_MAINNET_CONFIG = __assign({}, exports.DEFAULT_BASIC_CONFIG, { networkByte: exports.MAINNET_BYTE, nodeAddress: 'https://nodes.wavesplatform.com', matcherAddress: 'https://matcher.wavesplatform.com/matcher' });
+exports.DEFAULT_TESTNET_CONFIG = __assign({}, exports.DEFAULT_BASIC_CONFIG, { networkByte: exports.TESTNET_BYTE, nodeAddress: 'https://testnet1.wavesnodes.com', matcherAddress: 'https://testnet1.wavesnodes.com/matcher' });
 exports.WAVES_V1_ISSUE_TX = {
     assetId: exports.WAVES,
     decimals: 8,

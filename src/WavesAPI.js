@@ -1,7 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.TESTNET_CONFIG = exports.MAINNET_CONFIG = exports.create = void 0;
-var transactions_factory_1 = require("@vostokplatform/transactions-factory");
+var transactions_factory_1 = require("@wavesenterprise/transactions-factory");
 var api_1 = require("./api");
 var config_1 = require("./config");
 var constants = require("./constants");
@@ -40,6 +39,7 @@ var WavesAPI = /** @class */ (function () {
     }
     return WavesAPI;
 }());
+exports.WavesAPI = WavesAPI;
 function create(_a) {
     var initialConfiguration = _a.initialConfiguration, fetchInstance = _a.fetchInstance;
     return new WavesAPI({ initialConfiguration: initialConfiguration, fetchInstance: fetchInstance });

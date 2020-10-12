@@ -11,11 +11,10 @@ var __assign = (this && this.__assign) || function () {
     return __assign.apply(this, arguments);
 };
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
         function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
         function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        function step(result) { result.done ? resolve(result.value) : new P(function (resolve) { resolve(result.value); }).then(fulfilled, rejected); }
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
@@ -46,9 +45,9 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
-var _a;
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.createTxRequestWrapper = exports.wrapTxRequest = exports.createFetchWrapper = exports.processJSON = exports.normalizePath = exports.normalizeHost = exports.POST_TEMPLATE = exports.SAFE_JSON_STRINGIFY = exports.SAFE_JSON_PARSE = void 0;
+var _a;
+var _this = this;
 var create = require("parse-json-bignumber");
 var constants_1 = require("../constants");
 var WavesRequestError_1 = require("../errors/WavesRequestError");
@@ -111,25 +110,27 @@ function createFetchWrapper(config) {
 exports.createFetchWrapper = createFetchWrapper;
 exports.wrapTxRequest = function (factory, preRemapAsync, postRemap, callback, withProofs) {
     if (withProofs === void 0) { withProofs = false; }
-    return function (data, keyPair) { return __awaiter(void 0, void 0, void 0, function () {
-        var preData, signature, postData, sendData;
+    return function (data, keyPair) { return __awaiter(_this, void 0, void 0, function () {
+        var preData, tx, signature, postData, sendData;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
-                    preData = __assign(__assign({}, data), { senderPublicKey: keyPair.publicKey });
+                    preData = __assign({}, data, { senderPublicKey: keyPair.publicKey });
                     if (!preRemapAsync) return [3 /*break*/, 2];
                     return [4 /*yield*/, preRemapAsync(preData)];
                 case 1:
                     preData = _a.sent();
                     _a.label = 2;
-                case 2: return [4 /*yield*/, factory(preData).getSignature(keyPair.privateKey)];
+                case 2:
+                    tx = factory(preData);
+                    return [4 /*yield*/, tx.getSignature(keyPair.privateKey)];
                 case 3:
                     signature = _a.sent();
-                    postData = __assign(__assign({}, preData), (withProofs ? { proofs: [signature] } : { signature: signature }));
+                    postData = __assign({}, preData, (withProofs ? { proofs: [signature] } : { signature: signature }), { version: tx.version, type: tx.tx_type });
                     if (postRemap) {
                         postData = postRemap(postData);
                     }
-                    sendData = __assign(__assign({}, exports.POST_TEMPLATE), { rejectUnauthorized: false, 
+                    sendData = __assign({}, exports.POST_TEMPLATE, { rejectUnauthorized: false, 
                         // allow cookies
                         // used to implement sticky sessions
                         // by kubernetes ingress balancer
@@ -141,7 +142,7 @@ exports.wrapTxRequest = function (factory, preRemapAsync, postRemap, callback, w
     }); };
 };
 exports.createTxRequestWrapper = function (fetchInstance) {
-    return function (preRemapAsync, postRemap, nodeAddress, data, extraData) { return __awaiter(void 0, void 0, void 0, function () {
+    return function (preRemapAsync, postRemap, postSignRemap, nodeAddress, data, extraData) { return __awaiter(_this, void 0, void 0, function () {
         var newData, body, tx;
         return __generator(this, function (_a) {
             switch (_a.label) {
@@ -157,17 +158,20 @@ exports.createTxRequestWrapper = function (fetchInstance) {
                     if (postRemap) {
                         newData = postRemap(newData);
                     }
-                    body = __assign(__assign({}, newData), extraData);
+                    body = __assign({}, newData, extraData, { type: data.type, version: data.version });
                     if (body.assetId === '') {
                         body.assetId = null;
                     }
                     if (body.feeAssetId === '') {
                         body.feeAssetId = null;
                     }
-                    return [4 /*yield*/, fetchInstance(nodeAddress + constants_1.SIGN_PATH, __assign(__assign({}, exports.POST_TEMPLATE), { credentials: 'include', body: exports.SAFE_JSON_STRINGIFY(body, null, null) })).then(processJSON)];
+                    return [4 /*yield*/, fetchInstance(nodeAddress + constants_1.SIGN_PATH, __assign({}, exports.POST_TEMPLATE, { credentials: 'include', body: exports.SAFE_JSON_STRINGIFY(body, null, null) })).then(processJSON)];
                 case 3:
                     tx = _a.sent();
-                    return [2 /*return*/, fetchInstance(nodeAddress + constants_1.BROADCAST_PATH, __assign(__assign({}, exports.POST_TEMPLATE), { credentials: 'include', body: exports.SAFE_JSON_STRINGIFY(tx, null, null) })).then(processJSON)];
+                    if (postSignRemap) {
+                        tx = postSignRemap(tx);
+                    }
+                    return [2 /*return*/, fetchInstance(nodeAddress + constants_1.BROADCAST_PATH, __assign({}, exports.POST_TEMPLATE, { credentials: 'include', body: exports.SAFE_JSON_STRINGIFY(tx, null, null) })).then(processJSON)];
             }
         });
     }); };

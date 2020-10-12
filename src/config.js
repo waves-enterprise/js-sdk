@@ -11,7 +11,7 @@ var __assign = (this && this.__assign) || function () {
     return __assign.apply(this, arguments);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-var transactions_factory_1 = require("@vostokplatform/transactions-factory");
+var transactions_factory_1 = require("@wavesenterprise/transactions-factory");
 var constants_1 = require("./constants");
 var request_1 = require("./utils/request");
 var config = Object.create(null);
@@ -61,7 +61,7 @@ exports.default = {
         transactions_factory_1.config.set(newConfig);
         // Extend incoming objects only when `config` is empty
         if (Object.keys(config).length === 0) {
-            newConfig = __assign(__assign({}, constants_1.DEFAULT_BASIC_CONFIG), newConfig);
+            newConfig = __assign({}, constants_1.DEFAULT_BASIC_CONFIG, newConfig);
         }
         Object.keys(newConfig).forEach(function (key) {
             switch (key) {

@@ -10,7 +10,13 @@ exports.default = {
     },
     assetId: {
         type: ts_api_validator_1.StringPart,
-        required: true
+        required: true,
+        parseValue: remap_1.normalizeAssetId
+    },
+    feeAssetId: {
+        type: ts_api_validator_1.StringPart,
+        required: false,
+        parseValue: remap_1.normalizeAssetId
     },
     fee: {
         type: ts_api_validator_1.NumberPart,

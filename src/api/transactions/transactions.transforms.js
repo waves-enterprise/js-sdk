@@ -3,7 +3,7 @@ var __extends = (this && this.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
             ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-            function (d, b) { for (var p in b) if (Object.prototype.hasOwnProperty.call(b, p)) d[p] = b[p]; };
+            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
         return extendStatics(d, b);
     };
     return function (d, b) {
@@ -24,11 +24,10 @@ var __assign = (this && this.__assign) || function () {
     return __assign.apply(this, arguments);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-var transactions_factory_1 = require("@vostokplatform/transactions-factory");
+var transactions_factory_1 = require("@wavesenterprise/transactions-factory");
 var ts_api_validator_1 = require("ts-api-validator");
 var schemaFields_1 = require("./schemaFields");
 var remap_1 = require("../../utils/remap");
-var constants = require("../../constants");
 var config_1 = require("../../config");
 var bignumber_1 = require("../../libs/bignumber");
 var TRANSFORMS = {};
@@ -72,7 +71,7 @@ var issueSchema = new ts_api_validator_1.Schema({
             type: ts_api_validator_1.StringPart,
             required: true
         },
-        precision: {
+        decimals: {
             type: ts_api_validator_1.NumberPart,
             required: true,
             isValid: remap_1.precisionCheck
@@ -90,7 +89,12 @@ var issueSchema = new ts_api_validator_1.Schema({
 var preIssue = function (data) { return issueSchema.parse(data); };
 var postIssue = remap_1.createRemapper({
     transactionType: null,
-    precision: 'decimals',
+    quantity: {
+        from: 'string',
+        to: 'bignumber'
+    },
+});
+var postSignIssue = remap_1.createRemapper({
     quantity: {
         from: 'string',
         to: 'bignumber'
@@ -99,7 +103,8 @@ var postIssue = remap_1.createRemapper({
 // TODO issue no script
 TRANSFORMS.ISSUE.V2 = {
     pre: preIssue,
-    post: postIssue
+    post: postIssue,
+    postSign: postSignIssue,
 };
 /* TRANSFER */
 var transferSchema = new ts_api_validator_1.Schema({
@@ -113,17 +118,14 @@ var transferSchema = new ts_api_validator_1.Schema({
             type: ts_api_validator_1.StringPart,
             required: true
         },
-        feeAssetId: {
-            type: ts_api_validator_1.StringPart,
-            required: false,
-            defaultValue: constants.WAVES
-        },
+        feeAssetId: schemaFields_1.default.feeAssetId,
         fee: schemaFields_1.default.fee,
         attachment: {
             // TODO : make it possible to pass a byte array
             type: ts_api_validator_1.StringPart,
             required: false,
-            defaultValue: ''
+            defaultValue: '',
+            parseValue: remap_1.convertAttachmentToBase58
         },
         timestamp: schemaFields_1.default.timestamp
     }
@@ -131,12 +133,11 @@ var transferSchema = new ts_api_validator_1.Schema({
 var preTransfer = function (data) { return transferSchema.parse(data); };
 var postTransfer = remap_1.createRemapper({
     transactionType: null,
-    assetId: remap_1.normalizeAssetId,
-    feeAssetId: remap_1.normalizeAssetId,
-    attachment: {
-        from: 'string',
-        to: 'base58'
-    },
+    // Attachment should be encoded to base58 before calculate signature
+    // attachment: {
+    //   from: 'string',
+    //   to: 'base58'
+    // },
     recipient: {
         from: 'raw',
         to: 'prefixed'
@@ -146,9 +147,16 @@ var postTransfer = remap_1.createRemapper({
         to: 'bignumber'
     },
 });
+var postSignTransfer = remap_1.createRemapper({
+    amount: {
+        from: 'string',
+        to: 'bignumber'
+    },
+});
 TRANSFORMS.TRANSFER.V2 = {
     pre: preTransfer,
-    post: postTransfer
+    post: postTransfer,
+    postSign: postSignTransfer
 };
 /* REISSUE */
 var reissueSchema = new ts_api_validator_1.Schema({
@@ -179,9 +187,16 @@ var postReissue = remap_1.createRemapper({
         to: 'bignumber'
     }
 });
+var postSignReissue = remap_1.createRemapper({
+    quantity: {
+        from: 'string',
+        to: 'bignumber'
+    }
+});
 TRANSFORMS.REISSUE.V2 = {
     pre: preReissue,
-    post: postReissue
+    post: postReissue,
+    postSign: postSignReissue
 };
 /* BURN */
 var burnSchema = new ts_api_validator_1.Schema({
@@ -190,9 +205,13 @@ var burnSchema = new ts_api_validator_1.Schema({
     content: {
         senderPublicKey: schemaFields_1.default.publicKey,
         assetId: schemaFields_1.default.assetId,
-        quantity: {
+        amount: {
             type: ts_api_validator_1.StringPart,
             required: true
+        },
+        quantity: {
+            type: ts_api_validator_1.StringPart,
+            required: false
         },
         fee: schemaFields_1.default.fee,
         timestamp: schemaFields_1.default.timestamp,
@@ -206,6 +225,20 @@ var burnSchema = new ts_api_validator_1.Schema({
 var preBurn = function (data) { return burnSchema.parse(data); };
 var postBurn = remap_1.createRemapper({
     transactionType: null,
+    amount: {
+        from: 'string',
+        to: 'bignumber'
+    },
+    quantity: {
+        from: 'string',
+        to: 'bignumber'
+    }
+});
+var postSignBurn = remap_1.createRemapper({
+    amount: {
+        from: 'string',
+        to: 'bignumber'
+    },
     quantity: {
         from: 'string',
         to: 'bignumber'
@@ -213,7 +246,8 @@ var postBurn = remap_1.createRemapper({
 });
 TRANSFORMS.BURN.V2 = {
     pre: preBurn,
-    post: postBurn
+    post: postBurn,
+    postSign: postSignBurn,
 };
 /* LEASE */
 var leaseSchema = new ts_api_validator_1.Schema({
@@ -223,7 +257,7 @@ var leaseSchema = new ts_api_validator_1.Schema({
         senderPublicKey: schemaFields_1.default.publicKey,
         recipient: schemaFields_1.default.recipient,
         amount: {
-            type: ts_api_validator_1.NumberPart,
+            type: ts_api_validator_1.StringPart,
             required: true
         },
         fee: schemaFields_1.default.fee,
@@ -237,10 +271,21 @@ var postLease = remap_1.createRemapper({
         from: 'raw',
         to: 'prefixed'
     },
+    amount: {
+        from: 'string',
+        to: 'bignumber'
+    }
+});
+var postSignLease = remap_1.createRemapper({
+    amount: {
+        from: 'string',
+        to: 'bignumber'
+    }
 });
 TRANSFORMS.LEASE.V2 = {
     pre: preLease,
-    post: postLease
+    post: postLease,
+    postSign: postSignLease,
 };
 /* CANCEL LEASING */
 var cancelLeasingSchema = new ts_api_validator_1.Schema({
@@ -321,18 +366,19 @@ var massTransferSchema = new ts_api_validator_1.Schema({
             // TODO : make it possible to pass a byte array
             type: ts_api_validator_1.StringPart,
             required: false,
-            defaultValue: ''
+            defaultValue: '',
+            parseValue: remap_1.convertAttachmentToBase58
         }
     }
 });
 var preMassTransfer = function (data) { return massTransferSchema.parse(data); };
 var postMassTransfer = remap_1.createRemapper({
     transactionType: null,
-    assetId: remap_1.normalizeAssetId,
-    attachment: {
-        from: 'string',
-        to: 'base58'
-    },
+    // Attachment should be encoded to base58 before calculate signature
+    // attachment: {
+    //   from: 'string',
+    //   to: 'base58'
+    // },
     transfers: {
         from: 'raw',
         to: 'prefixed',
@@ -385,7 +431,7 @@ var postData = function (d) {
         }
         return e;
     });
-    return __assign(__assign({}, d), { data: data, transactionType: null });
+    return __assign({}, d, { data: data, transactionType: null });
 };
 TRANSFORMS.DATA.V1 = {
     pre: preData,
@@ -540,13 +586,13 @@ var postDockerCreate = function (d) {
         }
         return e;
     });
-    return __assign(__assign({}, d), { params: data, transactionType: null });
+    return __assign({}, d, { params: data, transactionType: null });
 };
 TRANSFORMS.CREATE_CONTRACT.V1 = {
     pre: preDockerCreate,
     post: postDockerCreate
 };
-var dockerCreateV2Schema = new ts_api_validator_1.Schema(__assign(__assign({}, dockerCreateBaseSchema), { content: __assign(__assign({}, dockerCreateBaseSchema.content), { feeAssetId: __assign(__assign({}, schemaFields_1.default.assetId), { required: false, defaultValue: constants.WAVES }) }) }));
+var dockerCreateV2Schema = new ts_api_validator_1.Schema(__assign({}, dockerCreateBaseSchema, { content: __assign({}, dockerCreateBaseSchema.content, { feeAssetId: schemaFields_1.default.feeAssetId }) }));
 var preDockerCreateV2 = function (data) {
     return dockerCreateV2Schema.parse(data);
 };
@@ -558,7 +604,7 @@ var postDockerCreateV2 = function (d) {
         }
         return e;
     });
-    return __assign(__assign({}, d), { feeAssetId: remap_1.normalizeAssetId(d.feeAssetId), params: data, transactionType: null });
+    return __assign({}, d, { params: data, transactionType: null });
 };
 TRANSFORMS.CREATE_CONTRACT.V2 = {
     pre: preDockerCreateV2,
@@ -614,13 +660,13 @@ var postDockerCall = function (d) {
         }
         return e;
     });
-    return __assign(__assign({}, d), { params: data, transactionType: null });
+    return __assign({}, d, { params: data, transactionType: null });
 };
 TRANSFORMS.CALL_CONTRACT.V1 = {
     pre: preDockerCall,
     post: postDockerCall
 };
-var dockerCallSchemaV2 = new ts_api_validator_1.Schema(__assign(__assign({}, dockerCallSchemaBase), { content: __assign(__assign({}, dockerCallSchemaBase.content), { contractVersion: {
+var dockerCallSchemaV2 = new ts_api_validator_1.Schema(__assign({}, dockerCallSchemaBase, { content: __assign({}, dockerCallSchemaBase.content, { contractVersion: {
             type: ts_api_validator_1.NumberPart,
             required: true
         } }) }));
@@ -635,16 +681,16 @@ var postDockerCallV2 = function (d) {
         }
         return e;
     });
-    return __assign(__assign({}, d), { params: data, transactionType: null });
+    return __assign({}, d, { params: data, transactionType: null });
 };
 TRANSFORMS.CALL_CONTRACT.V2 = {
     pre: preDockerCallV2,
     post: postDockerCallV2
 };
-var dockerCallSchemaV3 = new ts_api_validator_1.Schema(__assign(__assign({}, dockerCallSchemaBase), { content: __assign(__assign({}, dockerCallSchemaBase.content), { contractVersion: {
+var dockerCallSchemaV3 = new ts_api_validator_1.Schema(__assign({}, dockerCallSchemaBase, { content: __assign({}, dockerCallSchemaBase.content, { contractVersion: {
             type: ts_api_validator_1.NumberPart,
             required: true
-        }, feeAssetId: __assign(__assign({}, schemaFields_1.default.assetId), { required: false, defaultValue: constants.WAVES }) }) }));
+        }, feeAssetId: schemaFields_1.default.feeAssetId }) }));
 var preDockerCallV3 = function (data) {
     return dockerCallSchemaV3.parse(data);
 };
@@ -657,7 +703,7 @@ var postDockerCallV3 = function (d) {
         }
         return e;
     });
-    return __assign(__assign({}, d), { feeAssetId: remap_1.normalizeAssetId(d.feeAssetId), params: data, transactionType: null });
+    return __assign({}, d, { params: data, transactionType: null });
 };
 TRANSFORMS.CALL_CONTRACT.V3 = {
     pre: preDockerCallV3,
@@ -681,7 +727,7 @@ var preDockerDisable = function (data) {
     return dockerDisableSchema.parse(data);
 };
 var postDockerDisable = function (d) {
-    return __assign(__assign({}, d), { transactionType: null });
+    return __assign({}, d, { transactionType: null });
 };
 TRANSFORMS.DISABLE_CONTRACT.V1 = {
     pre: preDockerDisable,
@@ -707,14 +753,14 @@ var dockerUpdateV2Schema = new ts_api_validator_1.Schema({
         },
         fee: schemaFields_1.default.fee,
         timestamp: schemaFields_1.default.timestamp,
-        feeAssetId: __assign(__assign({}, schemaFields_1.default.assetId), { required: false, defaultValue: constants.WAVES })
+        feeAssetId: schemaFields_1.default.feeAssetId
     }
 });
 var preDockerUpdateV2 = function (data) {
     return dockerUpdateV2Schema.parse(data);
 };
 var postDockerUpdateV2 = function (d) {
-    return __assign(__assign({}, d), { feeAssetId: remap_1.normalizeAssetId(d.feeAssetId), transactionType: null });
+    return __assign({}, d, { transactionType: null });
 };
 TRANSFORMS.UPDATE_CONTRACT.V2 = {
     pre: preDockerUpdateV2,
@@ -743,7 +789,7 @@ var preNodeRegistry = function (data) {
     return nodeRegistrySchema.parse(data);
 };
 var postNodeRegistry = function (d) {
-    return __assign(__assign({}, d), { transactionType: null });
+    return __assign({}, d, { transactionType: null });
 };
 TRANSFORMS.REGISTER_NODE.V1 = {
     pre: preNodeRegistry,
@@ -787,7 +833,7 @@ var prePolicyCreate = function (data) {
     return policyCreateScheme.parse(data);
 };
 var postPolicyCreate = function (d) {
-    return __assign(__assign({}, d), { transactionType: null });
+    return __assign({}, d, { transactionType: null });
 };
 TRANSFORMS.CREATE_POLICY.V1 = {
     pre: prePolicyCreate,
@@ -831,7 +877,7 @@ var preUpdateCreate = function (data) {
     return policyUpdateScheme.parse(data);
 };
 var postUpdateCreate = function (d) {
-    return __assign(__assign({}, d), { transactionType: null });
+    return __assign({}, d, { transactionType: null });
 };
 TRANSFORMS.UPDATE_POLICY.V1 = {
     pre: preUpdateCreate,

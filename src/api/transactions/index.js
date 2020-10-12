@@ -11,11 +11,10 @@ var __assign = (this && this.__assign) || function () {
     return __assign.apply(this, arguments);
 };
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
         function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
         function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        function step(result) { result.done ? resolve(result.value) : new P(function (resolve) { resolve(result.value); }).then(fulfilled, rejected); }
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
@@ -52,7 +51,7 @@ var constants = require("../../constants");
 var WavesError_1 = require("../../errors/WavesError");
 var request_1 = require("../../utils/request");
 var transactions_transforms_1 = require("./transactions.transforms");
-var transactions_factory_1 = require("@vostokplatform/transactions-factory");
+var transactions_factory_1 = require("@wavesenterprise/transactions-factory");
 var request_2 = require("../../utils/request");
 var Transactions = /** @class */ (function () {
     function Transactions(fetchInstance) {
@@ -97,14 +96,14 @@ var Transactions = /** @class */ (function () {
     };
     Transactions.prototype.broadcastFromNodeAddress = function (txType, nodeAddress, data, extraData) {
         return __awaiter(this, void 0, void 0, function () {
-            var _a, type, version, key, _b, preRemap, postRemap;
+            var _a, type, version, key, _b, preRemap, postRemap, postSignRemap;
             return __generator(this, function (_c) {
                 _a = Transactions.getTxMetaInfo(txType), type = _a.type, version = _a.version, key = _a.key;
                 if (!type || !key) {
                     throw new WavesError_1.default("Wrong transaction type: " + type, data);
                 }
-                _b = transactions_transforms_1.default[key]["V" + version], preRemap = _b.pre, postRemap = _b.post;
-                return [2 /*return*/, this.txRequestFromNodeAddress(preRemap, postRemap, nodeAddress, data, extraData)];
+                _b = transactions_transforms_1.default[key]["V" + version], preRemap = _b.pre, postRemap = _b.post, postSignRemap = _b.postSign;
+                return [2 /*return*/, this.txRequestFromNodeAddress(preRemap, postRemap, postSignRemap, nodeAddress, __assign({}, data, { type: type, version: version }), extraData)];
             });
         });
     };
@@ -121,7 +120,7 @@ var Transactions = /** @class */ (function () {
         return request_2.wrapTxRequest(factory, pre, post, callback, true)(data, keys);
     };
     Transactions.prototype.rawBroadcast = function (data) {
-        return this.fetch(constants.BROADCAST_PATH, __assign(__assign({}, request_1.POST_TEMPLATE), { body: JSON.stringify(data) }));
+        return this.fetch(constants.BROADCAST_PATH, __assign({}, request_1.POST_TEMPLATE, { body: JSON.stringify(data) }));
     };
     Transactions.prototype.signOnNode = function (data) {
         return this.fetch('/transactions/sign');

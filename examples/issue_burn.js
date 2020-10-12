@@ -1,7 +1,7 @@
 const { create: createApiInstance, MAINNET_CONFIG } = require('../dist/waves-api');
 const nodeFetch = require('node-fetch');
 
-const nodeAddress = 'https://trump.vostokservices.com/node-1';
+const nodeAddress = 'https://hoover.welocal.dev/node-0';
 const seedPhrase = 'examples seed phrase';
 
 const fetch = (url, options = {}) => {
@@ -59,7 +59,7 @@ const fetch = (url, options = {}) => {
             timestamp: Date.now()
         }
 
-        const burnResult = await Waves.API.Node.transactions.broadcast('burn', burnTx, seed.keyPair);
+        const burnResult = await Waves.API.Node.transactions.broadcastFromClientAddress('burn', burnTx, seed.keyPair);
         console.log('Broadcast BURN result: ', burnResult)
     } catch (err) {
         console.log('Broadcast error:', err)
