@@ -76,7 +76,7 @@ To run examples:
         `npm run example:permission`
      + Issue and Burn tokens
      
-        `npm run example:issue_burn`
+        `npm run example:issue-burn`
      + Create docker contract
      
         `npm run example:docker-create`
@@ -128,8 +128,8 @@ console.log(seed.keyPair); // { privateKey: '2gSboTPsiQfi1i3zNtFppVJVgjoCA9P4HE9
 ## Authors
 
 * [**Mikhail Tokarev**](https://github.com/mtfj) - *Initial refactoring*
-* [**Alexander Kuvakin**](https://github.com/larsan12) - *Refactoring, add new transactions*
-* [**Artem Kolodko**](https://github.com/ArtemKolodko) - *Refactoring, add new transactions*
+* [**Alexander Kuvakin**](https://github.com/larsan12) - *Refactoring, add new transaction types*
+* [**Artem Kolodko**](https://github.com/ArtemKolodko) - *Refactoring, examples*
 
 ## License
 

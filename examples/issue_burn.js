@@ -30,10 +30,10 @@ const fetch = (url, options = {}) => {
     const quantity = '1000000'
 
     const tx = {
-        name: 'Oscar token',
+        name: 'Sample token',
         description: 'The best token ever made',
         quantity,
-        precision: 8,
+        decimals: 8,
         reissuable: false,
         fee: minimumFee[3],
         timestamp: Date.now(),
@@ -41,12 +41,12 @@ const fetch = (url, options = {}) => {
     }
 
     try {
-        const result = await Waves.API.Node.transactions.broadcast('issue', tx, seed.keyPair);
+        const result = await Waves.API.Node.transactions.broadcastFromClientAddress('issue', tx, seed.keyPair);
         console.log('Broadcast ISSUE result: ', result)
 
-        const waitTimeout = 10
+        const waitTimeout = 30
 
-        console.log(`Wait ${waitTimeout} seconds while tx mining...`)
+        console.log(`Wait ${waitTimeout} seconds while tx is mining...`)
 
         await new Promise(resolve => {
             setTimeout(resolve, waitTimeout * 1000)
@@ -54,7 +54,7 @@ const fetch = (url, options = {}) => {
 
         const burnTx = {
             assetId: result.assetId,
-            quantity: quantity,
+            amount: quantity,
             fee: minimumFee[6],
             timestamp: Date.now()
         }

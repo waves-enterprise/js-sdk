@@ -26,22 +26,23 @@ const fetch = (url, options = {}) => {
 
     // Create Seed object from phrase
     const seed = Waves.Seed.fromExistingPhrase(seedPhrase);
+    const targetSeed = Waves.Seed.create(15);
 
     const tx = {
-        target: seed.address,
+        target: targetSeed.address,
         opType: 'add',
-        role: 'contract_developer',
+        role: 'issuer',
         fee: minimumFee[102],
         timestamp: Date.now(),
     }
 
     try {
-        const result = await Waves.API.Node.transactions.broadcast('permit', tx, seed.keyPair);
+        const result = await Waves.API.Node.transactions.broadcastFromClientAddress('permit', tx, seed.keyPair);
         console.log('Broadcast ADD PERMIT: ', result)
 
-        const waitTimeout = 10
+        const waitTimeout = 30
 
-        console.log(`Wait ${waitTimeout} seconds while tx mining...`)
+        console.log(`Wait ${waitTimeout} seconds while tx is mining...`)
 
         await new Promise(resolve => {
             setTimeout(resolve, waitTimeout * 1000)

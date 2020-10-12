@@ -65,7 +65,7 @@
     "test-api-long-tests": "cd test && mocha -r ts-node/register api/api.spec.ts --with-long-tests",
     "test-verify": "cd test && mocha -r ts-node/register verify.spec.ts",
     "example:transfer": "node examples/transfer",
-    "example:issue_burn": "node examples/issue_burn",
+    "example:issue-burn": "node examples/issue_burn",
     "example:policy": "node examples/policy",
     "example:permission": "node examples/permission",
     "example:docker-create": "node examples/create-contract",
