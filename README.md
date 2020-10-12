@@ -124,33 +124,6 @@ console.log(seed.phrase); // 'a seed which was backed up some time ago'
 console.log(seed.address); // '3N3dy1P8Dccup5WnYsrC6VmaGHF6wMxdLn4'
 console.log(seed.keyPair); // { privateKey: '2gSboTPsiQfi1i3zNtFppVJVgjoCA9P4HE9K95y8yCMm', publicKey: 'CFr94paUnDSTRk8jz6Ep3bzhXb9LKarNmLYXW6gqw6Y3' }
 ```
-### Configuration
-
-The configuration is changeable even during the runtime. The structure of the config is following:
-
-```
-const newConfig = {
-
-    // The byte allowing to distinguish networks (mainnet, testnet, devnet, etc)
-    networkByte: Waves.constants.MAINNET_BYTE,
-
-    // Node and Matcher addresses, no comments here
-    nodeAddress: 'https://nodes.wavesnodes.com',
-    matcherAddress: 'https://nodes.wavesnodes.com/matcher',
-
-    // If a seed phrase length falls below that value an error will be thrown
-    minimumSeedLength: 50
-
-};
-```
-
-All fields are optional, only filled ones will be replaced.
-
-You can change the config like that:
-
-```
-Waves.config.set(newConfig);
-```
 
 ## Authors
 
