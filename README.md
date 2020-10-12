@@ -1,4 +1,4 @@
-# Waves API [![npm version](https://badge.fury.io/js/%40waves%2Fwaves-api.svg)](https://www.npmjs.com/package/@wavesenterprise/waves-api) [![downloads/month](https://img.shields.io/npm/dm/%40waves%2Fwaves-api.svg)](https://www.npmjs.com/package/@wavesenterprise/waves-api)
+# Waves API [![npm version](https://badge.fury.io/js/%40wavesenterprise%2Fwaves-api.svg)](https://badge.fury.io/js/%40wavesenterprise%2Fwaves-api)
 
 WavesAPI is a javascript library for signing and broadcasting transactions on the Waves Enterprise network.
 
