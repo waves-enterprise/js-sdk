@@ -126,4 +126,18 @@ export default class Transactions {
         return this.fetch('/transactions/sign');
     }
 
+    async getTxId (txType: string, data: object, keyPair: { publicKey: string, privateKey?: string }) {
+        const { publicKey } = keyPair
+        const { type, version, key } = Transactions.getTxMetaInfo(txType)
+        const factory = getTransactionFactory(version, type)
+        const { pre } = TRANSFORMS[key][`V${version}`]
+        const preData = await pre({
+            ...data,
+            senderPublicKey: publicKey
+        })
+        const tx = factory(preData)
+        const txId = await tx.getId()
+        return txId
+    }
+
 };
