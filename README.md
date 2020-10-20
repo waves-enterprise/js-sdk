@@ -56,6 +56,14 @@ Waves.API.Node.transactions.broadcastFromClientAddress('transfer', tx, seed.keyP
 });
 ```
 
+## Additional features
+
+Get transaction ID (or transaction hash) before broadcast:
+
+```
+const txHash = await Waves.API.Node.transactions.getTxId('transfer', txBody, { publicKey })
+```
+
 ## More examples
 In the /examples folder you can find complete examples of sending the most popular transactions.
 
