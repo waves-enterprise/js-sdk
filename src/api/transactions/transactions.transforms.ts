@@ -461,9 +461,25 @@ const postData = d => {
   }
 }
 
+const postSignData = createRemapper({
+  data: (data) => {
+    return data.map(item => {
+      const { type, value } = item
+      if (type !== 'integer') {
+        return item
+      }
+      return {
+        ...item,
+        value: new BigNumber(value)
+      }
+    })
+  }
+})
+
 TRANSFORMS.DATA.V1 = {
   pre: preData,
-  post: postData
+  post: postData,
+  postSign: postSignData
 }
 
 /* SET SCRIPT */
