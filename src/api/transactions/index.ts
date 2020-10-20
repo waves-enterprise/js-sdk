@@ -131,7 +131,7 @@ export default class Transactions {
         const { type, version, key } = Transactions.getTxMetaInfo(txType)
         const factory = getTransactionFactory(version, type)
         const { pre } = TRANSFORMS[key][`V${version}`]
-        let preData: any = await pre({
+        const preData = await pre({
             ...data,
             senderPublicKey: publicKey
         })
