@@ -18,6 +18,7 @@ export const LEGACY_TX_TYPES = {
     issue: { type: 3, v: 2 },
     issue_no_script: { type: 3, v: 2 },
     transfer: { type: 4, v: 2 },
+    transferV3: { type: 4, v: 3 },
     reissue: { type: 5, v: 2 },
     burn: { type: 6, v: 2 },
     exchange: { type: 7, v: 2 },
@@ -31,15 +32,19 @@ export const LEGACY_TX_TYPES = {
     permit: { type: 102, v: 1 },
     dockerCreate: { type: 103, v: 1 },
     dockerCreateV2: { type: 103, v: 2 },
+    dockerCreateV3: { type: 103, v: 3 },
     dockerCall: { type: 104, v: 1 },
     dockerCallV2: { type: 104, v: 2 },
     dockerCallV3: { type: 104, v: 3 },
+    dockerCallV4: { type: 104, v: 4 },
     dockerDisable: { type: 106, v: 1 },
     dockerUpdateV2: { type: 107, v: 2 },
     policyRegisterNode: { type: 111, v: 1 },
     policyCreate: { type: 112, v: 1 },
+    policyCreateV3: { type: 112, v: 3 },
     policyUpdate: { type: 113, v: 1 },
     policyDataHash: { type: 114, v: 1 },
+    atomic: { type: 120, v: 1 }
 }
 
 export const PRIVATE_KEY_LENGTH = 32;

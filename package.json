@@ -69,6 +69,7 @@
     "example:policy": "node examples/policy",
     "example:permission": "node examples/permission",
     "example:docker-create": "node examples/create-contract",
-    "example:docker-call": "node examples/call-contract"
+    "example:docker-call": "node examples/call-contract",
+    "example:atomic": "node examples/atomic"
   }
 }

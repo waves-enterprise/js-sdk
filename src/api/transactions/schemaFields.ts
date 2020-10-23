@@ -1,7 +1,6 @@
-import { BooleanPart, NumberPart, StringPart } from 'ts-api-validator';
+import { BooleanPart, NumberPart, ObjectPart, StringPart } from 'ts-api-validator';
 import { getTimestamp, removeRecipientPrefix, normalizeAssetId } from '../../utils/remap';
 import * as constants from '../../constants';
-
 
 export default {
 
@@ -56,6 +55,17 @@ export default {
         type: NumberPart,
         required: true,
         parseValue: getTimestamp
-    }
+    },
 
+    atomicBadge: {
+        type: ObjectPart,
+        required: true,
+        content: {
+            trustedSender: {
+                type: StringPart,
+                required: false,
+                defaultValue: null
+            }
+        }
+    }
 }
