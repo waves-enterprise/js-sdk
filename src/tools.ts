@@ -44,15 +44,16 @@ export default {
         base58ToString
     },
 
-    encodePolicyDataText (text: string) {
-        const uint8array = utils.convert.stringToByteArray(text);
+    convert: utils.convert,
+
+    encodePolicyData (uint8array: number[]) {
         const base64Text = libs.base64.fromByteArray(uint8array)
         const sha = sha256(uint8array)
         const strip = stripInvalidCharacters(sha, hexAlphabet);
         const plain = fromHex(strip);
         const hash = libs.base58.encode(plain)
         return {
-            base64Data: base64Text,
+            base64Text,
             hash: hash
         }
     }

@@ -90,13 +90,14 @@ const fetch = (url, options = {}) => {
     }
 
     const policyDataText = `Some random text ${Date.now()}`
-    const { base64Data, hash } = Waves.tools.encodePolicyDataText(policyDataText)
+    const uint8array = Waves.tools.convert.stringToByteArray(policyDataText);
+    const { base64Text, hash } = Waves.tools.encodePolicyData(uint8array)
 
     const policyDataHashBody = {
         "sender": "3NkZd8Xd4KsuPiNVsuphRNCZE3SqJycqv8d",
         "policyId": "9QUUuQ5XetCe2wEyrSX95NEVzPw2bscfcFfAzVZL5ZJN",
         "type": "file",
-        "data": base64Data,
+        "data": base64Text,
         "hash": hash,
         "info": {
             "filename":"test-send1.txt",
