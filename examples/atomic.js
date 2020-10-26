@@ -89,12 +89,15 @@ const fetch = (url, options = {}) => {
         }
     }
 
+    const policyDataText = `Some random text ${Date.now()}`
+    const { base64Data, hash } = Waves.tools.encodePolicyDataText(policyDataText)
+
     const policyDataHashBody = {
         "sender": "3NkZd8Xd4KsuPiNVsuphRNCZE3SqJycqv8d",
         "policyId": "9QUUuQ5XetCe2wEyrSX95NEVzPw2bscfcFfAzVZL5ZJN",
         "type": "file",
-        "data": "Mw==",
-        "hash": "6FbDRScGruVdATaNWzD51xJkTfYCVwxSZDb7gzqCLzwf",
+        "data": base64Data,
+        "hash": hash,
         "info": {
             "filename":"test-send1.txt",
             "size":1,
@@ -109,7 +112,7 @@ const fetch = (url, options = {}) => {
     }
     const policyDataHashTx = {
         type: 'policyDataHashV3',
-        apiKey: '<somestring>',
+        apiKey: 'vostok',
         tx: {
             ...policyDataHashBody,
             atomicBadge: {
@@ -123,7 +126,7 @@ const fetch = (url, options = {}) => {
         }
         const transactions = [transfer1, transfer2, policyDataHashTx]
         const broadcast = await Waves.API.Node.transactions.broadcastAtomic(atomicBody, transactions, seed.keyPair);
-        console.log('broadcast id', broadcast.id)
+        console.log('Atomic broadcast successful, tx id:', broadcast.id)
     } catch (err) {
         console.log('Create atomic error:', err)
     }
