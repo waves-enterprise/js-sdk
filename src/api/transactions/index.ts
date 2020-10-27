@@ -93,6 +93,47 @@ export default class Transactions {
         );
     }
 
+    async broadcastAtomic(atomicBody, transactions, keyPair) {
+        const {
+            sender,
+            fee = 0,
+            timestamp = Date.now()
+        } = atomicBody
+
+        const signedTransactions = await Promise.all(transactions.map(async txData => {
+            const { type, tx } = txData
+            if (type !== 'policyDataHashV3') {
+                const signedTx = await this.sign(type, tx, keyPair)
+                const id = await this.getTxId(type, tx, keyPair)
+                return {
+                    ...signedTx,
+                    id
+                }
+            } else {
+                const { apiKey } = txData
+                const result = await this.fetch(`/privacy/sendData?broadcast=false`, {
+                    ...POST_TEMPLATE,
+                    headers: {
+                        ...POST_TEMPLATE.headers,
+                        'X-API-KEY': apiKey
+                    },
+                    body: JSON.stringify(tx)
+                })
+                return result
+            }
+        }))
+
+        // console.log('signedTransactions', signedTransactions)
+
+        const atomicTx = {
+            sender,
+            fee,
+            timestamp,
+            transactions: signedTransactions
+        }
+        return this.broadcastFromClientAddress('atomic', atomicTx, keyPair);
+    }
+
     sign(txType: string, data, keys) {
         return this.processTx(txType, data, keys,
           (postParams: any) => JSON.parse(postParams.body)
@@ -120,10 +161,6 @@ export default class Transactions {
             ...POST_TEMPLATE,
             body: JSON.stringify(data)
         });
-    }
-
-    signOnNode(data) {
-        return this.fetch('/transactions/sign');
     }
 
     async getTxId (txType: string, data: object, keyPair: { publicKey: string, privateKey?: string }) {

@@ -46,6 +46,7 @@
     "@wavesenterprise/transactions-factory": "1.0.9",
     "bignumber.js": "7.2.1",
     "crypto-js": "3.1.9-1",
+    "js-sha256": "^0.9.0",
     "node-fetch": "2.2.0",
     "parse-json-bignumber": "^0.1.2",
     "ts-api-validator": "2.1.3",
@@ -69,6 +70,7 @@
     "example:policy": "node examples/policy",
     "example:permission": "node examples/permission",
     "example:docker-create": "node examples/create-contract",
-    "example:docker-call": "node examples/call-contract"
+    "example:docker-call": "node examples/call-contract",
+    "example:atomic": "node examples/atomic"
   }
 }
