@@ -1,7 +1,7 @@
 import { ObjectPart, Schema, StringPart } from "ts-api-validator";
 import schemaFields from "../schemaFields";
 
-const dockerUpdateV2Schema = new Schema({
+const BaseSchema = {
   type: ObjectPart,
   required: true,
   content: {
@@ -22,7 +22,8 @@ const dockerUpdateV2Schema = new Schema({
     timestamp: schemaFields.timestamp,
     feeAssetId: schemaFields.feeAssetId
   }
-})
+}
+const dockerUpdateV2Schema = new Schema(BaseSchema)
 
 const preDockerUpdateV2 = (data) => {
   return dockerUpdateV2Schema.parse(data)
@@ -35,4 +36,16 @@ const postDockerUpdateV2 = d => {
   }
 }
 
-export { preDockerUpdateV2, postDockerUpdateV2 }
+const dockerUpdateSchemaV3 = new Schema({
+  ...BaseSchema,
+  content: {
+    ...BaseSchema.content,
+    atomicBadge: schemaFields.atomicBadge
+  }
+})
+
+const preDockerUpdateV3 = (data) => dockerUpdateSchemaV3.parse(data)
+
+const postDockerUpdateV3 = postDockerUpdateV2
+
+export { preDockerUpdateV2, postDockerUpdateV2, preDockerUpdateV3, postDockerUpdateV3 }

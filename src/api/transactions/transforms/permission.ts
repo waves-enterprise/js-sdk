@@ -1,8 +1,9 @@
 import { NumberPart, ObjectPart, Schema, StringPart } from "ts-api-validator";
 import schemaFields from "../schemaFields";
 import { createRemapper } from "../../../utils/remap";
+import Base = Mocha.reporters.Base;
 
-const permissionSchema = new Schema({
+const BaseSchema = {
   type: ObjectPart,
   required: true,
   content: {
@@ -26,11 +27,25 @@ const permissionSchema = new Schema({
     },
     fee: schemaFields.fee
   }
-})
+}
+
+const permissionSchema = new Schema(BaseSchema)
 
 const prePermit = (data) => permissionSchema.parse(data)
 const postPermit = createRemapper({
   transactionType: null,
 })
 
-export { prePermit, postPermit }
+const permissionSchemaV2 = new Schema({
+  ...BaseSchema,
+  content: {
+    ...BaseSchema.content,
+    atomicBadge: schemaFields.atomicBadge
+  }
+})
+
+const prePermitV2 = (data) => permissionSchemaV2.parse(data)
+
+const postPermitV2 = postPermit
+
+export { prePermit, postPermit, prePermitV2, postPermitV2 }

@@ -13,7 +13,7 @@ import { preMassTransfer, postMassTransfer } from './transforms/mass-transfer'
 import { preData, postData, postSignData } from './transforms/data'
 import { preSetScript, postSetScript } from './transforms/set-script'
 import { preSponsorship, postSponsorship } from './transforms/sponsorship'
-import { prePermit, postPermit } from './transforms/permission'
+import { prePermit, postPermit, prePermitV2, postPermitV2 } from './transforms/permission'
 import {
   preDockerCreate, postDockerCreate,
   preDockerCreateV2, postDockerCreateV2,
@@ -25,14 +25,14 @@ import {
   preDockerCallV3, postDockerCallV3,
   preDockerCallV4, postDockerCallV4
 } from './transforms/docker-call'
-import { preDockerDisable, postDockerDisable } from './transforms/docker-disable'
-import { preDockerUpdateV2, postDockerUpdateV2 } from './transforms/docker-update'
+import { preDockerDisable, postDockerDisable, preDockerDisableV3, postDockerDisableV3 } from './transforms/docker-disable'
+import { preDockerUpdateV2, postDockerUpdateV2, preDockerUpdateV3, postDockerUpdateV3 } from './transforms/docker-update'
 import { preNodeRegistry, postNodeRegistry } from './transforms/register-node'
 import {
   prePolicyCreate, postPolicyCreate,
   prePolicyCreateV3, postPolicyCreateV3
 } from './transforms/policy-create'
-import { preUpdatePolicy, postUpdatePolicy } from './transforms/policy-update'
+import { preUpdatePolicy, postUpdatePolicy, preUpdatePolicyV3, postUpdatePolicyV3 } from './transforms/policy-update'
 
 type TRANSFORMS_TYPES = {
   [key in keyof typeof TRANSACTIONS]?: {
@@ -152,6 +152,11 @@ TRANSFORMS.PERMIT.V1 = {
   post: postPermit
 }
 
+TRANSFORMS.PERMIT.V2 = {
+  pre: prePermitV2,
+  post: postPermitV2
+}
+
 /* DOCKER CREATE */
 
 TRANSFORMS.CREATE_CONTRACT.V1 = {
@@ -198,12 +203,22 @@ TRANSFORMS.DISABLE_CONTRACT.V1 = {
   post: postDockerDisable
 }
 
+TRANSFORMS.DISABLE_CONTRACT.V3 = {
+  pre: preDockerDisableV3,
+  post: postDockerDisableV3
+}
+
 /* DOCKER UPDATE */
 
 
 TRANSFORMS.UPDATE_CONTRACT.V2 = {
   pre: preDockerUpdateV2,
   post: postDockerUpdateV2
+}
+
+TRANSFORMS.UPDATE_CONTRACT.V3 = {
+  pre: preDockerUpdateV3,
+  post: postDockerUpdateV3
 }
 
 /* REGISTRY */
@@ -230,6 +245,11 @@ TRANSFORMS.CREATE_POLICY.V3 = {
 TRANSFORMS.UPDATE_POLICY.V1 = {
   pre: preUpdatePolicy,
   post: postUpdatePolicy
+}
+
+TRANSFORMS.UPDATE_POLICY.V3 = {
+  pre: preUpdatePolicyV3,
+  post: postUpdatePolicyV3
 }
 
 export default TRANSFORMS
