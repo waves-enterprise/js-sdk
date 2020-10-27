@@ -32,7 +32,7 @@ import {
   prePolicyCreate, postPolicyCreate,
   prePolicyCreateV3, postPolicyCreateV3
 } from './transforms/policy-create'
-import { preUpdatePolicy, postUpdatePolicy } from './transforms/policy-update'
+import { preUpdatePolicy, postUpdatePolicy, preUpdatePolicyV3, postUpdatePolicyV3 } from './transforms/policy-update'
 
 type TRANSFORMS_TYPES = {
   [key in keyof typeof TRANSACTIONS]?: {
@@ -240,6 +240,11 @@ TRANSFORMS.CREATE_POLICY.V3 = {
 TRANSFORMS.UPDATE_POLICY.V1 = {
   pre: preUpdatePolicy,
   post: postUpdatePolicy
+}
+
+TRANSFORMS.UPDATE_POLICY.V3 = {
+  pre: preUpdatePolicyV3,
+  post: postUpdatePolicyV3
 }
 
 export default TRANSFORMS
