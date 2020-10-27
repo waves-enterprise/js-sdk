@@ -41,6 +41,7 @@ export const LEGACY_TX_TYPES = {
     dockerDisable: { type: 106, v: 1 },
     dockerDisableV3: { type: 106, v: 3 },
     dockerUpdateV2: { type: 107, v: 2 },
+    dockerUpdateV3: { type: 107, v: 3 },
     policyRegisterNode: { type: 111, v: 1 },
     policyCreate: { type: 112, v: 1 },
     policyCreateV3: { type: 112, v: 3 },

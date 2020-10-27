@@ -26,7 +26,7 @@ import {
   preDockerCallV4, postDockerCallV4
 } from './transforms/docker-call'
 import { preDockerDisable, postDockerDisable, preDockerDisableV3, postDockerDisableV3 } from './transforms/docker-disable'
-import { preDockerUpdateV2, postDockerUpdateV2 } from './transforms/docker-update'
+import { preDockerUpdateV2, postDockerUpdateV2, preDockerUpdateV3, postDockerUpdateV3 } from './transforms/docker-update'
 import { preNodeRegistry, postNodeRegistry } from './transforms/register-node'
 import {
   prePolicyCreate, postPolicyCreate,
@@ -214,6 +214,11 @@ TRANSFORMS.DISABLE_CONTRACT.V3 = {
 TRANSFORMS.UPDATE_CONTRACT.V2 = {
   pre: preDockerUpdateV2,
   post: postDockerUpdateV2
+}
+
+TRANSFORMS.UPDATE_CONTRACT.V3 = {
+  pre: preDockerUpdateV3,
+  post: postDockerUpdateV3
 }
 
 /* REGISTRY */
