@@ -1,7 +1,7 @@
 import { ObjectPart, Schema, StringPart } from "ts-api-validator";
 import schemaFields from "../schemaFields";
 
-const dockerDisableSchema = new Schema({
+const BaseSchema = {
   type: ObjectPart,
   required: true,
   content: {
@@ -13,7 +13,9 @@ const dockerDisableSchema = new Schema({
     fee: schemaFields.fee, // TODO : validate against the transaction size in bytes
     timestamp: schemaFields.timestamp
   }
-})
+}
+
+const dockerDisableSchema = new Schema(BaseSchema)
 
 const preDockerDisable = (data) => {
   return dockerDisableSchema.parse(data)
@@ -26,4 +28,16 @@ const postDockerDisable = d => {
   }
 }
 
-export { preDockerDisable, postDockerDisable }
+const dockerDisableSchemaV3 = new Schema({
+  ...BaseSchema,
+  content: {
+    ...BaseSchema.content,
+    atomicBadge: schemaFields.atomicBadge
+  }
+})
+
+const preDockerDisableV3 = (data) => dockerDisableSchemaV3.parse(data)
+
+const postDockerDisableV3 = postDockerDisable
+
+export { preDockerDisable, postDockerDisable, preDockerDisableV3, postDockerDisableV3 }

@@ -1,7 +1,7 @@
 import { ArrayPart, ObjectPart, Schema, StringPart } from "ts-api-validator";
 import schemaFields from "../schemaFields";
 
-const policyUpdateScheme = new Schema({
+const BaseSchema = {
   type: ObjectPart,
   required: true,
   content: {
@@ -33,7 +33,9 @@ const policyUpdateScheme = new Schema({
     timestamp: schemaFields.timestamp,
     fee: schemaFields.fee
   }
-})
+}
+
+const policyUpdateScheme = new Schema(BaseSchema)
 
 const preUpdatePolicy = (data) => {
   return policyUpdateScheme.parse(data)
@@ -46,4 +48,16 @@ const postUpdatePolicy = d => {
   }
 }
 
-export { preUpdatePolicy, postUpdatePolicy }
+const policyUpdateSchemeV3 = new Schema({
+  ...BaseSchema,
+  content: {
+    ...BaseSchema.content,
+    atomicBadge: schemaFields.atomicBadge
+  }
+})
+
+const preUpdatePolicyV3 = (data) => policyUpdateSchemeV3.parse(data)
+
+const postUpdatePolicyV3 = postUpdatePolicy
+
+export { preUpdatePolicy, postUpdatePolicy, preUpdatePolicyV3, postUpdatePolicyV3 }

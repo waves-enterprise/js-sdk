@@ -123,8 +123,6 @@ export default class Transactions {
             }
         }))
 
-        // console.log('signedTransactions', signedTransactions)
-
         const atomicTx = {
             sender,
             fee,

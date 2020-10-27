@@ -13,7 +13,7 @@ import { preMassTransfer, postMassTransfer } from './transforms/mass-transfer'
 import { preData, postData, postSignData } from './transforms/data'
 import { preSetScript, postSetScript } from './transforms/set-script'
 import { preSponsorship, postSponsorship } from './transforms/sponsorship'
-import { prePermit, postPermit } from './transforms/permission'
+import { prePermit, postPermit, prePermitV2, postPermitV2 } from './transforms/permission'
 import {
   preDockerCreate, postDockerCreate,
   preDockerCreateV2, postDockerCreateV2,
@@ -25,7 +25,7 @@ import {
   preDockerCallV3, postDockerCallV3,
   preDockerCallV4, postDockerCallV4
 } from './transforms/docker-call'
-import { preDockerDisable, postDockerDisable } from './transforms/docker-disable'
+import { preDockerDisable, postDockerDisable, preDockerDisableV3, postDockerDisableV3 } from './transforms/docker-disable'
 import { preDockerUpdateV2, postDockerUpdateV2 } from './transforms/docker-update'
 import { preNodeRegistry, postNodeRegistry } from './transforms/register-node'
 import {
@@ -152,6 +152,11 @@ TRANSFORMS.PERMIT.V1 = {
   post: postPermit
 }
 
+TRANSFORMS.PERMIT.V2 = {
+  pre: prePermitV2,
+  post: postPermitV2
+}
+
 /* DOCKER CREATE */
 
 TRANSFORMS.CREATE_CONTRACT.V1 = {
@@ -196,6 +201,11 @@ TRANSFORMS.CALL_CONTRACT.V4 = {
 TRANSFORMS.DISABLE_CONTRACT.V1 = {
   pre: preDockerDisable,
   post: postDockerDisable
+}
+
+TRANSFORMS.DISABLE_CONTRACT.V3 = {
+  pre: preDockerDisableV3,
+  post: postDockerDisableV3
 }
 
 /* DOCKER UPDATE */

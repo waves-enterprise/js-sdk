@@ -30,6 +30,7 @@ export const LEGACY_TX_TYPES = {
     setScript: { type: 13, v: 1 },
     sponsorship: { type: 14, v: 1 },
     permit: { type: 102, v: 1 },
+    permitV2: { type: 102, v: 2 },
     dockerCreate: { type: 103, v: 1 },
     dockerCreateV2: { type: 103, v: 2 },
     dockerCreateV3: { type: 103, v: 3 },
@@ -38,11 +39,13 @@ export const LEGACY_TX_TYPES = {
     dockerCallV3: { type: 104, v: 3 },
     dockerCallV4: { type: 104, v: 4 },
     dockerDisable: { type: 106, v: 1 },
+    dockerDisableV3: { type: 106, v: 3 },
     dockerUpdateV2: { type: 107, v: 2 },
     policyRegisterNode: { type: 111, v: 1 },
     policyCreate: { type: 112, v: 1 },
     policyCreateV3: { type: 112, v: 3 },
     policyUpdate: { type: 113, v: 1 },
+    policyUpdateV3: { type: 113, v: 3 },
     policyDataHash: { type: 114, v: 1 },
     atomic: { type: 120, v: 1 }
 }
