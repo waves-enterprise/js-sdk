@@ -1,5 +1,5 @@
 import { expect } from '../getChai';
-import * as WavesAPI from '../../dist/waves-api.min';
+import * as WavesAPI from '../../src/WavesAPI';
 
 declare const process: {
     argv: any,
@@ -55,7 +55,9 @@ describe('API', function() {
     this.timeout(3600000);
 
     beforeEach(() => {
-        Waves = WavesAPI.create(wavesConfig);
+        Waves = WavesAPI.create({
+            initialConfiguration: wavesConfig
+        });
     });
 
     it('[transactions.broadcast("transfer")] should send 0.001 WAVES to address', async () => {

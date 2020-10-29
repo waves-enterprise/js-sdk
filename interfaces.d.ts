@@ -19,7 +19,7 @@ export interface IWavesBasicConfig {
     requestLimit: number;
     logLevel: TLogLevel;
     timeDiff: number;
-    crypto: TCrypto
+    crypto: string
 }
 
 export interface IWavesConfig extends IWavesBasicConfig {

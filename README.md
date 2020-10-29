@@ -160,6 +160,17 @@ console.log(seed.address); // '3N3dy1P8Dccup5WnYsrC6VmaGHF6wMxdLn4'
 console.log(seed.keyPair); // { privateKey: '2gSboTPsiQfi1i3zNtFppVJVgjoCA9P4HE9K95y8yCMm', publicKey: 'CFr94paUnDSTRk8jz6Ep3bzhXb9LKarNmLYXW6gqw6Y3' }
 ```
 
+### Crypto Tool
+Duplicate methods from blockchain node REST api: 
+- crypto/encryptCommon
+- crypto/encryptSeparate
+- crypto/decrypt
+  
+ ```js
+// example of usage in ./test/libs/cryptoTool.test.ts
+// run test via command: mocha -r ts-node/register ./test/libs/cryptoTool.test.ts
+```
+
 ## Authors
 
 * [**Mikhail Tokarev**](https://github.com/mtfj) - *Initial refactoring*

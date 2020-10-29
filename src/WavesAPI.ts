@@ -12,7 +12,7 @@ import tools from './tools';
 import * as request from "./utils/request";
 
 export interface IWavesAPICtr {
-    initialConfiguration: IWavesConfig;
+    initialConfiguration: Partial<IWavesConfig>;
     fetchInstance?: typeof fetch;
 }
 
