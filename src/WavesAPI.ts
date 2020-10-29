@@ -1,6 +1,6 @@
 import { ByteProcessor as byteProcessors, Seed, utils } from '@wavesenterprise/transactions-factory';
 import { IWavesConfig } from '../interfaces';
-
+import cryptoTool from './libs/cryptoTool';
 
 import NodeAPI from './api';
 import config from './config';
@@ -12,7 +12,7 @@ import tools from './tools';
 import * as request from "./utils/request";
 
 export interface IWavesAPICtr {
-    initialConfiguration: IWavesConfig;
+    initialConfiguration: Partial<IWavesConfig>;
     fetchInstance?: typeof fetch;
 }
 
@@ -24,6 +24,7 @@ export class WavesAPI {
     public readonly crypto = utils.crypto;
     public readonly request = request;
     public readonly tools = tools;
+    public readonly cryptoTool = cryptoTool
 
     public readonly API: {
         Node: NodeAPI;
