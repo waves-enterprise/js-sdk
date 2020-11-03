@@ -154,24 +154,21 @@ const issueData = {
 }
 
 const iss = {
-  'type': 3,
-  'id': 'EMN4GrZHZKMfHVpiaM6H9ejfjmfqrV6h6DSPHKfLCPiw',
-  'sender': '3N6J8YZ4VGMrcX9fHRoJutfGPmiWziMd8z7',
-  'senderPublicKey': '7Qi7EuGU74GrnCuoSuEETNyGJFNnxNwLUTPurejcUWod',
-  'fee': 100000000,
-  'timestamp': 1549446741610,
-  'proofs': [
-    '4joh3ZhJ5JYAwDjHF8iU3mFDsFcFCtCenMd91WZg5wEsmnzybQg354FDn75brRuT8tNQRsBHN4LPFgHFw6JuoHDy'
-  ],
-  'version': 2,
-  'assetId': 'EMN4GrZHZKMfHVpiaM6H9ejfjmfqrV6h6DSPHKfLCPiw',
-  'name': 'test-token3',
-  'quantity': 9223372036854776000,
-  'reissuable': false,
+  type: 3,
+  id: 'EMN4GrZHZKMfHVpiaM6H9ejfjmfqrV6h6DSPHKfLCPiw',
+  sender: '3N6J8YZ4VGMrcX9fHRoJutfGPmiWziMd8z7',
+  senderPublicKey: '7Qi7EuGU74GrnCuoSuEETNyGJFNnxNwLUTPurejcUWod',
+  fee: 100000000,
+  timestamp: 1549446741610,
+  version: 2,
+  assetId: 'EMN4GrZHZKMfHVpiaM6H9ejfjmfqrV6h6DSPHKfLCPiw',
+  name: 'test-token3',
+  quantity: 9223372036854776000,
+  reissuable: false,
   precision: 5,
-  'decimals': 5,
-  'description': '',
-//     "script": "base64:AQa3b8tH"
+  decimals: 5,
+  description: 'test test',
+  script: 'base64:AQa3b8tH'
 }
 
 // Waves.API.Node.transactions.sign('issue', iss, seed.keyPair).then((responseData) => {

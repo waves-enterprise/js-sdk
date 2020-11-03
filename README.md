@@ -75,25 +75,25 @@ To run examples:
 2. Broadcast following transactions:
      + Tokens transfer:
         
-        `npm run example:transfer`
+        `node examples/transfer`
      + Create Policy:
         
-        `npm run example:policy`
+        `node examples/policy`
      + Grant and revoke blockchain permission:
      
-        `npm run example:permission`
+        `node examples/permission`
      + Issue and Burn tokens
      
-        `npm run example:issue-burn`
+        `node examples/issue_burn`
      + Create docker contract
      
-        `npm run example:docker-create`
+        `node examples/create-contract`
      + Call docker contract
      
-        `npm run example:docker-call`
+        `node examples/call-contract`
      + Atomic (including two Transfers and PolicyDataHash)
      
-        `npm run example:atomic`
+        `node examples/atomic`
      
 Using this examples, you can sign any other type of transaction using the transaction structure from [docs](https://docs.wavesenterprise.com/en/1.3.0/how-the-platform-works/data-structures/transactions-structure.html#id26).
 
@@ -167,8 +167,8 @@ Duplicate methods from blockchain node REST api:
 - crypto/decrypt
   
  ```js
-// example of usage in ./test/libs/cryptoTool.test.ts
-// run test via command: mocha -r ts-node/register ./test/libs/cryptoTool.test.ts
+// example of usage in ./test/libs/data-encryption.spec.ts
+// run test via command: mocha -r ts-node/register ./test/libs/data-encryption.spec.ts
 ```
 
 ## Authors

@@ -7,7 +7,7 @@ type encodedResult = Array<{
   wrappedKey: string
 }>
 
-function decrypt(
+export function decrypt(
   recipientPrivateKey: string,
   senderPublicKey: string,
   encryptedText: string,
@@ -27,7 +27,7 @@ function decrypt(
   return converters.byteArrayToString(result)
 }
 
-function encryptCommon(
+export function encryptCommon(
   recipientsPublicKeys: string[],
   senderPrivateKey: string,
   encryptionText: string,
@@ -52,7 +52,7 @@ function encryptCommon(
   }))
 }
 
-function encryptSeparate(
+export function encryptSeparate(
   recipientsPublicKeys: string[],
   senderPrivateKey: string,
   encryptionText: string,

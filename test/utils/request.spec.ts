@@ -1,5 +1,5 @@
-import { expect } from '../getChai';
-import * as WavesAPI from '../../dist/waves-api.min';
+import { expect } from 'chai';
+import * as WavesAPI from '../../src/WavesAPI';
 
 
 let Waves;
@@ -8,7 +8,9 @@ let Waves;
 describe('utils/request', () => {
 
     beforeEach(() => {
-        Waves = WavesAPI.create(WavesAPI.TESTNET_CONFIG);
+        Waves = WavesAPI.create({
+            initialConfiguration: WavesAPI.TESTNET_CONFIG
+        });
     });
 
     it('should normalize all types of paths', () => {

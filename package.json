@@ -1,6 +1,6 @@
 {
   "name": "@wavesenterprise/waves-api",
-  "version": "2.2.6",
+  "version": "2.2.7",
   "description": "Waves Enterprise client-side API library",
   "keywords": [
     "cryptocurrency",
@@ -59,18 +59,7 @@
     "compile": "mkdir -p raw && ./node_modules/.bin/tsc -p ./tsconfig.json --declaration --outDir raw",
     "uglifyjs": "node_modules/.bin/uglifyjs ./dist/waves-api.js -o ./dist/waves-api.min.js && node_modules/.bin/uglifyjs ./dist/waves-api.partial.js -o ./dist/waves-api.partial.min.js",
     "prepublishOnly": "npm run build",
-    "test": "npm run build && ./node_modules/.bin/tsc -p ./test/tsconfig.json && ./node_modules/.bin/mocha $(find ./tmp-node/test -name '*.spec.js')",
-    "debug": "npm run build && ./node_modules/.bin/tsc -p ./test/tsconfig.json && ./node_modules/.bin/mocha $(find ./tmp-node/test -name 'tx.spec.js')",
-    "test-browser": "npm run build && ./node_modules/.bin/tsc -p ./test/tsconfig.browser.json && ./node_modules/.bin/karma start karma.conf.js",
-    "test-api": "cd test && mocha -r ts-node/register api/api.spec.ts",
-    "test-api-long-tests": "cd test && mocha -r ts-node/register api/api.spec.ts --with-long-tests",
-    "test-verify": "cd test && mocha -r ts-node/register verify.spec.ts",
-    "example:transfer": "node examples/transfer",
-    "example:issue-burn": "node examples/issue_burn",
-    "example:policy": "node examples/policy",
-    "example:permission": "node examples/permission",
-    "example:docker-create": "node examples/create-contract",
-    "example:docker-call": "node examples/call-contract",
-    "example:atomic": "node examples/atomic"
+    "test": "mocha -r ts-node/register ./test/*/api.spec.ts",
+    "test-browser": "npm run build && ./node_modules/.bin/tsc -p ./test/tsconfig.browser.json && ./node_modules/.bin/karma start karma.conf.js"
   }
 }
