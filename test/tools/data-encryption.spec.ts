@@ -1,4 +1,4 @@
-import { expect } from '../getChai';
+import { expect } from 'chai';
 import * as WavesAPI from '../../src/WavesAPI';
 
 const wavesConfig = {
@@ -15,13 +15,13 @@ const Waves = WavesAPI.create({
 const recipients = Array(5).fill(0).map(() => Waves.Seed.create())
 const sender = Waves.Seed.create()
 
-describe('API', function() {
+describe('tools/data-encryption', function() {
 
   const data = 'test test test'
 
   it('encryptCommon', async () => {
     // encrypt
-    const encrypted = Waves.cryptoTool.encryptCommon(
+    const encrypted = Waves.tools.data.encryptCommon(
       recipients.map(r => r.keyPair.publicKey),
       sender.keyPair.privateKey,
       data
@@ -36,7 +36,7 @@ describe('API', function() {
     // decrypt
     encrypted.forEach((result, i) => {
       expect(
-        Waves.cryptoTool.decrypt(
+        Waves.tools.data.decrypt(
           recipients[i].keyPair.privateKey,
           sender.keyPair.publicKey,
           result.encryptedText,
@@ -47,7 +47,7 @@ describe('API', function() {
 
   it('encryptSeparate', async () => {
     // encrypt
-    const encrypted = Waves.cryptoTool.encryptSeparate(
+    const encrypted = Waves.tools.data.encryptSeparate(
       recipients.map(r => r.keyPair.publicKey),
       sender.keyPair.privateKey,
       data
@@ -62,7 +62,7 @@ describe('API', function() {
     // decrypt
     encrypted.forEach((result, i) => {
       expect(
-        Waves.cryptoTool.decrypt(
+        Waves.tools.data.decrypt(
           recipients[i].keyPair.privateKey,
           sender.keyPair.publicKey,
           result.encryptedText,

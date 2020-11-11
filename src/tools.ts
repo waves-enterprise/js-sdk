@@ -2,6 +2,7 @@ import { libs, utils } from '@wavesenterprise/transactions-factory';
 import config from './config'
 import { base58ToString } from './utils/base58ToString';
 import { sha256 } from 'js-sha256';
+import {encryptCommon, encryptSeparate, decrypt} from './libs/cryptoTool'
 
 const hexAlphabet = '0123456789abcdefABCDEF';
 function stripInvalidCharacters(s, alphabet) {
@@ -56,6 +57,12 @@ export default {
             base64Text,
             hash: hash
         }
+    },
+
+    data: {
+        encryptCommon,
+        encryptSeparate,
+        decrypt
     }
 
 };

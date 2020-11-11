@@ -1,14 +1,16 @@
-import {expect} from './getChai';
-import * as WavesAPI from '../dist/waves-api.min';
+import {expect} from 'chai';
+import * as WavesAPI from '../../src/WavesAPI';
 
 
 let Waves;
 
 
-describe('tools GOST', function () {
+describe('tools/GOST', function () {
 
     beforeEach(() => {
-        Waves = WavesAPI.create({...WavesAPI.TESTNET_CONFIG, crypto: 'gost'});
+        Waves = WavesAPI.create(
+            { initialConfiguration: {...WavesAPI.TESTNET_CONFIG, crypto: 'gost'}
+          });
     });
 
     it('should build the right address from the given public key', () => {
@@ -21,10 +23,16 @@ describe('tools GOST', function () {
     });
 });
 
-describe('tools WAVES', function () {
+describe('tools/WAVES', function () {
 
     beforeEach(() => {
-        Waves = WavesAPI.create({...WavesAPI.TESTNET_CONFIG, networkByte: 'T'.charCodeAt(0)});
+        Waves = WavesAPI.create({
+            initialConfiguration:
+                {
+                    ...WavesAPI.TESTNET_CONFIG,
+                    networkByte: 'T'.charCodeAt(0)
+                }
+        });
     });
 
     it('should build the right address from the given public key', () => {

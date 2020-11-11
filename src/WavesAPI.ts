@@ -1,6 +1,5 @@
 import { ByteProcessor as byteProcessors, Seed, utils } from '@wavesenterprise/transactions-factory';
 import { IWavesConfig } from '../interfaces';
-import cryptoTool from './libs/cryptoTool';
 
 import NodeAPI from './api';
 import config from './config';
@@ -24,7 +23,6 @@ export class WavesAPI {
     public readonly crypto = utils.crypto;
     public readonly request = request;
     public readonly tools = tools;
-    public readonly cryptoTool = cryptoTool
 
     public readonly API: {
         Node: NodeAPI;

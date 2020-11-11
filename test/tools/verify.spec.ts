@@ -1,7 +1,7 @@
-import { expect } from './getChai';
+import { expect } from 'chai';
 import { libs, utils } from "@wavesenterprise/signature-generator";
 
-describe('Verify signature', () => {
+describe('tools/Verify signature', () => {
   it('verification function should return true with correct data', () => {
     expect(
       utils.crypto.isValidSignature(
