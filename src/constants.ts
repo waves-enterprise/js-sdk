@@ -26,6 +26,7 @@ export const LEGACY_TX_TYPES = {
     cancelLeasing: { type: 9, v: 2 },
     createAlias: { type: 10, v: 2 },
     massTransfer: { type: 11, v: 1 },
+    massTransferV2: { type: 11, v: 2 },
     data: { type: 12, v: 1 },
     setScript: { type: 13, v: 1 },
     sponsorship: { type: 14, v: 1 },
