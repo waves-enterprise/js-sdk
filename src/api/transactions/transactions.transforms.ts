@@ -9,7 +9,12 @@ import { preLease, postLease, postSignLease } from './transforms/lease'
 import { preCancelLeasing, postCancelLeasing } from './transforms/lease-cancel'
 import { preBurn, postBurn, postSignBurn } from './transforms/burn'
 import { preCreateAlias, postCreateAlias } from './transforms/alias'
-import { preMassTransfer, postMassTransfer } from './transforms/mass-transfer'
+import {
+  preMassTransfer,
+  postMassTransfer,
+  preMassTransferV2,
+  postMassTransferV2
+} from './transforms/mass-transfer'
 import { preData, postData, postSignData } from './transforms/data'
 import { preSetScript, postSetScript } from './transforms/set-script'
 import { preSponsorship, postSponsorship } from './transforms/sponsorship'
@@ -121,6 +126,11 @@ TRANSFORMS.CREATE_ALIAS.V2 = {
 TRANSFORMS.MASS_TRANSFER.V1 = {
   pre: preMassTransfer,
   post: postMassTransfer
+}
+
+TRANSFORMS.MASS_TRANSFER.V2 = {
+  pre: preMassTransferV2,
+  post: postMassTransferV2
 }
 
 /* DATA */

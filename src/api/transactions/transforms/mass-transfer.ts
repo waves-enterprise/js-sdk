@@ -1,8 +1,9 @@
-import { ArrayPart, ObjectPart, Schema, StringPart } from "ts-api-validator";
+import { ArrayPart, NumberPart, ObjectPart, Schema, StringPart } from 'ts-api-validator';
 import schemaFields from "../schemaFields";
 import { convertAttachmentToBase58, createRemapper } from "../../../utils/remap";
 
-const massTransferSchema = new Schema({
+
+const massTransferSchemaBase = {
   type: ObjectPart,
   required: true,
   content: {
@@ -33,7 +34,9 @@ const massTransferSchema = new Schema({
       parseValue: convertAttachmentToBase58
     }
   }
-})
+}
+
+const massTransferSchema = new Schema(massTransferSchemaBase)
 
 const preMassTransfer = (data) => massTransferSchema.parse(data)
 const postMassTransfer = createRemapper({
@@ -50,4 +53,23 @@ const postMassTransfer = createRemapper({
   },
 })
 
-export { preMassTransfer, postMassTransfer }
+const massTransferSchemaV2 = new Schema({
+  ...massTransferSchemaBase,
+  content: {
+    ...massTransferSchemaBase.content,
+    feeAssetId: schemaFields.feeAssetId
+  }
+})
+
+const preMassTransferV2 = (data) => {
+  return massTransferSchemaV2.parse(data)
+}
+
+const postMassTransferV2 = postMassTransfer
+
+export {
+  preMassTransfer,
+  postMassTransfer,
+  preMassTransferV2,
+  postMassTransferV2
+}
