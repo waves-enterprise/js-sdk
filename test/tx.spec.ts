@@ -1,6 +1,6 @@
 // todo not needed. for manual testing purposes only
 
-import * as WavesAPI from '../dist/waves-api'
+import * as WeSdk from '../dist/we-sdk'
 
 
 // export NODE_TLS_REJECT_UNAUTHORIZED=0
@@ -51,7 +51,7 @@ const permissionTxMockWaves = {
   dueTimestamp: Date.now() + 500000
 }
 
-const Waves = WavesAPI.create(allConfigValues)
+const Waves = WeSdk.create(allConfigValues)
 
 //Waves.API.Node.transactions.broadcast('permit', permissionTxMockWaves, seed.keyPair).then((responseData) => {
 //    console.log(responseData);

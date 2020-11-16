@@ -1,5 +1,5 @@
 import { expect } from 'chai';
-import * as WavesAPI from '../../src/WavesAPI';
+import * as WeSdk from '../../src';
 
 
 let Waves;
@@ -8,8 +8,8 @@ let Waves;
 describe('utils/request', () => {
 
     beforeEach(() => {
-        Waves = WavesAPI.create({
-            initialConfiguration: WavesAPI.TESTNET_CONFIG
+        Waves = WeSdk.create({
+            initialConfiguration: WeSdk.TESTNET_CONFIG
         });
     });
 
