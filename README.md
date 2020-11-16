@@ -1,6 +1,6 @@
-# Waves API [![npm version](https://badge.fury.io/js/%40wavesenterprise%2Fwaves-api.svg)](https://badge.fury.io/js/%40wavesenterprise%2Fwaves-api)
+# JS SDK [![npm version](https://badge.fury.io/js/%40wavesenterprise%2Fwaves-api.svg)](https://badge.fury.io/js/%40wavesenterprise%2Fwaves-api)
 
-WavesAPI is a javascript library for signing and broadcasting transactions on the Waves Enterprise network.
+WE Js Sdk is a javascript library for signing and broadcasting transactions on the Waves Enterprise network.
 
 * Works both in browser and in the Node.js environment
 * Supports [GOST](https://en.wikipedia.org/wiki/GOST) standards
@@ -10,29 +10,29 @@ WavesAPI is a javascript library for signing and broadcasting transactions on th
 
 ##### 1. Download and install Node.js (LTS) from the [official website](https://nodejs.org/en/download/)
 
-##### 2. Install waves-api package using npm:
+##### 2. Install js sdk package using npm:
 ```
-npm install @wavesenterprise/waves-api --save
+npm install @wavesenterprise/js-sdk --save
 ```
 
-##### 3. Import waves-api package:
+##### 3. Import js-sdk package:
 ```
-import WavesAPI from '@wavesenterprise/waves-api'
+import WeSdk from '@wavesenterprise/js-sdk'
 ```
 or use require:
 
-`const WavesAPI = require('@wavesenterprise/waves-api');`
+`const WeSdk = require('@wavesenterprise/js-sdk');`
 
 ##### 4. Initialize library:
 ```
 const config = {
-    ...WavesAPI.MAINNET_CONFIG,
+    ...WeSdk.MAINNET_CONFIG,
     nodeAddress: 'https://hoover.welocal.dev/node-0',
     crypto: 'waves',
     networkByte: 'V'.charCodeAt(0)
 }
 
-const Waves = WavesAPI.create({
+const Waves = WeSdk.create({
     initialConfiguration: config,
     fetchInstance: window.fetch // For Node.js use node-fetch: check /examples
 });
@@ -113,7 +113,7 @@ const { fetch } = initRefresher({
   }
 });
 
-const Waves = WavesAPI.create({
+const Waves = WeSdk.create({
     initialConfiguration: config,
     fetchInstance: fetch
 });

@@ -10,12 +10,12 @@ import fetch from './libs/fetch';
 import tools from './tools';
 import * as request from "./utils/request";
 
-export interface IWavesAPICtr {
+export interface IWeSdkCtr {
     initialConfiguration: Partial<IWavesConfig>;
     fetchInstance?: typeof fetch;
 }
 
-export class WavesAPI {
+export class WeSdk {
     public readonly Seed = Seed;
     public readonly byteProcessors = byteProcessors;
     public readonly config = config;
@@ -30,26 +30,26 @@ export class WavesAPI {
 
     private static _instance;
 
-    constructor(params: IWavesAPICtr) {
+    constructor(params: IWeSdkCtr) {
         const { initialConfiguration, fetchInstance = fetchSubstitute } = params;
         this.API = {
             Node: new NodeAPI(fetchInstance),
         };
 
-        if (this instanceof WavesAPI) {
+        if (this instanceof WeSdk) {
 
             this.config.clear();
             this.config.set(initialConfiguration);
 
-            if (WavesAPI._instance === null) {
-                WavesAPI._instance = this;
+            if (WeSdk._instance === null) {
+                WeSdk._instance = this;
             } else {
-                return WavesAPI._instance;
+                return WeSdk._instance;
             }
 
         } else {
 
-            return new WavesAPI({
+            return new WeSdk({
                 initialConfiguration,
                 fetchInstance,
             });
@@ -61,8 +61,8 @@ export class WavesAPI {
 }
 
 
-export function create({ initialConfiguration, fetchInstance }: IWavesAPICtr): WavesAPI {
-    return new WavesAPI({ initialConfiguration, fetchInstance });
+export function create({ initialConfiguration, fetchInstance }: IWeSdkCtr): WeSdk {
+    return new WeSdk({ initialConfiguration, fetchInstance });
 }
 
 export const MAINNET_CONFIG: IWavesConfig = constants.DEFAULT_MAINNET_CONFIG;

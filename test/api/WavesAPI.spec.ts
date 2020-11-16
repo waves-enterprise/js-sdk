@@ -1,10 +1,10 @@
 import {expect} from 'chai';
-import * as WavesAPI from '../../src/WavesAPI';
+import * as WeSdk from '../../src';
 
 let requiredConfigValues;
 let allConfigValues;
 
-describe('api/WavesAPI', () => {
+describe('api/WeSdk', () => {
 
     beforeEach(() => {
 
@@ -28,24 +28,24 @@ describe('api/WavesAPI', () => {
 
     it('should throw when created without required fields in config', async () => {
         // @ts-ignore
-        expect(() => WavesAPI.create({})).to.throw();
+        expect(() => WeSdk.create({})).to.throw();
         // @ts-ignore
-        expect(() => WavesAPI.create({networkByte: 1, nodeAddress: '1'})).to.throw();
+        expect(() => WeSdk.create({networkByte: 1, nodeAddress: '1'})).to.throw();
         // @ts-ignore
-        expect(() => WavesAPI.create({networkByte: 1, matcherAddress: '1'})).to.throw();
+        expect(() => WeSdk.create({networkByte: 1, matcherAddress: '1'})).to.throw();
         // @ts-ignore
-        expect(() => WavesAPI.create({nodeAddress: '1', matcherAddress: '1'})).to.throw();
+        expect(() => WeSdk.create({nodeAddress: '1', matcherAddress: '1'})).to.throw();
     });
 
     it('should have all fields in config when all fields are passed', () => {
-        const Waves = WavesAPI.create({
+        const Waves = WeSdk.create({
             initialConfiguration: allConfigValues
         });
         expect(Waves.config.get()).to.deep.equal(allConfigValues);
     });
 
     it('should have all fields in config when only required fields are passed', () => {
-        const Waves = WavesAPI.create({
+        const Waves = WeSdk.create({
             initialConfiguration: requiredConfigValues
         });
         const config = Waves.config.get();
@@ -53,7 +53,7 @@ describe('api/WavesAPI', () => {
     });
 
     it('should create seed without errors', () => {
-        const Waves = WavesAPI.create({
+        const Waves = WeSdk.create({
             initialConfiguration: requiredConfigValues
         });
         const seed = Waves.Seed.create();
@@ -65,7 +65,7 @@ describe('api/WavesAPI', () => {
 
         const logLevel = 'none';
 
-        const Waves = WavesAPI.create({
+        const Waves = WeSdk.create({
             initialConfiguration: {...requiredConfigValues, logLevel}
         });
         Waves.config.set({
@@ -75,7 +75,7 @@ describe('api/WavesAPI', () => {
         const config = Waves.config.get();
         expect(config.logLevel).to.equal(logLevel);
 
-        const Waves2 = WavesAPI.create({
+        const Waves2 = WeSdk.create({
             initialConfiguration: requiredConfigValues
         });
         const config2 = Waves2.config.get();

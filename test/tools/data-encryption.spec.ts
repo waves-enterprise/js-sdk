@@ -1,5 +1,5 @@
 import { expect } from 'chai';
-import * as WavesAPI from '../../src/WavesAPI';
+import * as WeSdk from '../../src';
 
 const wavesConfig = {
   networkByte: 84,
@@ -8,7 +8,7 @@ const wavesConfig = {
   crypto: 'waves'
 };
 
-const Waves = WavesAPI.create({
+const Waves = WeSdk.create({
   initialConfiguration: wavesConfig
 })
 

@@ -1,5 +1,5 @@
 import { expect } from 'chai';
-import * as WavesAPI from '../../src/WavesAPI';
+import * as WeSdk from '../../src';
 import { TRANSACTIONS } from '@wavesenterprise/transactions-factory';
 
 const wavesConfig = {
@@ -21,7 +21,7 @@ const testSeed = {
 }
 
 
-let Waves: WavesAPI.WavesAPI;
+let Waves: WeSdk.WeSdk;
 
 const issueTx = {
     id: 'EMN4GrZHZKMfHVpiaM6H9ejfjmfqrV6h6DSPHKfLCPiw',
@@ -53,7 +53,7 @@ const fetchInstance = (url, opt) => {
 describe('API/api', function() {
 
     beforeEach(() => {
-        Waves = WavesAPI.create({
+        Waves = WeSdk.create({
             initialConfiguration: wavesConfig,
             fetchInstance: fetchInstance
         });

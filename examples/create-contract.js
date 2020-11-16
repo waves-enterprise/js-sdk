@@ -1,4 +1,4 @@
-const { create: createApiInstance, MAINNET_CONFIG } = require('../dist/waves-api');
+const { create: createApiInstance, MAINNET_CONFIG } = require('../dist/we-sdk');
 const nodeFetch = require('node-fetch');
 
 const nodeAddress = 'https://hoover.welocal.dev/node-0';

@@ -1,7 +1,7 @@
 // author: Phil Situmorang
 // Здесь я проверяю логику работы отправки транзакций
 
-const WavesAPI = require('./dist/waves-api');
+const WeSdk = require('./dist/waves-api');
 
 // let requiredConfigValues = {
 //   networkByte: 68,
@@ -47,7 +47,7 @@ const seed = {
   }
 };
 
-const Waves = WavesAPI.create(allConfigValues);
+const Waves = WeSdk.create(allConfigValues);
 
 async function sendTransferData() {
   const recipientSeed = Waves.Seed.create();

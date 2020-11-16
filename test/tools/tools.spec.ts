@@ -1,5 +1,5 @@
 import {expect} from 'chai';
-import * as WavesAPI from '../../src/WavesAPI';
+import * as WeSdk from '../../src';
 
 
 let Waves;
@@ -8,8 +8,8 @@ let Waves;
 describe('tools/GOST', function () {
 
     beforeEach(() => {
-        Waves = WavesAPI.create(
-            { initialConfiguration: {...WavesAPI.TESTNET_CONFIG, crypto: 'gost'}
+        Waves = WeSdk.create(
+            { initialConfiguration: {...WeSdk.TESTNET_CONFIG, crypto: 'gost'}
           });
     });
 
@@ -26,10 +26,10 @@ describe('tools/GOST', function () {
 describe('tools/WAVES', function () {
 
     beforeEach(() => {
-        Waves = WavesAPI.create({
+        Waves = WeSdk.create({
             initialConfiguration:
                 {
-                    ...WavesAPI.TESTNET_CONFIG,
+                    ...WeSdk.TESTNET_CONFIG,
                     networkByte: 'T'.charCodeAt(0)
                 }
         });
