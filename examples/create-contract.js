@@ -29,6 +29,7 @@ const fetch = (url, options = {}) => {
 
     const timestamp  = Date.now();
 
+    //body description: https://docs.wavesenterprise.com/en/latest/how-the-platform-works/data-structures/transactions-structure.html#createcontracttransaction
     const txBody = {
         senderPublicKey: seed.keyPair.publicKey,
         image: 'vostok-sc/grpc-contract-example:2.1',
