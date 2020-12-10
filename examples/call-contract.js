@@ -29,7 +29,7 @@ const fetch = (url, options = {}) => {
 
     const timestamp  = Date.now()
 
-    const tx = {
+    const txBody = {
         senderPublicKey: seed.keyPair.publicKey,
         authorPublicKey: seed.keyPair.publicKey,
         contractId: '4pSJoWsaYvT8iCSAxUYdc7LwznFexnBGPRoUJX7Lw3sh', // Predefined contract
@@ -39,8 +39,10 @@ const fetch = (url, options = {}) => {
         fee: minimumFee[104]
     };
 
+    const tx = Waves.API.Transactions.CallContract.V4(txBody)
+
     try {
-        const result = await Waves.API.Node.transactions.broadcastFromClientAddress('dockerCallV2', tx, seed.keyPair);
+        const result = await tx.broadcast(seed.keyPair);
         console.log('Broadcast docker call result: ', result)
     } catch (err) {
         console.log('Broadcast error:', err)

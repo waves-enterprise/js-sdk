@@ -27,9 +27,9 @@ const fetch = (url, options = {}) => {
     // Create Seed object from phrase
     const seed = Waves.Seed.fromExistingPhrase(seedPhrase);
 
-    const timestamp  = Date.now()
+    const timestamp  = Date.now();
 
-    const tx = {
+    const txBody = {
         senderPublicKey: seed.keyPair.publicKey,
         image: 'vostok-sc/grpc-contract-example:2.1',
         imageHash: '9fddd69022f6a47f39d692dfb19cf2bdb793d8af7b28b3d03e4d5d81f0aa9058',
@@ -39,8 +39,10 @@ const fetch = (url, options = {}) => {
         fee: minimumFee[103]
     };
 
+    const tx = Waves.API.Transactions.CreateContract.V3(txBody)
+
     try {
-        const result = await Waves.API.Node.transactions.broadcastFromClientAddress('dockerCreateV2', tx, seed.keyPair);
+        const result = await tx.broadcast(seed.keyPair);
         console.log('Broadcast docker create result: ', result)
     } catch (err) {
         console.log('Broadcast error:', err)
