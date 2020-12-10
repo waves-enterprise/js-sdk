@@ -17,9 +17,11 @@ export default class NodeAPI {
     leasing: Leasing;
     transactions: Transactions;
     peers: Peers;
-    utils: Utils
+    utils: Utils;
+    fetchInstance: typeof fetch;
 
     constructor(fetchInstance: typeof fetch) {
+        this.fetchInstance = fetchInstance;
         this.addresses = new Addresses(fetchInstance);
         this.aliases = new Aliases(fetchInstance);
         this.assets = new Assets(fetchInstance);

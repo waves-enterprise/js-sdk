@@ -40,7 +40,12 @@ export default {
     },
 
     base58: {
-        encode: libs.base58.encode,
+        encode: (val: Uint8Array | number[] | string ) => {
+            if (typeof val === 'string') {
+                val = libs.converters.stringToByteArray(val);
+            }
+            return libs.base58.encode(Uint8Array.from(val))
+        },
         decode: libs.base58.decode,
         base58ToString
     },

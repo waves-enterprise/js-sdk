@@ -1,10 +1,11 @@
-import { TransactionFactory } from '@wavesenterprise/transactions-factory';
+import { TransactionFactory, TransactionType } from '@wavesenterprise/transactions-factory';
 import { IKeyPair } from '../../interfaces';
 import * as create from 'parse-json-bignumber';
 import { BROADCAST_PATH, SIGN_PATH } from "../constants";
 import WavesRequestError from '../errors/WavesRequestError';
 import config from '../config';
 import BigNumber from '../libs/bignumber';
+
 
 export const SAFE_JSON_PARSE = create({
   BigNumber
@@ -90,45 +91,75 @@ export function createFetchWrapper(config: IFetchWrapperConfig): IFetchWrapper<a
 
 }
 
-export const wrapTxRequest = (
+export const txRequestV2 = async (
+  tx: TransactionType<any>,
+  keyPair: IKeyPair,
+  withProofs: boolean = true,
+) => {
+  const data = {};
+  // TODO move to transactions factory
+  Object.keys(tx).forEach(key => {
+    if (typeof tx[key] !== 'function' && key !== 'val') {
+      data[key] = tx[key];
+    }
+  });
+
+  tx.senderPublicKey = keyPair.publicKey;
+  const signature = await tx.getSignature(keyPair.privateKey)
+  let postData: any = {
+    ...data,
+    senderPublicKey: keyPair.publicKey,
+    ...(withProofs ? { proofs: [signature] } : { signature }),
+    version: tx.version,
+    type: tx.tx_type
+  }
+
+  const sendData = {
+    ...POST_TEMPLATE,
+    rejectUnauthorized: false,
+    credentials: 'include',
+    body: SAFE_JSON_STRINGIFY(postData, null, null)
+  }
+
+  return sendData;
+};
+
+
+export const txRequest = async (
   factory: TransactionFactory<any>,
-  preRemapAsync: (data: object) => Promise<object>,
-  postRemap: (data: object) => object,
-  callback: (postParams: object) => Promise<any>,
-  withProofs: boolean = false
-) =>
-  async (data: object, keyPair: IKeyPair): Promise<any> => {
-    let preData: any = { ...data, senderPublicKey: keyPair.publicKey }
-    if (preRemapAsync) {
-      preData = await preRemapAsync(preData)
-    }
+  data: object,
+  keyPair: IKeyPair,
+  withProofs: boolean = false,
+  preRemapAsync?: (data: object) => Promise<object>,
+  postRemap?: (data: object) => object
+) => {
+  let preData: any = { ...data, senderPublicKey: keyPair.publicKey }
+  if (preRemapAsync) {
+    preData = await preRemapAsync(preData)
+  }
 
-    const tx = factory(preData)
-    const signature = await tx.getSignature(keyPair.privateKey)
+  const tx = factory(preData)
+  const signature = await tx.getSignature(keyPair.privateKey)
 
-    let postData: any = {
-      ...preData,
-      ...(withProofs ? { proofs: [signature] } : { signature }),
-      version: tx.version,
-      type: tx.tx_type
-    }
-    if (postRemap) {
-      postData = postRemap(postData)
-    }
+  let postData: any = {
+    ...preData,
+    ...(withProofs ? { proofs: [signature] } : { signature }),
+    version: tx.version,
+    type: tx.tx_type
+  }
+  if (postRemap) {
+    postData = postRemap(postData)
+  }
 
-    const sendData = {
-      ...POST_TEMPLATE,
-      rejectUnauthorized: false,
-      // allow cookies
-      // used to implement sticky sessions
-      // by kubernetes ingress balancer
-      // https://kubernetes.github.io/ingress-nginx/examples/affinity/cookie/
-      credentials: 'include',
-      body: SAFE_JSON_STRINGIFY(postData, null, null)
-    }
+  const sendData = {
+    ...POST_TEMPLATE,
+    rejectUnauthorized: false,
+    credentials: 'include',
+    body: SAFE_JSON_STRINGIFY(postData, null, null)
+  }
 
-    return callback(sendData)
-  };
+  return sendData;
+};
 
 
 export const createTxRequestWrapper = (fetchInstance: IFetchWrapper<any>) => {

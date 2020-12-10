@@ -1,4 +1,4 @@
-const { create: createApiInstance, MAINNET_CONFIG } = require('../dist/we-sdk');
+const { create: createApiInstance, MAINNET_CONFIG } = require('..');
 const nodeFetch = require('node-fetch');
 
 const nodeAddress = 'https://hoover.welocal.dev/node-0';
@@ -28,7 +28,8 @@ const fetch = (url, options = {}) => {
     const seed = Waves.Seed.fromExistingPhrase(seedPhrase);
 
     // Transaction data
-    const tx = {
+    // https://docs.wavesenterprise.com/en/latest/how-the-platform-works/data-structures/transactions-structure.html#createpolicytransaction
+    const txBody = {
         sender: seed.address,
         policyName: 'Example policy',
         description: 'Description for example policy',
@@ -38,8 +39,10 @@ const fetch = (url, options = {}) => {
         timestamp: Date.now(),
     }
 
+    const tx = Waves.API.Transactions.CreatePolicy.V3(txBody);
+
     try {
-        const result = await Waves.API.Node.transactions.broadcastFromClientAddress('policyCreate', tx, seed.keyPair);
+        const result = await tx.broadcast(seed.keyPair);
         console.log('Broadcast PolicyCreate result: ', result)
     } catch (err) {
         console.log('Broadcast error:', err)

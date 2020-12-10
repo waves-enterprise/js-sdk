@@ -12,7 +12,7 @@ import {
 } from '../../utils/request';
 import TRANSFORMS from "./transactions.transforms";
 import {getTransactionFactory, TRANSACTION_TYPES} from '@wavesenterprise/transactions-factory'
-import { wrapTxRequest } from '../../utils/request';
+import { txRequest } from '../../utils/request';
 
 export default class Transactions {
 
@@ -71,10 +71,9 @@ export default class Transactions {
         return this.fetch('/transactions/unconfirmed');
     }
 
-    broadcastFromClientAddress(txType: string, data, keys) {
-        return this.processTx(txType, data, keys,
-          (postParams: any) => this.fetch(constants.BROADCAST_PATH, postParams)
-          )
+    async broadcastFromClientAddress(txType: string, data, keys) {
+        const postParams = await this.processTx(txType, data, keys);
+        return this.fetch(constants.BROADCAST_PATH, postParams)
     }
 
     async broadcastFromNodeAddress(txType: string, nodeAddress: string, data, extraData) {
@@ -132,26 +131,26 @@ export default class Transactions {
         return this.broadcastFromClientAddress('atomic', atomicTx, keyPair);
     }
 
-    sign(txType: string, data, keys) {
-        return this.processTx(txType, data, keys,
-          (postParams: any) => JSON.parse(postParams.body)
-        )
+    async sign(txType: string, data, keys) {
+        const postParams = await this.processTx(txType, data, keys);
+        return JSON.parse(postParams.body)
     }
 
-    processTx(txType: string, data, keys, callback) {
+    processTx(txType: string, data, keys) {
         const {type, version, key} = Transactions.getTxMetaInfo(txType)
         if (!type || !key) {
             throw new WavesError(`Wrong transaction type: ${type}`, data);
         }
         const factory = getTransactionFactory(version, type)
         const {pre, post} = TRANSFORMS[key][`V${version}`]
-        return wrapTxRequest(
+        return txRequest(
           factory,
+          data,
+          keys,
+          true,
           pre,
           post,
-          callback,
-          true
-        )(data, keys)
+        )
     }
 
     rawBroadcast(data) {

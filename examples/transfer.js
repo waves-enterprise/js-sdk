@@ -1,4 +1,4 @@
-const { create: createApiInstance, MAINNET_CONFIG } = require('../dist/we-sdk');
+const { create: createApiInstance, MAINNET_CONFIG } = require('..');
 const nodeFetch = require('node-fetch');
 
 const nodeAddress = 'https://hoover.welocal.dev/node-0';
@@ -27,17 +27,21 @@ const fetch = (url, options = {}) => {
   // Create Seed object from phrase
   const seed = Waves.Seed.fromExistingPhrase(seedPhrase);
 
-  const tx = {
+
+  // see docs: https://docs.wavesenterprise.com/en/latest/how-the-platform-works/data-structures/transactions-structure.html#transfertransaction
+  const txBody = {
     recipient: seed.address,
-    assetId: 'WAVES',
-    amount: '10000',
+    assetId: '',
+    amount: 10000,
     fee: minimumFee[4],
-    attachment: 'Examples transfer attachment',
+    attachment: Waves.tools.base58.encode('Examples transfer attachment'),
     timestamp: Date.now()
   }
 
+  const tx = Waves.API.Transactions.Transfer.V3(txBody);
+
   try {
-    const result = await Waves.API.Node.transactions.broadcastFromClientAddress('transfer', tx, seed.keyPair);
+    const result = await tx.broadcast(seed.keyPair);
     console.log('Broadcast transfer result: ', result)
   } catch (err) {
     console.log('Broadcast error:', err)

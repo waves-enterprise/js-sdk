@@ -9,6 +9,8 @@ import fetchSubstitute from "./libs/fetch";
 import fetch from './libs/fetch';
 import tools from './tools';
 import * as request from "./utils/request";
+import {TransactionsType, Transactions} from './api/transactions/transactionsV2';
+
 
 export interface IWeSdkCtr {
     initialConfiguration: Partial<IWavesConfig>;
@@ -26,14 +28,17 @@ export class WeSdk {
 
     public readonly API: {
         Node: NodeAPI;
+        Transactions: TransactionsType;
     };
 
     private static _instance;
 
     constructor(params: IWeSdkCtr) {
         const { initialConfiguration, fetchInstance = fetchSubstitute } = params;
+        const nodeApi = new NodeAPI(fetchInstance);
         this.API = {
-            Node: new NodeAPI(fetchInstance),
+            Node: nodeApi,
+            Transactions: Transactions(nodeApi),
         };
 
         if (this instanceof WeSdk) {
