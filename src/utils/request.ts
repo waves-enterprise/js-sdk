@@ -5,6 +5,7 @@ import { BROADCAST_PATH, SIGN_PATH } from "../constants";
 import WavesRequestError from '../errors/WavesRequestError';
 import config from '../config';
 import BigNumber from '../libs/bignumber';
+import { TransactionTypeWithDecorator } from '../api/transactions/transactionsV2';
 
 
 export const SAFE_JSON_PARSE = create({
@@ -92,33 +93,15 @@ export function createFetchWrapper(config: IFetchWrapperConfig): IFetchWrapper<a
 }
 
 export const txRequestV2 = async (
-  tx: TransactionType<any>,
-  keyPair: IKeyPair,
-  withProofs: boolean = true,
+  tx: TransactionTypeWithDecorator,
+  keyPair: IKeyPair
 ) => {
-  const data = {};
-  // TODO move to transactions factory
-  Object.keys(tx).forEach(key => {
-    if (typeof tx[key] !== 'function' && key !== 'val') {
-      data[key] = tx[key];
-    }
-  });
-
-  tx.senderPublicKey = keyPair.publicKey;
-  const signature = await tx.getSignature(keyPair.privateKey)
-  let postData: any = {
-    ...data,
-    senderPublicKey: keyPair.publicKey,
-    ...(withProofs ? { proofs: [signature] } : { signature }),
-    version: tx.version,
-    type: tx.tx_type
-  }
-
+  const signedTx = await tx.getSignedTx(keyPair);
   const sendData = {
     ...POST_TEMPLATE,
     rejectUnauthorized: false,
     credentials: 'include',
-    body: SAFE_JSON_STRINGIFY(postData, null, null)
+    body: SAFE_JSON_STRINGIFY(signedTx, null, null)
   }
 
   return sendData;

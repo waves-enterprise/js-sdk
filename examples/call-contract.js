@@ -31,7 +31,6 @@ const fetch = (url, options = {}) => {
 
     //body description: https://docs.wavesenterprise.com/en/latest/how-the-platform-works/data-structures/transactions-structure.html#callcontracttransaction
     const txBody = {
-        senderPublicKey: seed.keyPair.publicKey,
         authorPublicKey: seed.keyPair.publicKey,
         contractId: '4pSJoWsaYvT8iCSAxUYdc7LwznFexnBGPRoUJX7Lw3sh', // Predefined contract
         contractVersion: 1,

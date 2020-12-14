@@ -59,7 +59,6 @@
     "compile": "mkdir -p raw && ./node_modules/.bin/tsc -p ./tsconfig.json --declaration --outDir raw",
     "uglifyjs": "node_modules/.bin/uglifyjs ./dist/we-sdk.js -o ./dist/we-sdk.min.js && node_modules/.bin/uglifyjs ./dist/we-sdk.partial.js -o ./dist/we-sdk.partial.min.js",
     "prepublishOnly": "npm run build",
-    "test": "ts-node ./examples/create-contract.js",
     "test-browser": "npm run build && ./node_modules/.bin/tsc -p ./test/tsconfig.browser.json && ./node_modules/.bin/karma start karma.conf.js"
   }
 }
