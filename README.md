@@ -86,7 +86,7 @@ await tx.broadcast(seed.keyPair);
 ```
 
 #### Transaction interface
-Except broadcast also available next methods:
+In addition to broadcasting, the following methods are also available:
 
 ```typescript
 interface Transaction {
