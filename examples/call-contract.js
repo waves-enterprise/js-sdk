@@ -1,4 +1,4 @@
-const { create: createApiInstance, MAINNET_CONFIG } = require('../dist/we-sdk');
+const { create: createApiInstance, MAINNET_CONFIG } = require('..');
 const nodeFetch = require('node-fetch');
 
 const nodeAddress = 'https://hoover.welocal.dev/node-0';
@@ -29,8 +29,8 @@ const fetch = (url, options = {}) => {
 
     const timestamp  = Date.now()
 
-    const tx = {
-        senderPublicKey: seed.keyPair.publicKey,
+    //body description: https://docs.wavesenterprise.com/en/latest/how-the-platform-works/data-structures/transactions-structure.html#callcontracttransaction
+    const txBody = {
         authorPublicKey: seed.keyPair.publicKey,
         contractId: '4pSJoWsaYvT8iCSAxUYdc7LwznFexnBGPRoUJX7Lw3sh', // Predefined contract
         contractVersion: 1,
@@ -39,8 +39,10 @@ const fetch = (url, options = {}) => {
         fee: minimumFee[104]
     };
 
+    const tx = Waves.API.Transactions.CallContract.V4(txBody)
+
     try {
-        const result = await Waves.API.Node.transactions.broadcastFromClientAddress('dockerCallV2', tx, seed.keyPair);
+        const result = await tx.broadcast(seed.keyPair);
         console.log('Broadcast docker call result: ', result)
     } catch (err) {
         console.log('Broadcast error:', err)

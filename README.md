@@ -42,7 +42,7 @@ const Waves = WeSdk.create({
 ```
 const seed = Waves.Seed.fromExistingPhrase('examples seed phrase');
 
-const tx = {
+const txBody = {
     recipient: seed.address, // Send tokens to the same address
     assetId: 'WAVES',
     amount: '10000',
@@ -51,19 +51,90 @@ const tx = {
     timestamp: Date.now()
 };
 
-Waves.API.Node.transactions.broadcastFromClientAddress('transfer', tx, seed.keyPair).then(result => {
-    console.log('Broadcast result:', result)
-});
+const tx = Waves.API.Transactions.Transfer.V3(txBody);
+
+await tx.broadcast(seed.keyPair)
+```
+
+## Transactions
+#### Description
+All types of transaction available by calling a function like Waves.API.Transactions.<TX_NAME>.<TX_VERSION>   
+For example:
+```
+const tx = Waves.API.Transactions.Transfer.V3(txBody);
+```
+
+txBody - object with initial transaction body, you can init with empty body and set fields later, for example:
+
+```
+const tx = Waves.API.Transactions.Transfer.V3({});
+tx.recipient = '12afdsdga243134';
+tx.amount = 10000;
+...
+```
+
+For successful transaction broadcast you must set all required fields,
+except 'type', 'version', 'id', 'proofs' and 'senderPublicKey'(automatically taken from keyPair).  
+
+Full description of transaction body see in the documentation: https://docs.wavesenterprise.com/en/latest/how-the-platform-works/data-structures/transactions-structure.html  
+
+Transaction broadcast examples located in directory ./examples.  
+
+To broadcast transaction - use method broadcast:
+```
+await tx.broadcast(seed.keyPair);
+```
+
+#### Transaction interface
+In addition to broadcasting, the following methods are also available:
+
+```typescript
+interface Transaction {
+    isValid(): boolean; // validate tx body
+    getErrors(): string[]; // returns array of errors for invalid fields
+    getSignature(privateKey: string): Promise<string>; // returns signature
+    getId(): Promise<string>; // calculate tx id
+    getBytes(): Promise<Uint8Array>; // internal method, returns bytes to sign
+    broadcast(): Promise<object>;
+}
+```
+
+#### Transaction types
+Transaction name and its type id:
+```typescript
+const TRANSACTION_TYPES = {
+  Issue: 3,
+  Transfer: 4,
+  Reissue: 5,
+  Burn: 6,
+  Lease: 8,
+  LeaseCancel: 9,
+  CreateAlias: 10,
+  MassTransfer: 11,
+  Data: 12,
+  SetScript: 13,
+  SponsorFee: 14,
+  SetAssetScript: 15,
+  Permit: 102,
+  CreateContract: 103,
+  CallContract: 104,
+  DisableContract: 106,
+  UpdateContract: 107,
+  RegisterNode: 111,
+  CreatePolicy: 112,
+  UpdatePolicy: 113,
+  PolicyDataHash: 114,
+  Atomic: 120
+}
 ```
 
 ## Additional features
 
-Get transaction ID (or transaction hash) before broadcast:
-
+#####Base58 encode/decode
+```typescript
+Waves.tools.base58.encode('Examples transfer attachment');
+Waves.tools.base58.decode('123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz');
 ```
-const txHash = await Waves.API.Node.transactions.getTxId('transfer', txBody, { publicKey })
-```
-
 ## More examples
 In the /examples folder you can find complete examples of sending the most popular transactions.
 
