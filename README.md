@@ -1,10 +1,10 @@
-# JS SDK [![npm version](https://badge.fury.io/js/%40wavesenterprise%2Fwaves-api.svg)](https://badge.fury.io/js/%40wavesenterprise%2Fwaves-api)
+# JS SDK [![npm version](https://badge.fury.io/js/%40wavesenterprise%2Fjs-sdk.svg)](https://www.npmjs.com/package/@wavesenterprise/js-sdk)
 
 WE Js Sdk is a javascript library for signing and broadcasting transactions on the Waves Enterprise network.
 
 * Works both in browser and in the Node.js environment
 * Supports [GOST](https://en.wikipedia.org/wiki/GOST) standards
-* Supports the signing of [all types](https://docs.wavesenterprise.com/en/1.3.0/how-the-platform-works/data-structures/transactions-structure.html#id26) of Waves Enterprise network transactions
+* Supports the signing of [all types](https://docs.wavesenterprise.com/en/latest/how-the-platform-works/data-structures/transactions-structure.html#id26) of Waves Enterprise network transactions
 
 ## Quickstart
 
