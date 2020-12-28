@@ -34,8 +34,8 @@ export type TransactionTypeWithDecorator = TransactionDecorator & TransactionTyp
 type ReturnType<T> = T extends (...args: any[]) => infer R ? R : any;
 type ArgType<T> = T extends (arr: infer R) => any ? R : any;
 type TX_TYPES = {
-  [key in keyof typeof TRANSACTIONS]?: {
-    [key1 in keyof typeof TRANSACTIONS[key]]?: (tx: ArgType<typeof TRANSACTIONS[key][key1]>) =>
+  [key in keyof typeof TRANSACTIONS]: {
+    [key1 in keyof typeof TRANSACTIONS[key]]: (tx: ArgType<typeof TRANSACTIONS[key][key1]>) =>
       ReturnType<typeof TRANSACTIONS[key][key1]> & TransactionDecorator
   }
 }
@@ -53,7 +53,7 @@ export function Transactions(nodeApi: NodeAPI) : TransactionsType {
       txs[name][version] = decorateFactory(TRANSACTIONS[name][version], txs);
     })
   })
-  return txs;
+  return txs as any;
 }
 
 function decorateFactory(factory: TransactionFactory<any>, txClass: TransactionsCommon) {
@@ -175,6 +175,6 @@ class TransactionsCommon {
       timestamp: timestamp as number,
       transactions: signedTransactions
     }
-    return (this as TransactionsType).Atomic.V1(atomicTxBody).broadcast(keyPair);
+    return (this as unknown as TransactionsType).Atomic.V1(atomicTxBody).broadcast(keyPair);
   }
 };
