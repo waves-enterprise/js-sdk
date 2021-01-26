@@ -18,6 +18,7 @@ import {
 } from '@wavesenterprise/transactions-factory';
 import config from '../../config';
 import { IKeyPair } from '../../../interfaces';
+import logger from "../../utils/logger";
 
 
 // Additional methods for TRANSACTIONS
@@ -61,6 +62,7 @@ function decorateFactory(factory: TransactionFactory<any>, txClass: Transactions
     const tx = factory(...args);
     tx.broadcast = async (keys: IKeyPair) => {
       const postParams = await txRequestV2(tx as TransactionTypeWithDecorator, keys)
+      logger.log('Broadcast tx body:', postParams.body)
       return txClass.fetch(constants.BROADCAST_PATH, postParams)
     };
     tx.getSignedTx = async (keyPair: IKeyPair) => {
