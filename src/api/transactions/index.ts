@@ -13,6 +13,7 @@ import {
 import TRANSFORMS from "./transactions.transforms";
 import {getTransactionFactory, TRANSACTION_TYPES} from '@wavesenterprise/transactions-factory'
 import { txRequest } from '../../utils/request';
+import logger from "../../utils/logger";
 
 export default class Transactions {
 
@@ -73,6 +74,7 @@ export default class Transactions {
 
   async broadcastFromClientAddress(txType: string, data, keys) {
     const postParams = await this.processTx(txType, data, keys);
+    logger.log('Broadcast tx body:', postParams.body)
     return this.fetch(constants.BROADCAST_PATH, postParams)
   }
 

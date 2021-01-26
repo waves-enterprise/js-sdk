@@ -17,6 +17,7 @@ const fetch = (url, options = {}) => {
     nodeAddress,
     crypto: gostCrypto ? 'gost' : 'waves',
     networkByte: chainId.charCodeAt(0),
+    logLevel: 'info'
   };
 
   const Waves = createApiInstance({
