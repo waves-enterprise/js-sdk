@@ -78,7 +78,7 @@ describe('API/api', function() {
         expect(transaction.senderPublicKey).to.be.equal(testSeed.keyPair.publicKey)
         expect(transaction.proofs).to.be.an('array')
 
-        const bytes = await TRANSACTIONS.ISSUE.V2(transaction).getBytes()
+        const bytes = await TRANSACTIONS.Issue.V2(transaction).getBytes()
         expect(bytes.toString()).to.be.equal('3,2,84,141,31,29,90,184,236,64,177,164,23,82,230,160,218,243,249,223,21,21,119,13,61,168,255,46,18,68,208,97,141,159,114,0,11,116,101,115,116,45,116,111,107,101,110,51,0,9,116,101,115,116,32,116,101,115,116,128,0,0,0,0,0,0,192,5,0,0,0,0,0,5,245,225,0,0,0,1,104,194,56,254,106,1,0,6,1,6,183,111,203,71')
 
         expect(path).to.be.equal('https://test.com/transactions/broadcast')
