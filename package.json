@@ -1,6 +1,6 @@
 {
   "name": "@wavesenterprise/js-sdk",
-  "version": "3.1.3",
+  "version": "3.1.4",
   "description": "Waves Enterprise client-side API library",
   "keywords": [
     "cryptocurrency",
@@ -26,20 +26,12 @@
   "devDependencies": {
     "@types/chai": "4.1.5",
     "@types/mocha": "5.2.5",
-    "@wavesenterprise/transactions-factory": "1.2.1",
-    "bignumber.js": "7.2.1",
     "browserify": "^17.0.0",
     "chai": "4.1.2",
-    "crypto-js": "3.1.9-1",
-    "js-sha256": "^0.9.0",
     "mocha": "5.2.0",
     "mock-require": "3.0.2",
-    "node-fetch": "2.2.0",
-    "parse-json-bignumber": "^0.1.2",
     "requirejs": "2.3.6",
-    "ts-api-validator": "2.1.3",
     "ts-node": "^7.0.1",
-    "ts-utils": "6.0.4",
     "typescript": "4.0.2",
     "uglify-es": "3.3.9"
   },
@@ -49,5 +41,15 @@
     "compile": "mkdir -p raw && ./node_modules/.bin/tsc -p ./tsconfig.json --declaration --outDir raw",
     "uglifyjs": "node_modules/.bin/uglifyjs ./dist/we-sdk.js -o ./dist/we-sdk.min.js",
     "prepublishOnly": "npm run build"
+  },
+  "dependencies": {
+    "@wavesenterprise/transactions-factory": "^1.2.1",
+    "bignumber.js": "7.2.1",
+    "crypto-js": "3.1.9-1",
+    "js-sha256": "^0.9.0",
+    "node-fetch": "2.2.0",
+    "parse-json-bignumber": "^0.1.2",
+    "ts-api-validator": "2.1.3",
+    "ts-utils": "6.0.4"
   }
 }
