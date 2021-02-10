@@ -10,6 +10,8 @@ import fetch from './libs/fetch';
 import tools from './tools';
 import * as request from "./utils/request";
 import {TransactionsType, Transactions} from './api/transactions/transactionsV2';
+import { TransactionServiceClient } from './grpc/compiled/transaction/transaction_grpc_pb';
+import * as grpc from '@grpc/grpc-js';
 
 
 export interface IWeSdkCtr {
@@ -25,6 +27,7 @@ export class WeSdk {
     public readonly crypto = utils.crypto;
     public readonly request = request;
     public readonly tools = tools;
+    public grpcService: TransactionServiceClient;
 
     public readonly API: {
         Node: NodeAPI;
@@ -38,10 +41,17 @@ export class WeSdk {
         const nodeApi = new NodeAPI(fetchInstance);
         this.API = {
             Node: nodeApi,
-            Transactions: Transactions(nodeApi),
-        };
+            Transactions: {} as any
+        }
+        Transactions(this)
 
         if (this instanceof WeSdk) {
+            if (initialConfiguration.grpcAddress) {
+                this.grpcService = new TransactionServiceClient(
+                  initialConfiguration.grpcAddress,
+                  grpc.credentials.createInsecure()
+                )
+            }
 
             this.config.clear();
             this.config.set(initialConfiguration);
@@ -61,6 +71,13 @@ export class WeSdk {
 
         }
 
+    }
+
+    setGrpcService(address: string) {
+        this.grpcService = new TransactionServiceClient(
+          address,
+          grpc.credentials.createInsecure()
+        )
     }
 
 }

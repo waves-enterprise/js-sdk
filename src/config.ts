@@ -60,6 +60,13 @@ export default {
         return { ...config };
     },
 
+    getFee(type: number): number {
+      if (!config.minimumFee) {
+          return null;
+      }
+      return config.minimumFee[type]
+    },
+
     set(newConfig: Partial<IWavesConfig>) {
 
         outerConfig.set(newConfig);

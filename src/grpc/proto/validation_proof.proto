@@ -1,0 +1,10 @@
+syntax = "proto3";
+package wavesenterprise;
+
+option java_package = "com.wavesplatform.transaction.protobuf";
+option csharp_namespace = "WavesEnterprise";
+
+message ValidationProof {
+    bytes validator_public_key = 1;
+    bytes signature = 2;
+}

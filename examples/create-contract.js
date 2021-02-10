@@ -17,6 +17,7 @@ const fetch = (url, options = {}) => {
         nodeAddress,
         crypto: gostCrypto ? 'gost' : 'waves',
         networkByte: chainId.charCodeAt(0),
+        minimumFee
     };
 
     const Waves = createApiInstance({
@@ -31,13 +32,11 @@ const fetch = (url, options = {}) => {
 
     //body description: https://docs.wavesenterprise.com/en/latest/how-the-platform-works/data-structures/transactions-structure.html#createcontracttransaction
     const txBody = {
-        senderPublicKey: seed.keyPair.publicKey,
         image: 'vostok-sc/grpc-contract-example:2.1',
         imageHash: '9fddd69022f6a47f39d692dfb19cf2bdb793d8af7b28b3d03e4d5d81f0aa9058',
         contractName: 'Sample GRPC contract',
         timestamp,
         params: [],
-        fee: minimumFee[103]
     };
 
     const tx = Waves.API.Transactions.CreateContract.V3(txBody)

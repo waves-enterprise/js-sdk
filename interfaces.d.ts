@@ -27,6 +27,8 @@ export interface IWavesConfig extends IWavesBasicConfig {
     nodeAddress: string;
     matcherAddress: string;
     assetFactory?: Function;
+    minimumFee?: object;
+    grpcAddress?: string;
 }
 
 

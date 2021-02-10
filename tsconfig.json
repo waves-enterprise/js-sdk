@@ -8,7 +8,7 @@
     ],
     "module": "commonjs",
     "sourceMap": true,
-    "target": "es5",
+    "target": "ES2018",
     "paths": {
       "parse-json-bignumber": [
         "node_modules/parse-json-bignumber/dist/parse-json-bignumber"
@@ -19,7 +19,10 @@
       "ts-utils": [
         "node_modules/ts-utils/index"
       ]
-    }
+    },
+    "types": [
+      "long"
+    ]
   },
   "include": [
     "src",

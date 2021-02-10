@@ -8,7 +8,6 @@ import {
   VERSIONS,
   txRequestV2,
 } from '../../utils/request';
-import NodeAPI from '../';
 import OldTxService from './index';
 import {
   TransactionFactory,
@@ -19,45 +18,65 @@ import {
 import config from '../../config';
 import { IKeyPair } from '../../../interfaces';
 import logger from "../../utils/logger";
+import { WeSdk } from '../../index';
+import { callContract, createContract } from '../../grpc';
 
 
 // Additional methods for TRANSACTIONS
-type TransactionDecorator = {
+type TransactionDecorator<T> = {
   broadcast: (keys: IKeyPair) => Promise<object>,
-  getSignedTx: (keys: IKeyPair) => {
+  broadcastGrpc: (keys: IKeyPair) => Promise<object>,
+  getBody: () => {
+    version: number,
+    type: number
+  } & T,
+  getSignedTx: (keys: IKeyPair) => Promise<{
     senderPublicKey: string,
     proofs: Array<string>,
     version: number,
     type: number
-  } & any
+  } & T>
 }
-export type TransactionTypeWithDecorator = TransactionDecorator & TransactionType<any>;
+export type TransactionTypeWithDecorator = TransactionDecorator<any> & TransactionType<any>;
 type ReturnType<T> = T extends (...args: any[]) => infer R ? R : any;
 type ArgType<T> = T extends (arr: infer R) => any ? R : any;
 type TX_TYPES = {
   [key in keyof typeof TRANSACTIONS]: {
     [key1 in keyof typeof TRANSACTIONS[key]]: (tx: ArgType<typeof TRANSACTIONS[key][key1]>) =>
-      ReturnType<typeof TRANSACTIONS[key][key1]> & TransactionDecorator
+      ReturnType<typeof TRANSACTIONS[key][key1]>
+      & TransactionDecorator<
+        Omit<ReturnType<typeof TRANSACTIONS[key][key1]>,
+          'getId'|'getBytes'|'getErrors'|'getSignature'|'isValid'|'tx_type'>
+      >
   }
 }
 
-
 export type TransactionsType = TransactionsCommon & TX_TYPES;
 
-export function Transactions(nodeApi: NodeAPI) : TransactionsType {
-  const txs = new TransactionsCommon(nodeApi);
+
+export function Transactions(api: WeSdk) : TransactionsType {
+  const txs = new TransactionsCommon(api);
   Object.keys(TRANSACTIONS).forEach(name => {
     Object.keys(TRANSACTIONS[name]).forEach(version => {
       if (!txs[name]) {
         txs[name] = {}
       }
-      txs[name][version] = decorateFactory(TRANSACTIONS[name][version], txs);
+      txs[name][version] = decorateFactory(
+        TRANSACTIONS[name][version],
+        txs,
+        api
+      );
     })
   })
-  return txs as any;
+  api.API.Transactions = txs as TransactionsType;
+  return txs as TransactionsType;
 }
 
-function decorateFactory(factory: TransactionFactory<any>, txClass: TransactionsCommon) {
+function decorateFactory(
+  factory: TransactionFactory<any>,
+  txClass: TransactionsCommon,
+  api: WeSdk
+) {
   return function(...args) {
     const tx = factory(...args);
     tx.broadcast = async (keys: IKeyPair) => {
@@ -65,21 +84,51 @@ function decorateFactory(factory: TransactionFactory<any>, txClass: Transactions
       logger.log('Broadcast tx body:', postParams.body)
       return txClass.fetch(constants.BROADCAST_PATH, postParams)
     };
-    tx.getSignedTx = async (keyPair: IKeyPair) => {
-      const data = {};
+    tx.getBody = () => {
+      const data = {} as any;
       Object.keys(tx).forEach(key => {
         if (typeof tx[key] !== 'function' && key !== 'val') {
           data[key] = tx[key];
         }
       });
+      if (!data.fee && config.get().minimumFee) {
+        tx.fee = config.getFee(tx.tx_type as number)
+        data.fee = config.getFee(tx.tx_type as number)
+      }
+      delete data.tx_type
+      return {
+        ...data,
+        version: tx.version,
+        type: tx.tx_type
+      }
+    }
+    tx.getSignedTx = async (keyPair: IKeyPair) => {
+      const data = (tx as any).getBody()
       tx.senderPublicKey = keyPair.publicKey;
       const signature = await tx.getSignature(keyPair.privateKey)
       return {
         ...data,
         senderPublicKey: keyPair.publicKey,
-        proofs: [signature],
-        version: tx.version,
-        type: tx.tx_type
+        proofs: [signature]
+      }
+    }
+
+    tx.broadcastGrpc = async (keyPair: IKeyPair) => {
+      switch (tx.tx_type) {
+        case 103:
+          return createContract(
+            tx as any,
+            api,
+            keyPair
+          )
+        case 104:
+          return callContract(
+              tx as any,
+              api,
+              keyPair
+            );
+        default:
+          throw new Error('Support only docker call and docker create transactions')
       }
     }
     return tx;
@@ -91,14 +140,14 @@ class TransactionsCommon {
   private oldTxService: OldTxService;
   public readonly fetch: IFetchWrapper<any>;
 
-  constructor(nodeApi: NodeAPI) {
+  constructor(api: WeSdk) {
     this.fetch = createFetchWrapper({
       product: PRODUCTS.NODE,
       version: VERSIONS.V1,
       pipe: processJSON,
-      fetchInstance: nodeApi.fetchInstance
+      fetchInstance: api.API.Node.fetchInstance
     });
-    this.oldTxService = nodeApi.transactions;
+    this.oldTxService = api.API.Node.transactions;
   }
 
   static getTxMetaInfo(txType) {

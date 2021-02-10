@@ -1,7 +1,6 @@
 import { NumberPart, ObjectPart, Schema, StringPart } from "ts-api-validator";
 import schemaFields from "../schemaFields";
 import { createRemapper } from "../../../utils/remap";
-import Base = Mocha.reporters.Base;
 
 const BaseSchema = {
   type: ObjectPart,

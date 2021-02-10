@@ -165,7 +165,7 @@ To run examples:
      + Atomic (including two Transfers and PolicyDataHash)
      
         `node examples/atomic`
-     
+
 Using this examples, you can sign any other type of transaction using the transaction structure from [docs](https://docs.wavesenterprise.com/en/1.3.0/how-the-platform-works/data-structures/transactions-structure.html#id26).
 
 ## Using with oAuth
@@ -241,6 +241,18 @@ Duplicate methods from blockchain node REST api:
 // example of usage in ./test/libs/data-encryption.spec.ts
 // run test via command: mocha -r ts-node/register ./test/libs/data-encryption.spec.ts
 ```
+
+## GRPC transactions broadcast
+Now supports only docker call and docker create transaction in Node.js environment.
+
+Transaction grpc broadcast examples located in directory ./examples/grpc-node.
+
++ Create docker contract
+
+   `node examples/grpc-node/create-contract`
++ Call docker contract
+
+   `node examples/grpc-node/call-contract`
 
 ## Authors
 

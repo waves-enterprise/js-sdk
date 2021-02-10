@@ -17,6 +17,7 @@ const fetch = (url, options = {}) => {
         nodeAddress,
         crypto: gostCrypto ? 'gost' : 'waves',
         networkByte: chainId.charCodeAt(0),
+        minimumFee
     };
 
     const Waves = createApiInstance({
@@ -31,12 +32,10 @@ const fetch = (url, options = {}) => {
 
     //body description: https://docs.wavesenterprise.com/en/latest/how-the-platform-works/data-structures/transactions-structure.html#callcontracttransaction
     const txBody = {
-        authorPublicKey: seed.keyPair.publicKey,
         contractId: '4pSJoWsaYvT8iCSAxUYdc7LwznFexnBGPRoUJX7Lw3sh', // Predefined contract
         contractVersion: 1,
         timestamp,
         params: [],
-        fee: minimumFee[104]
     };
 
     const tx = Waves.API.Transactions.CallContract.V4(txBody)
