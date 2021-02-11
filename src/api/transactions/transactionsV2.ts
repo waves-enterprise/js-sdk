@@ -19,13 +19,14 @@ import config from '../../config';
 import { IKeyPair } from '../../../interfaces';
 import logger from "../../utils/logger";
 import { WeSdk } from '../../index';
-import { callContract, createContract } from '../../grpc';
+import { callContract, createContract, sendGrpcTx } from '../../grpc';
 
 
 // Additional methods for TRANSACTIONS
 type TransactionDecorator<T> = {
   broadcast: (keys: IKeyPair) => Promise<object>,
   broadcastGrpc: (keys: IKeyPair) => Promise<object>,
+  getSignedGrpcTx: (keys: IKeyPair) => Promise<Uint8Array>,
   getBody: () => {
     version: number,
     type: number
@@ -79,11 +80,13 @@ function decorateFactory(
 ) {
   return function(...args) {
     const tx = factory(...args);
+
     tx.broadcast = async (keys: IKeyPair) => {
       const postParams = await txRequestV2(tx as TransactionTypeWithDecorator, keys)
       logger.log('Broadcast tx body:', postParams.body)
       return txClass.fetch(constants.BROADCAST_PATH, postParams)
     };
+
     tx.getBody = () => {
       const data = {} as any;
       Object.keys(tx).forEach(key => {
@@ -102,6 +105,7 @@ function decorateFactory(
         type: tx.tx_type
       }
     }
+
     tx.getSignedTx = async (keyPair: IKeyPair) => {
       const data = (tx as any).getBody()
       tx.senderPublicKey = keyPair.publicKey;
@@ -113,7 +117,7 @@ function decorateFactory(
       }
     }
 
-    tx.broadcastGrpc = async (keyPair: IKeyPair) => {
+    function getGrpcTx(keyPair: IKeyPair) {
       switch (tx.tx_type) {
         case 103:
           return createContract(
@@ -123,14 +127,23 @@ function decorateFactory(
           )
         case 104:
           return callContract(
-              tx as any,
-              api,
-              keyPair
-            );
+            tx as any,
+            api,
+            keyPair
+          );
         default:
           throw new Error('Support only docker call and docker create transactions')
       }
     }
+
+    tx.getSignedGrpcTx = async (keyPair: IKeyPair) => {
+      return (await getGrpcTx(keyPair)).serializeBinary()
+    }
+
+    tx.broadcastGrpc = async (keyPair: IKeyPair) => {
+      return sendGrpcTx(api, await getGrpcTx(keyPair))
+    }
+
     return tx;
   }
 }

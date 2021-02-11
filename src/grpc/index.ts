@@ -47,73 +47,64 @@ export async function callContract(
   inputTx: DockerCallTx,
   api: WeSdk,
   keyPair: IKeyPair
-) {
-  return new Promise(async (resolve, reject) => {
-    try {
-      const tx = await inputTx.getSignedTx(keyPair);
+) : Promise<Transaction> {
+  const tx = await inputTx.getSignedTx(keyPair);
 
-      const txGrpc = new Transaction()
-      const callTx = new CallContractTransaction()
+  const txGrpc = new Transaction()
+  const callTx = new CallContractTransaction()
 
-      callTx.setSenderPublicKey(api.tools.base58.decode(tx.senderPublicKey))
-      callTx.setContractId(api.tools.base58.decode(tx.contractId))
-      callTx.setContractVersion(tx.contractVersion)
-      callTx.setFee(tx.fee as number)
-      callTx.setTimestamp(tx.timestamp as number)
-      callTx.addProofs(api.tools.base58.decode(tx.proofs[0]))
-      txGrpc.setVersion(tx.version)
-      if (tx.params.length) {
-        callTx.setParamsList(tx.params.map(mapDataEntry))
-      }
+  callTx.setSenderPublicKey(api.tools.base58.decode(tx.senderPublicKey))
+  callTx.setContractId(api.tools.base58.decode(tx.contractId))
+  callTx.setContractVersion(tx.contractVersion)
+  callTx.setFee(tx.fee as number)
+  callTx.setTimestamp(tx.timestamp as number)
+  callTx.addProofs(api.tools.base58.decode(tx.proofs[0]))
+  txGrpc.setVersion(tx.version)
+  if (tx.params.length) {
+    callTx.setParamsList(tx.params.map(mapDataEntry))
+  }
 
-      txGrpc.setCallContractTransaction(callTx)
+  txGrpc.setCallContractTransaction(callTx)
 
-      api.grpcService.broadcast(txGrpc, (err, res) => {
-        if (err) {
-          reject(err.metadata)
-        }
-        resolve(res)
-      })
-    } catch (err) {
-      reject(err)
-    }
-  })
+  return txGrpc
+
 }
 
-export function createContract(
+
+export async function createContract(
   inputTx: DockerCreateTx,
   api: WeSdk,
   keyPair: IKeyPair
-) {
+) : Promise<Transaction> {
+  const tx = await inputTx.getSignedTx(keyPair);
+
+  const txGrpc = new Transaction()
+  const createTx = new CreateContractTransaction()
+
+  createTx.setSenderPublicKey(api.tools.base58.decode(tx.senderPublicKey))
+  createTx.setContractName(tx.contractName)
+  createTx.setImage(tx.image)
+  createTx.setFee(tx.fee as number)
+  createTx.setImageHash(tx.imageHash)
+  createTx.setTimestamp(tx.timestamp as number)
+  createTx.addProofs(api.tools.base58.decode(tx.proofs[0]))
+  if (tx.params.length) {
+    createTx.setParamsList(tx.params.map(mapDataEntry))
+  }
+
+  txGrpc.setVersion(tx.version)
+  txGrpc.setCreateContractTransaction(createTx)
+
+  return txGrpc
+}
+
+export function sendGrpcTx(api: WeSdk, tx: Transaction) {
   return new Promise(async (resolve, reject) => {
-    try {
-      const tx = await inputTx.getSignedTx(keyPair);
-
-      const txGrpc = new Transaction()
-      const createTx = new CreateContractTransaction()
-
-      createTx.setSenderPublicKey(api.tools.base58.decode(tx.senderPublicKey))
-      createTx.setContractName(tx.contractName)
-      createTx.setImage(tx.image)
-      createTx.setFee(tx.fee as number)
-      createTx.setImageHash(tx.imageHash)
-      createTx.setTimestamp(tx.timestamp as number)
-      createTx.addProofs(api.tools.base58.decode(tx.proofs[0]))
-      txGrpc.setVersion(tx.version)
-      txGrpc.setCreateContractTransaction(createTx)
-
-      if (tx.params.length) {
-        createTx.setParamsList(tx.params.map(mapDataEntry))
+    api.grpcService.broadcast(tx, (err, res) => {
+      if (err) {
+        reject(err.metadata)
       }
-
-      api.grpcService.broadcast(txGrpc, (err, res) => {
-        if (err) {
-          reject(err.metadata)
-        }
-        resolve(res)
-      })
-    } catch (err) {
-      reject(err)
-    }
+      resolve(res)
+    })
   })
 }
