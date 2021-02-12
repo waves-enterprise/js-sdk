@@ -1,10 +1,25 @@
-import { DataEntry } from './compiled/data_entry_pb';
+import { TransactionsType } from '../api/transactions/transactionsV2';
 import { WeSdk } from '../index';
 import { IKeyPair } from '../../interfaces';
-import { Transaction } from './compiled/managed/transaction_pb';
-import { CallContractTransaction } from './compiled/managed/call_contract_transaction_pb';
-import { CreateContractTransaction } from './compiled/managed/create_contract_transaction_pb';
-import { TransactionsType } from '../api/transactions/transactionsV2';
+import isNode from '../utils/isNode';
+
+// Node
+import { DataEntry as DataEntryNode } from './compiled-node/data_entry_pb';
+import { Transaction as TransactionNode } from './compiled-node/managed/transaction_pb';
+import { CallContractTransaction as CallContractTransactionNode } from './compiled-node/managed/call_contract_transaction_pb';
+import { CreateContractTransaction as CreateContractTransactionNode } from './compiled-node/managed/create_contract_transaction_pb';
+
+// Web
+import { DataEntry as DataEntryWeb } from './compiled-web/data_entry_pb';
+import { Transaction as TransactionWeb } from './compiled-web/managed/transaction_pb';
+import { CallContractTransaction as CallContractTransactionWeb } from './compiled-web/managed/call_contract_transaction_pb';
+import { CreateContractTransaction as CreateContractTransactionWeb } from './compiled-web/managed/create_contract_transaction_pb';
+
+const DataEntry = isNode ? DataEntryNode : DataEntryWeb;
+const Transaction = isNode ? TransactionNode : TransactionWeb;
+const CallContractTransaction = isNode ? CallContractTransactionNode : CallContractTransactionWeb;
+const CreateContractTransaction = isNode ? CreateContractTransactionNode : CreateContractTransactionWeb;
+
 
 type ReturnType<T> = T extends (...args: any[]) => infer R ? R : any;
 
@@ -15,7 +30,7 @@ export const mapDataEntry = (param: {
   type: 'string' | 'binary' | 'integer' | 'boolean',
   value: any,
   key: string
-}): DataEntry => {
+}): any => {
   const dataEntry = new DataEntry()
   dataEntry.setKey(param.key)
   switch (param.type) {
@@ -47,7 +62,7 @@ export async function callContract(
   inputTx: DockerCallTx,
   api: WeSdk,
   keyPair: IKeyPair
-) : Promise<Transaction> {
+) : Promise<TransactionNode | TransactionWeb> {
   const tx = await inputTx.getSignedTx(keyPair);
 
   const txGrpc = new Transaction()
@@ -64,7 +79,7 @@ export async function callContract(
     callTx.setParamsList(tx.params.map(mapDataEntry))
   }
 
-  txGrpc.setCallContractTransaction(callTx)
+  txGrpc.setCallContractTransaction(callTx as any)
 
   return txGrpc
 
@@ -75,7 +90,7 @@ export async function createContract(
   inputTx: DockerCreateTx,
   api: WeSdk,
   keyPair: IKeyPair
-) : Promise<Transaction> {
+) : Promise<TransactionNode | TransactionWeb> {
   const tx = await inputTx.getSignedTx(keyPair);
 
   const txGrpc = new Transaction()
@@ -93,13 +108,14 @@ export async function createContract(
   }
 
   txGrpc.setVersion(tx.version)
-  txGrpc.setCreateContractTransaction(createTx)
+  txGrpc.setCreateContractTransaction(createTx as any)
 
   return txGrpc
 }
 
-export function sendGrpcTx(api: WeSdk, tx: Transaction) {
+export function sendGrpcTx(api: WeSdk, tx: TransactionNode | TransactionWeb) {
   return new Promise(async (resolve, reject) => {
+    // @ts-ignore
     api.grpcService.broadcast(tx, (err, res) => {
       if (err) {
         reject(err.metadata)
