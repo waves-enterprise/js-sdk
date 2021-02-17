@@ -10,11 +10,14 @@ import fetch from './libs/fetch';
 import tools from './tools';
 import * as request from "./utils/request";
 import {TransactionsType, Transactions} from './api/transactions/transactionsV2';
-import { TransactionServiceClient as TransactionServiceClientNode } from './grpc/compiled-node/transaction/transaction_grpc_pb';
 import { TransactionServiceClient as TransactionServiceClientWeb } from './grpc/compiled-web/transaction/transaction_grpc_web_pb';
 import isNode from './utils/isNode'
 
-import * as grpcNode from '@grpc/grpc-js';
+let TransactionServiceClient = TransactionServiceClientWeb;
+
+if (isNode) {
+  TransactionServiceClient = require('./grpc/compiled-node/transaction/transaction_grpc_pb').TransactionServiceClient;
+}
 
 
 export interface IWeSdkCtr {
@@ -30,7 +33,7 @@ export class WeSdk {
   public readonly crypto = utils.crypto;
   public readonly request = request;
   public readonly tools = tools;
-  public grpcService: TransactionServiceClientNode | TransactionServiceClientWeb;
+  public grpcService: TransactionServiceClientWeb;
 
   public readonly API: {
     Node: NodeAPI;
@@ -75,14 +78,18 @@ export class WeSdk {
 
   setGrpcService(address: string) {
     if (isNode) {
-      this.grpcService = new TransactionServiceClientNode(
+      this.grpcService = new TransactionServiceClient(
         address,
-        grpcNode.credentials.createInsecure()
+        eval('require')('@grpc/grpc-js').credentials.createInsecure()
       )
     } else {
-      this.grpcService = new TransactionServiceClientWeb(
+      const enableDevTools = (window as any).__GRPCWEB_DEVTOOLS__ || (() => {});
+      this.grpcService = new TransactionServiceClient(
         address
       )
+      enableDevTools([
+        this.grpcService,
+      ]);
     }
   }
 

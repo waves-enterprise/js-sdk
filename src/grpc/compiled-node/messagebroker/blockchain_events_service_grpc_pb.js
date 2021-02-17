@@ -1,7 +1,7 @@
 // GENERATED CODE -- DO NOT EDIT!
 
 'use strict';
-var grpc = require('@grpc/grpc-js');
+var grpc = eval('require')('@grpc/grpc-js');
 var google_protobuf_wrappers_pb = require('google-protobuf/google/protobuf/wrappers_pb.js');
 var messagebroker_blockchain_event_pb = require('../messagebroker/blockchain_event_pb.js');
 var messagebroker_subscribe_on_request_pb = require('../messagebroker/subscribe_on_request_pb.js');

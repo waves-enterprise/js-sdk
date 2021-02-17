@@ -1,7 +1,7 @@
 // GENERATED CODE -- DO NOT EDIT!
 
 'use strict';
-var grpc = require('@grpc/grpc-js');
+var grpc = eval('require')('@grpc/grpc-js');
 var contract_privacy_pb = require('../contract/privacy_pb.js');
 
 function serialize_wavesenterprise_PolicyHashesRequest(arg) {

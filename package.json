@@ -21,7 +21,7 @@
     "type": "git",
     "url": "https://github.com/wavesplatform/js-sdk.git"
   },
-  "main": "raw/src/index.js",
+  "main": "dist/we-sdk.min.js",
   "types": "raw/src/index.d.ts",
   "devDependencies": {
     "@types/chai": "4.1.5",
@@ -40,12 +40,11 @@
     "build": "rm -rf ./raw && rm -rf ./dist && npm run compile && mkdir -p dist && npm run build-full && npm run uglifyjs && cp ./interfaces.d.ts ./raw/interfaces.d.ts",
     "compile": "mkdir -p raw && ./node_modules/.bin/tsc -p ./tsconfig.json --declaration --outDir raw && cp -R ./src/grpc/compiled-node ./raw/src/grpc/compiled-node && cp -R ./src/grpc/compiled-web ./raw/src/grpc/compiled-web",
     "uglifyjs": "node_modules/.bin/uglifyjs ./dist/we-sdk.js -o ./dist/we-sdk.min.js",
-    "compile-grpc-web": "./node_modules/.bin/grpc_tools_node_protoc ./src/grpc/proto/*/*.proto ./src/grpc/proto/*.proto --proto_path=./src/grpc/proto --js_out=import_style=commonjs,binary:./src/grpc/compiled-web --grpc-web_out=import_style=commonjs+dts,mode=grpcweb:./src/grpc/compiled-web",
-    "compile-grpc": "./node_modules/.bin/grpc_tools_node_protoc ./src/grpc/proto/*/*.proto ./src/grpc/proto/*.proto --proto_path=./src/grpc/proto --plugin=\"protoc-gen-ts=./node_modules/.bin/protoc-gen-ts\" --js_out=import_style=commonjs,binary:./src/grpc/compiled-node --grpc_out=grpc_js:./src/grpc/compiled-node --ts_out=\"service=grpc-node,mode=grpc-js:./src/grpc/compiled-node\"",
-    "test": "ts-node test.ts"
+    "compile-grpc": "sudo chmod +x ./compile-proto.sh && ./compile-proto.sh"
   },
   "dependencies": {
     "@grpc/grpc-js": "^1.2.6",
+    "node-fetch": "2.2.0",
     "@types/long": "^4.0.1",
     "@wavesenterprise/transactions-factory": "^1.2.1",
     "bignumber.js": "7.2.1",
@@ -55,7 +54,6 @@
     "grpc-web": "^1.2.1",
     "js-sha256": "^0.9.0",
     "long": "^4.0.0",
-    "node-fetch": "2.2.0",
     "parse-json-bignumber": "^0.1.2",
     "protobufjs": "^6.10.2",
     "ts-api-validator": "2.1.3",

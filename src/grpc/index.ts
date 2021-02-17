@@ -3,23 +3,23 @@ import { WeSdk } from '../index';
 import { IKeyPair } from '../../interfaces';
 import isNode from '../utils/isNode';
 
-// Node
-import { DataEntry as DataEntryNode } from './compiled-node/data_entry_pb';
-import { Transaction as TransactionNode } from './compiled-node/managed/transaction_pb';
-import { CallContractTransaction as CallContractTransactionNode } from './compiled-node/managed/call_contract_transaction_pb';
-import { CreateContractTransaction as CreateContractTransactionNode } from './compiled-node/managed/create_contract_transaction_pb';
-
 // Web
 import { DataEntry as DataEntryWeb } from './compiled-web/data_entry_pb';
 import { Transaction as TransactionWeb } from './compiled-web/managed/transaction_pb';
 import { CallContractTransaction as CallContractTransactionWeb } from './compiled-web/managed/call_contract_transaction_pb';
 import { CreateContractTransaction as CreateContractTransactionWeb } from './compiled-web/managed/create_contract_transaction_pb';
 
-const DataEntry = isNode ? DataEntryNode : DataEntryWeb;
-const Transaction = isNode ? TransactionNode : TransactionWeb;
-const CallContractTransaction = isNode ? CallContractTransactionNode : CallContractTransactionWeb;
-const CreateContractTransaction = isNode ? CreateContractTransactionNode : CreateContractTransactionWeb;
+let DataEntry = DataEntryWeb;
+let Transaction = TransactionWeb;
+let CallContractTransaction = CallContractTransactionWeb;
+let CreateContractTransaction = CreateContractTransactionWeb;
 
+if (isNode) {
+  DataEntry = require('./compiled-node/data_entry_pb').DataEntry
+  Transaction = require('./compiled-node/managed/transaction_pb').Transaction
+  CallContractTransaction = require('./compiled-web/managed/call_contract_transaction_pb').CallContractTransaction
+  CreateContractTransaction = require('./compiled-web/managed/create_contract_transaction_pb').CreateContractTransaction
+}
 
 type ReturnType<T> = T extends (...args: any[]) => infer R ? R : any;
 
@@ -30,7 +30,7 @@ export const mapDataEntry = (param: {
   type: 'string' | 'binary' | 'integer' | 'boolean',
   value: any,
   key: string
-}): any => {
+}): DataEntryWeb => {
   const dataEntry = new DataEntry()
   dataEntry.setKey(param.key)
   switch (param.type) {
@@ -62,7 +62,7 @@ export async function callContract(
   inputTx: DockerCallTx,
   api: WeSdk,
   keyPair: IKeyPair
-) : Promise<TransactionNode | TransactionWeb> {
+) : Promise<TransactionWeb> {
   const tx = await inputTx.getSignedTx(keyPair);
 
   const txGrpc = new Transaction()
@@ -90,7 +90,7 @@ export async function createContract(
   inputTx: DockerCreateTx,
   api: WeSdk,
   keyPair: IKeyPair
-) : Promise<TransactionNode | TransactionWeb> {
+) : Promise<TransactionWeb> {
   const tx = await inputTx.getSignedTx(keyPair);
 
   const txGrpc = new Transaction()
@@ -113,14 +113,19 @@ export async function createContract(
   return txGrpc
 }
 
-export function sendGrpcTx(api: WeSdk, tx: TransactionNode | TransactionWeb) {
+export function sendGrpcTx(api: WeSdk, tx: TransactionWeb) {
   return new Promise(async (resolve, reject) => {
-    // @ts-ignore
-    api.grpcService.broadcast(tx, (err, res) => {
+    const callback = (err, res) => {
       if (err) {
-        reject(err.metadata)
+        reject((err as any).metadata ? (err as any).metadata : err)
       }
       resolve(res)
-    })
+    }
+    type ArgsType = [typeof tx, null, typeof callback]
+    const args: ArgsType = isNode
+      ? [tx, callback] as unknown as ArgsType
+      : [tx, null, callback]
+
+    api.grpcService.broadcast(...args)
   })
 }

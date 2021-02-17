@@ -1,7 +1,7 @@
 // GENERATED CODE -- DO NOT EDIT!
 
 'use strict';
-var grpc = require('@grpc/grpc-js');
+var grpc = eval('require')('@grpc/grpc-js');
 var contract_transaction_pb = require('../contract/transaction_pb.js');
 var managed_transaction_pb = require('../managed/transaction_pb.js');
 
