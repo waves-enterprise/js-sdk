@@ -1,13 +1,13 @@
-import {IWavesBasicConfig, IWavesConfig} from '../interfaces';
-export const WAVES = 'WAVES';
+import {IWavesBasicConfig, IWavesConfig} from '../interfaces'
+export const WAVES = 'WAVES'
 
-export const MAINNET_BYTE: number = 'D'.charCodeAt(0); // todo
-export const TESTNET_BYTE: number = 'D'.charCodeAt(0);
+export const MAINNET_BYTE: number = 'D'.charCodeAt(0) // todo
+export const TESTNET_BYTE: number = 'D'.charCodeAt(0)
 
-export const INITIAL_NONCE = 0;
+export const INITIAL_NONCE = 0
 
-export const ADDRESS_BYTE = 1;
-export const ALIAS_BYTE = 2;
+export const ADDRESS_BYTE = 1
+export const ALIAS_BYTE = 2
 
 /*
     LEGACY TRANSACTIONS SUPPORT
@@ -52,23 +52,23 @@ export const LEGACY_TX_TYPES = {
     atomic: { type: 120, v: 1 }
 }
 
-export const PRIVATE_KEY_LENGTH = 32;
-export const PUBLIC_KEY_LENGTH = 32;
-export const PUBLIC_KEY_GOST_LENGTH = 64;
+export const PRIVATE_KEY_LENGTH = 32
+export const PUBLIC_KEY_LENGTH = 32
+export const PUBLIC_KEY_GOST_LENGTH = 64
 
-export const MINIMUM_FEE = 100000;
-export const MINIMUM_ISSUE_FEE = 100000000;
-export const MINIMUM_MATCHER_FEE = 300000;
-export const MINIMUM_DATA_FEE_PER_KB = 100000;
+export const MINIMUM_FEE = 100000
+export const MINIMUM_ISSUE_FEE = 100000000
+export const MINIMUM_MATCHER_FEE = 300000
+export const MINIMUM_DATA_FEE_PER_KB = 100000
 
-export const TRANSFER_ATTACHMENT_BYTE_LIMIT = 140;
+export const TRANSFER_ATTACHMENT_BYTE_LIMIT = 140
 
-export const DEFAULT_MIN_SEED_LENGTH = 25;
+export const DEFAULT_MIN_SEED_LENGTH = 25
 
-export const DEFAULT_ORDER_EXPIRATION_DAYS = 20;
+export const DEFAULT_ORDER_EXPIRATION_DAYS = 20
 
-export const DEFAULT_PAGING_LIMIT = 50;
-export const DEFAULT_PAGING_OFFSET = 0;
+export const DEFAULT_PAGING_LIMIT = 50
+export const DEFAULT_PAGING_OFFSET = 0
 
 export const DEFAULT_BASIC_CONFIG: IWavesBasicConfig = {
     minimumSeedLength: DEFAULT_MIN_SEED_LENGTH,
@@ -77,21 +77,21 @@ export const DEFAULT_BASIC_CONFIG: IWavesBasicConfig = {
     logLevel: 'warning',
     timeDiff: 0,
     crypto: 'waves'
-};
+}
 
 export const DEFAULT_MAINNET_CONFIG: IWavesConfig = {
     ...DEFAULT_BASIC_CONFIG,
     networkByte: MAINNET_BYTE,
     nodeAddress: 'https://nodes.wavesplatform.com',
     matcherAddress: 'https://matcher.wavesplatform.com/matcher'
-};
+}
 
 export const DEFAULT_TESTNET_CONFIG: IWavesConfig = {
     ...DEFAULT_BASIC_CONFIG,
     networkByte: TESTNET_BYTE,
     nodeAddress: 'https://testnet1.wavesnodes.com',
     matcherAddress: 'https://testnet1.wavesnodes.com/matcher'
-};
+}
 
 export const WAVES_V1_ISSUE_TX = {
     assetId: WAVES,
@@ -108,8 +108,8 @@ export const WAVES_V1_ISSUE_TX = {
     signature: '',
     timestamp: 1460419200000,
     type: 3
-};
+}
 
-export const BROADCAST_PATH = '/transactions/broadcast';
+export const BROADCAST_PATH = '/transactions/broadcast'
 
-export const SIGN_PATH = '/transactions/sign';
+export const SIGN_PATH = '/transactions/sign'

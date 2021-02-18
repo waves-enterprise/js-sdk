@@ -1,175 +1,175 @@
 import * as jspb from 'google-protobuf'
 
-import * as genesis_genesis_transaction_pb from '../genesis/genesis_transaction_pb';
-import * as genesis_genesis_permit_transaction_pb from '../genesis/genesis_permit_transaction_pb';
-import * as genesis_genesis_register_node_transaction_pb from '../genesis/genesis_register_node_transaction_pb';
-import * as managed_register_node_transaction_pb from '../managed/register_node_transaction_pb';
-import * as managed_create_alias_transaction_pb from '../managed/create_alias_transaction_pb';
-import * as managed_issue_transaction_pb from '../managed/issue_transaction_pb';
-import * as managed_reissue_transaction_pb from '../managed/reissue_transaction_pb';
-import * as managed_burn_transaction_pb from '../managed/burn_transaction_pb';
-import * as managed_lease_transaction_pb from '../managed/lease_transaction_pb';
-import * as managed_lease_cancel_transaction_pb from '../managed/lease_cancel_transaction_pb';
-import * as managed_sponsor_fee_transaction_pb from '../managed/sponsor_fee_transaction_pb';
-import * as managed_set_asset_script_transaction_pb from '../managed/set_asset_script_transaction_pb';
-import * as managed_data_transaction_pb from '../managed/data_transaction_pb';
-import * as managed_transfer_transaction_pb from '../managed/transfer_transaction_pb';
-import * as managed_mass_transfer_transaction_pb from '../managed/mass_transfer_transaction_pb';
-import * as managed_permit_transaction_pb from '../managed/permit_transaction_pb';
-import * as managed_create_policy_transaction_pb from '../managed/create_policy_transaction_pb';
-import * as managed_update_policy_transaction_pb from '../managed/update_policy_transaction_pb';
-import * as managed_policy_data_hash_transaction_pb from '../managed/policy_data_hash_transaction_pb';
-import * as managed_create_contract_transaction_pb from '../managed/create_contract_transaction_pb';
-import * as managed_call_contract_transaction_pb from '../managed/call_contract_transaction_pb';
-import * as managed_executed_contract_transaction_pb from '../managed/executed_contract_transaction_pb';
-import * as managed_disable_contract_transaction_pb from '../managed/disable_contract_transaction_pb';
-import * as managed_update_contract_transaction_pb from '../managed/update_contract_transaction_pb';
-import * as managed_set_script_transaction_pb from '../managed/set_script_transaction_pb';
-import * as managed_atomic_transaction_pb from '../managed/atomic_transaction_pb';
+import * as genesis_genesis_transaction_pb from '../genesis/genesis_transaction_pb'
+import * as genesis_genesis_permit_transaction_pb from '../genesis/genesis_permit_transaction_pb'
+import * as genesis_genesis_register_node_transaction_pb from '../genesis/genesis_register_node_transaction_pb'
+import * as managed_register_node_transaction_pb from '../managed/register_node_transaction_pb'
+import * as managed_create_alias_transaction_pb from '../managed/create_alias_transaction_pb'
+import * as managed_issue_transaction_pb from '../managed/issue_transaction_pb'
+import * as managed_reissue_transaction_pb from '../managed/reissue_transaction_pb'
+import * as managed_burn_transaction_pb from '../managed/burn_transaction_pb'
+import * as managed_lease_transaction_pb from '../managed/lease_transaction_pb'
+import * as managed_lease_cancel_transaction_pb from '../managed/lease_cancel_transaction_pb'
+import * as managed_sponsor_fee_transaction_pb from '../managed/sponsor_fee_transaction_pb'
+import * as managed_set_asset_script_transaction_pb from '../managed/set_asset_script_transaction_pb'
+import * as managed_data_transaction_pb from '../managed/data_transaction_pb'
+import * as managed_transfer_transaction_pb from '../managed/transfer_transaction_pb'
+import * as managed_mass_transfer_transaction_pb from '../managed/mass_transfer_transaction_pb'
+import * as managed_permit_transaction_pb from '../managed/permit_transaction_pb'
+import * as managed_create_policy_transaction_pb from '../managed/create_policy_transaction_pb'
+import * as managed_update_policy_transaction_pb from '../managed/update_policy_transaction_pb'
+import * as managed_policy_data_hash_transaction_pb from '../managed/policy_data_hash_transaction_pb'
+import * as managed_create_contract_transaction_pb from '../managed/create_contract_transaction_pb'
+import * as managed_call_contract_transaction_pb from '../managed/call_contract_transaction_pb'
+import * as managed_executed_contract_transaction_pb from '../managed/executed_contract_transaction_pb'
+import * as managed_disable_contract_transaction_pb from '../managed/disable_contract_transaction_pb'
+import * as managed_update_contract_transaction_pb from '../managed/update_contract_transaction_pb'
+import * as managed_set_script_transaction_pb from '../managed/set_script_transaction_pb'
+import * as managed_atomic_transaction_pb from '../managed/atomic_transaction_pb'
 
 
 export class Transaction extends jspb.Message {
-  getVersion(): number;
-  setVersion(value: number): Transaction;
+  getVersion(): number
+  setVersion(value: number): Transaction
 
-  getGenesisTransaction(): genesis_genesis_transaction_pb.GenesisTransaction | undefined;
-  setGenesisTransaction(value?: genesis_genesis_transaction_pb.GenesisTransaction): Transaction;
-  hasGenesisTransaction(): boolean;
-  clearGenesisTransaction(): Transaction;
+  getGenesisTransaction(): genesis_genesis_transaction_pb.GenesisTransaction | undefined
+  setGenesisTransaction(value?: genesis_genesis_transaction_pb.GenesisTransaction): Transaction
+  hasGenesisTransaction(): boolean
+  clearGenesisTransaction(): Transaction
 
-  getGenesisPermitTransaction(): genesis_genesis_permit_transaction_pb.GenesisPermitTransaction | undefined;
-  setGenesisPermitTransaction(value?: genesis_genesis_permit_transaction_pb.GenesisPermitTransaction): Transaction;
-  hasGenesisPermitTransaction(): boolean;
-  clearGenesisPermitTransaction(): Transaction;
+  getGenesisPermitTransaction(): genesis_genesis_permit_transaction_pb.GenesisPermitTransaction | undefined
+  setGenesisPermitTransaction(value?: genesis_genesis_permit_transaction_pb.GenesisPermitTransaction): Transaction
+  hasGenesisPermitTransaction(): boolean
+  clearGenesisPermitTransaction(): Transaction
 
-  getGenesisRegisterNodeTransaction(): genesis_genesis_register_node_transaction_pb.GenesisRegisterNodeTransaction | undefined;
-  setGenesisRegisterNodeTransaction(value?: genesis_genesis_register_node_transaction_pb.GenesisRegisterNodeTransaction): Transaction;
-  hasGenesisRegisterNodeTransaction(): boolean;
-  clearGenesisRegisterNodeTransaction(): Transaction;
+  getGenesisRegisterNodeTransaction(): genesis_genesis_register_node_transaction_pb.GenesisRegisterNodeTransaction | undefined
+  setGenesisRegisterNodeTransaction(value?: genesis_genesis_register_node_transaction_pb.GenesisRegisterNodeTransaction): Transaction
+  hasGenesisRegisterNodeTransaction(): boolean
+  clearGenesisRegisterNodeTransaction(): Transaction
 
-  getRegisterNodeTransaction(): managed_register_node_transaction_pb.RegisterNodeTransaction | undefined;
-  setRegisterNodeTransaction(value?: managed_register_node_transaction_pb.RegisterNodeTransaction): Transaction;
-  hasRegisterNodeTransaction(): boolean;
-  clearRegisterNodeTransaction(): Transaction;
+  getRegisterNodeTransaction(): managed_register_node_transaction_pb.RegisterNodeTransaction | undefined
+  setRegisterNodeTransaction(value?: managed_register_node_transaction_pb.RegisterNodeTransaction): Transaction
+  hasRegisterNodeTransaction(): boolean
+  clearRegisterNodeTransaction(): Transaction
 
-  getCreateAliasTransaction(): managed_create_alias_transaction_pb.CreateAliasTransaction | undefined;
-  setCreateAliasTransaction(value?: managed_create_alias_transaction_pb.CreateAliasTransaction): Transaction;
-  hasCreateAliasTransaction(): boolean;
-  clearCreateAliasTransaction(): Transaction;
+  getCreateAliasTransaction(): managed_create_alias_transaction_pb.CreateAliasTransaction | undefined
+  setCreateAliasTransaction(value?: managed_create_alias_transaction_pb.CreateAliasTransaction): Transaction
+  hasCreateAliasTransaction(): boolean
+  clearCreateAliasTransaction(): Transaction
 
-  getIssueTransaction(): managed_issue_transaction_pb.IssueTransaction | undefined;
-  setIssueTransaction(value?: managed_issue_transaction_pb.IssueTransaction): Transaction;
-  hasIssueTransaction(): boolean;
-  clearIssueTransaction(): Transaction;
+  getIssueTransaction(): managed_issue_transaction_pb.IssueTransaction | undefined
+  setIssueTransaction(value?: managed_issue_transaction_pb.IssueTransaction): Transaction
+  hasIssueTransaction(): boolean
+  clearIssueTransaction(): Transaction
 
-  getReissueTransaction(): managed_reissue_transaction_pb.ReissueTransaction | undefined;
-  setReissueTransaction(value?: managed_reissue_transaction_pb.ReissueTransaction): Transaction;
-  hasReissueTransaction(): boolean;
-  clearReissueTransaction(): Transaction;
+  getReissueTransaction(): managed_reissue_transaction_pb.ReissueTransaction | undefined
+  setReissueTransaction(value?: managed_reissue_transaction_pb.ReissueTransaction): Transaction
+  hasReissueTransaction(): boolean
+  clearReissueTransaction(): Transaction
 
-  getBurnTransaction(): managed_burn_transaction_pb.BurnTransaction | undefined;
-  setBurnTransaction(value?: managed_burn_transaction_pb.BurnTransaction): Transaction;
-  hasBurnTransaction(): boolean;
-  clearBurnTransaction(): Transaction;
+  getBurnTransaction(): managed_burn_transaction_pb.BurnTransaction | undefined
+  setBurnTransaction(value?: managed_burn_transaction_pb.BurnTransaction): Transaction
+  hasBurnTransaction(): boolean
+  clearBurnTransaction(): Transaction
 
-  getLeaseTransaction(): managed_lease_transaction_pb.LeaseTransaction | undefined;
-  setLeaseTransaction(value?: managed_lease_transaction_pb.LeaseTransaction): Transaction;
-  hasLeaseTransaction(): boolean;
-  clearLeaseTransaction(): Transaction;
+  getLeaseTransaction(): managed_lease_transaction_pb.LeaseTransaction | undefined
+  setLeaseTransaction(value?: managed_lease_transaction_pb.LeaseTransaction): Transaction
+  hasLeaseTransaction(): boolean
+  clearLeaseTransaction(): Transaction
 
-  getLeaseCancelTransaction(): managed_lease_cancel_transaction_pb.LeaseCancelTransaction | undefined;
-  setLeaseCancelTransaction(value?: managed_lease_cancel_transaction_pb.LeaseCancelTransaction): Transaction;
-  hasLeaseCancelTransaction(): boolean;
-  clearLeaseCancelTransaction(): Transaction;
+  getLeaseCancelTransaction(): managed_lease_cancel_transaction_pb.LeaseCancelTransaction | undefined
+  setLeaseCancelTransaction(value?: managed_lease_cancel_transaction_pb.LeaseCancelTransaction): Transaction
+  hasLeaseCancelTransaction(): boolean
+  clearLeaseCancelTransaction(): Transaction
 
-  getSponsorFeeTransaction(): managed_sponsor_fee_transaction_pb.SponsorFeeTransaction | undefined;
-  setSponsorFeeTransaction(value?: managed_sponsor_fee_transaction_pb.SponsorFeeTransaction): Transaction;
-  hasSponsorFeeTransaction(): boolean;
-  clearSponsorFeeTransaction(): Transaction;
+  getSponsorFeeTransaction(): managed_sponsor_fee_transaction_pb.SponsorFeeTransaction | undefined
+  setSponsorFeeTransaction(value?: managed_sponsor_fee_transaction_pb.SponsorFeeTransaction): Transaction
+  hasSponsorFeeTransaction(): boolean
+  clearSponsorFeeTransaction(): Transaction
 
-  getSetAssetScriptTransaction(): managed_set_asset_script_transaction_pb.SetAssetScriptTransaction | undefined;
-  setSetAssetScriptTransaction(value?: managed_set_asset_script_transaction_pb.SetAssetScriptTransaction): Transaction;
-  hasSetAssetScriptTransaction(): boolean;
-  clearSetAssetScriptTransaction(): Transaction;
+  getSetAssetScriptTransaction(): managed_set_asset_script_transaction_pb.SetAssetScriptTransaction | undefined
+  setSetAssetScriptTransaction(value?: managed_set_asset_script_transaction_pb.SetAssetScriptTransaction): Transaction
+  hasSetAssetScriptTransaction(): boolean
+  clearSetAssetScriptTransaction(): Transaction
 
-  getDataTransaction(): managed_data_transaction_pb.DataTransaction | undefined;
-  setDataTransaction(value?: managed_data_transaction_pb.DataTransaction): Transaction;
-  hasDataTransaction(): boolean;
-  clearDataTransaction(): Transaction;
+  getDataTransaction(): managed_data_transaction_pb.DataTransaction | undefined
+  setDataTransaction(value?: managed_data_transaction_pb.DataTransaction): Transaction
+  hasDataTransaction(): boolean
+  clearDataTransaction(): Transaction
 
-  getTransferTransaction(): managed_transfer_transaction_pb.TransferTransaction | undefined;
-  setTransferTransaction(value?: managed_transfer_transaction_pb.TransferTransaction): Transaction;
-  hasTransferTransaction(): boolean;
-  clearTransferTransaction(): Transaction;
+  getTransferTransaction(): managed_transfer_transaction_pb.TransferTransaction | undefined
+  setTransferTransaction(value?: managed_transfer_transaction_pb.TransferTransaction): Transaction
+  hasTransferTransaction(): boolean
+  clearTransferTransaction(): Transaction
 
-  getMassTransferTransaction(): managed_mass_transfer_transaction_pb.MassTransferTransaction | undefined;
-  setMassTransferTransaction(value?: managed_mass_transfer_transaction_pb.MassTransferTransaction): Transaction;
-  hasMassTransferTransaction(): boolean;
-  clearMassTransferTransaction(): Transaction;
+  getMassTransferTransaction(): managed_mass_transfer_transaction_pb.MassTransferTransaction | undefined
+  setMassTransferTransaction(value?: managed_mass_transfer_transaction_pb.MassTransferTransaction): Transaction
+  hasMassTransferTransaction(): boolean
+  clearMassTransferTransaction(): Transaction
 
-  getPermitTransaction(): managed_permit_transaction_pb.PermitTransaction | undefined;
-  setPermitTransaction(value?: managed_permit_transaction_pb.PermitTransaction): Transaction;
-  hasPermitTransaction(): boolean;
-  clearPermitTransaction(): Transaction;
+  getPermitTransaction(): managed_permit_transaction_pb.PermitTransaction | undefined
+  setPermitTransaction(value?: managed_permit_transaction_pb.PermitTransaction): Transaction
+  hasPermitTransaction(): boolean
+  clearPermitTransaction(): Transaction
 
-  getCreatePolicyTransaction(): managed_create_policy_transaction_pb.CreatePolicyTransaction | undefined;
-  setCreatePolicyTransaction(value?: managed_create_policy_transaction_pb.CreatePolicyTransaction): Transaction;
-  hasCreatePolicyTransaction(): boolean;
-  clearCreatePolicyTransaction(): Transaction;
+  getCreatePolicyTransaction(): managed_create_policy_transaction_pb.CreatePolicyTransaction | undefined
+  setCreatePolicyTransaction(value?: managed_create_policy_transaction_pb.CreatePolicyTransaction): Transaction
+  hasCreatePolicyTransaction(): boolean
+  clearCreatePolicyTransaction(): Transaction
 
-  getUpdatePolicyTransaction(): managed_update_policy_transaction_pb.UpdatePolicyTransaction | undefined;
-  setUpdatePolicyTransaction(value?: managed_update_policy_transaction_pb.UpdatePolicyTransaction): Transaction;
-  hasUpdatePolicyTransaction(): boolean;
-  clearUpdatePolicyTransaction(): Transaction;
+  getUpdatePolicyTransaction(): managed_update_policy_transaction_pb.UpdatePolicyTransaction | undefined
+  setUpdatePolicyTransaction(value?: managed_update_policy_transaction_pb.UpdatePolicyTransaction): Transaction
+  hasUpdatePolicyTransaction(): boolean
+  clearUpdatePolicyTransaction(): Transaction
 
-  getPolicyDataHashTransaction(): managed_policy_data_hash_transaction_pb.PolicyDataHashTransaction | undefined;
-  setPolicyDataHashTransaction(value?: managed_policy_data_hash_transaction_pb.PolicyDataHashTransaction): Transaction;
-  hasPolicyDataHashTransaction(): boolean;
-  clearPolicyDataHashTransaction(): Transaction;
+  getPolicyDataHashTransaction(): managed_policy_data_hash_transaction_pb.PolicyDataHashTransaction | undefined
+  setPolicyDataHashTransaction(value?: managed_policy_data_hash_transaction_pb.PolicyDataHashTransaction): Transaction
+  hasPolicyDataHashTransaction(): boolean
+  clearPolicyDataHashTransaction(): Transaction
 
-  getCreateContractTransaction(): managed_create_contract_transaction_pb.CreateContractTransaction | undefined;
-  setCreateContractTransaction(value?: managed_create_contract_transaction_pb.CreateContractTransaction): Transaction;
-  hasCreateContractTransaction(): boolean;
-  clearCreateContractTransaction(): Transaction;
+  getCreateContractTransaction(): managed_create_contract_transaction_pb.CreateContractTransaction | undefined
+  setCreateContractTransaction(value?: managed_create_contract_transaction_pb.CreateContractTransaction): Transaction
+  hasCreateContractTransaction(): boolean
+  clearCreateContractTransaction(): Transaction
 
-  getCallContractTransaction(): managed_call_contract_transaction_pb.CallContractTransaction | undefined;
-  setCallContractTransaction(value?: managed_call_contract_transaction_pb.CallContractTransaction): Transaction;
-  hasCallContractTransaction(): boolean;
-  clearCallContractTransaction(): Transaction;
+  getCallContractTransaction(): managed_call_contract_transaction_pb.CallContractTransaction | undefined
+  setCallContractTransaction(value?: managed_call_contract_transaction_pb.CallContractTransaction): Transaction
+  hasCallContractTransaction(): boolean
+  clearCallContractTransaction(): Transaction
 
-  getExecutedContractTransaction(): managed_executed_contract_transaction_pb.ExecutedContractTransaction | undefined;
-  setExecutedContractTransaction(value?: managed_executed_contract_transaction_pb.ExecutedContractTransaction): Transaction;
-  hasExecutedContractTransaction(): boolean;
-  clearExecutedContractTransaction(): Transaction;
+  getExecutedContractTransaction(): managed_executed_contract_transaction_pb.ExecutedContractTransaction | undefined
+  setExecutedContractTransaction(value?: managed_executed_contract_transaction_pb.ExecutedContractTransaction): Transaction
+  hasExecutedContractTransaction(): boolean
+  clearExecutedContractTransaction(): Transaction
 
-  getDisableContractTransaction(): managed_disable_contract_transaction_pb.DisableContractTransaction | undefined;
-  setDisableContractTransaction(value?: managed_disable_contract_transaction_pb.DisableContractTransaction): Transaction;
-  hasDisableContractTransaction(): boolean;
-  clearDisableContractTransaction(): Transaction;
+  getDisableContractTransaction(): managed_disable_contract_transaction_pb.DisableContractTransaction | undefined
+  setDisableContractTransaction(value?: managed_disable_contract_transaction_pb.DisableContractTransaction): Transaction
+  hasDisableContractTransaction(): boolean
+  clearDisableContractTransaction(): Transaction
 
-  getUpdateContractTransaction(): managed_update_contract_transaction_pb.UpdateContractTransaction | undefined;
-  setUpdateContractTransaction(value?: managed_update_contract_transaction_pb.UpdateContractTransaction): Transaction;
-  hasUpdateContractTransaction(): boolean;
-  clearUpdateContractTransaction(): Transaction;
+  getUpdateContractTransaction(): managed_update_contract_transaction_pb.UpdateContractTransaction | undefined
+  setUpdateContractTransaction(value?: managed_update_contract_transaction_pb.UpdateContractTransaction): Transaction
+  hasUpdateContractTransaction(): boolean
+  clearUpdateContractTransaction(): Transaction
 
-  getSetScriptTransaction(): managed_set_script_transaction_pb.SetScriptTransaction | undefined;
-  setSetScriptTransaction(value?: managed_set_script_transaction_pb.SetScriptTransaction): Transaction;
-  hasSetScriptTransaction(): boolean;
-  clearSetScriptTransaction(): Transaction;
+  getSetScriptTransaction(): managed_set_script_transaction_pb.SetScriptTransaction | undefined
+  setSetScriptTransaction(value?: managed_set_script_transaction_pb.SetScriptTransaction): Transaction
+  hasSetScriptTransaction(): boolean
+  clearSetScriptTransaction(): Transaction
 
-  getAtomicTransaction(): managed_atomic_transaction_pb.AtomicTransaction | undefined;
-  setAtomicTransaction(value?: managed_atomic_transaction_pb.AtomicTransaction): Transaction;
-  hasAtomicTransaction(): boolean;
-  clearAtomicTransaction(): Transaction;
+  getAtomicTransaction(): managed_atomic_transaction_pb.AtomicTransaction | undefined
+  setAtomicTransaction(value?: managed_atomic_transaction_pb.AtomicTransaction): Transaction
+  hasAtomicTransaction(): boolean
+  clearAtomicTransaction(): Transaction
 
-  getTransactionCase(): Transaction.TransactionCase;
+  getTransactionCase(): Transaction.TransactionCase
 
-  serializeBinary(): Uint8Array;
-  toObject(includeInstance?: boolean): Transaction.AsObject;
-  static toObject(includeInstance: boolean, msg: Transaction): Transaction.AsObject;
-  static serializeBinaryToWriter(message: Transaction, writer: jspb.BinaryWriter): void;
-  static deserializeBinary(bytes: Uint8Array): Transaction;
-  static deserializeBinaryFromReader(message: Transaction, reader: jspb.BinaryReader): Transaction;
+  serializeBinary(): Uint8Array
+  toObject(includeInstance?: boolean): Transaction.AsObject
+  static toObject(includeInstance: boolean, msg: Transaction): Transaction.AsObject
+  static serializeBinaryToWriter(message: Transaction, writer: jspb.BinaryWriter): void
+  static deserializeBinary(bytes: Uint8Array): Transaction
+  static deserializeBinaryFromReader(message: Transaction, reader: jspb.BinaryReader): Transaction
 }
 
 export namespace Transaction {
@@ -203,7 +203,7 @@ export namespace Transaction {
     atomicTransaction?: managed_atomic_transaction_pb.AtomicTransaction.AsObject,
   }
 
-  export enum TransactionCase { 
+  export enum TransactionCase {
     TRANSACTION_NOT_SET = 0,
     GENESIS_TRANSACTION = 1000,
     GENESIS_PERMIT_TRANSACTION = 1001,

@@ -1,7 +1,7 @@
-import * as grpcWeb from 'grpc-web';
+import * as grpcWeb from 'grpc-web'
 
-import * as messagebroker_subscribe_on_request_pb from '../messagebroker/subscribe_on_request_pb';
-import * as messagebroker_blockchain_event_pb from '../messagebroker/blockchain_event_pb';
+import * as messagebroker_subscribe_on_request_pb from '../messagebroker/subscribe_on_request_pb'
+import * as messagebroker_blockchain_event_pb from '../messagebroker/blockchain_event_pb'
 
 
 export class BlockchainEventsServiceClient {
@@ -12,7 +12,7 @@ export class BlockchainEventsServiceClient {
   subscribeOn(
     request: messagebroker_subscribe_on_request_pb.SubscribeOnRequest,
     metadata?: grpcWeb.Metadata
-  ): grpcWeb.ClientReadableStream<messagebroker_blockchain_event_pb.BlockchainEvent>;
+  ): grpcWeb.ClientReadableStream<messagebroker_blockchain_event_pb.BlockchainEvent>
 
 }
 
@@ -24,7 +24,7 @@ export class BlockchainEventsServicePromiseClient {
   subscribeOn(
     request: messagebroker_subscribe_on_request_pb.SubscribeOnRequest,
     metadata?: grpcWeb.Metadata
-  ): grpcWeb.ClientReadableStream<messagebroker_blockchain_event_pb.BlockchainEvent>;
+  ): grpcWeb.ClientReadableStream<messagebroker_blockchain_event_pb.BlockchainEvent>
 
 }
 

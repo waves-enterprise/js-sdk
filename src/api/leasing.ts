@@ -1,4 +1,4 @@
-import { createFetchWrapper, IFetchWrapper, processJSON, PRODUCTS, VERSIONS } from "../utils/request";
+import { createFetchWrapper, IFetchWrapper, processJSON, PRODUCTS, VERSIONS } from "../utils/request"
 
 export default class Leasing {
 
@@ -8,18 +8,18 @@ export default class Leasing {
             version: VERSIONS.V1,
             pipe: processJSON,
             fetchInstance
-        });
+        })
     }
 
-    private readonly fetch: IFetchWrapper<any>;
+    private readonly fetch: IFetchWrapper<any>
 
     getAllActiveLeases(address) {
         return this.fetch(`/leasing/active/${address}`).then((list) => {
             return list.map((tx) => {
-                tx.status = 'active';
-                return tx;
-            });
-        });
+                tx.status = 'active'
+                return tx
+            })
+        })
     }
 
-};
+}

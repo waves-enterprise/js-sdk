@@ -1,0 +1,22 @@
+{
+  "extends": ["tslint:latest"],
+  "linterOptions": {
+    "exclude": [
+      "node_modules/**/*.ts",
+      "src/grpc/compiled-web/**/*",
+      "src/grpc/compiled-node/**/*"
+    ]
+  },
+  "rules": {
+    "interface-name": false,
+    "object-literal-sort-keys": false,
+    "member-access": [true, "no-public"],
+    "no-implicit-dependencies": false,
+    "ordered-imports": false,
+    "no-console": [true, "warning"],
+    "no-debugger": false,
+    "semicolon": [true, "never"],
+    "radix": false,
+    "no-var-requires": false
+  }
+}

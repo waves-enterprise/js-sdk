@@ -1,4 +1,4 @@
-import { createFetchWrapper, processJSON, PRODUCTS, VERSIONS } from "../utils/request";
+import { createFetchWrapper, processJSON, PRODUCTS, VERSIONS } from "../utils/request"
 
 export default class Aliases {
 
@@ -8,17 +8,17 @@ export default class Aliases {
             version: VERSIONS.V1,
             pipe: processJSON,
             fetchInstance
-        });
+        })
     }
 
-    private readonly fetch: typeof fetch;
+    private readonly fetch: typeof fetch
 
     byAlias(alias: string) {
-        return this.fetch(`/alias/by-alias/${alias}`);
+        return this.fetch(`/alias/by-alias/${alias}`)
     }
 
     byAddress(address: string) {
-        return this.fetch(`/alias/by-address/${address}`);
+        return this.fetch(`/alias/by-address/${address}`)
     }
 
-};
+}

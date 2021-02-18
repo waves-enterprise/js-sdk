@@ -1,6 +1,6 @@
-import { ObjectPart, Schema, StringPart } from "ts-api-validator";
-import schemaFields from "../schemaFields";
-import { createRemapper, removeAliasPrefix } from "../../../utils/remap";
+import { ObjectPart, Schema, StringPart } from "ts-api-validator"
+import schemaFields from "../schemaFields"
+import { createRemapper, removeAliasPrefix } from "../../../utils/remap"
 
 const createAliasSchema = new Schema({
   type: ObjectPart,

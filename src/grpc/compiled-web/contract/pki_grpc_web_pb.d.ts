@@ -1,6 +1,6 @@
-import * as grpcWeb from 'grpc-web';
+import * as grpcWeb from 'grpc-web'
 
-import * as contract_pki_pb from '../contract/pki_pb';
+import * as contract_pki_pb from '../contract/pki_pb'
 
 
 export class PkiServiceClient {
@@ -13,14 +13,14 @@ export class PkiServiceClient {
     metadata: grpcWeb.Metadata | undefined,
     callback: (err: grpcWeb.Error,
                response: contract_pki_pb.PkiSignResponse) => void
-  ): grpcWeb.ClientReadableStream<contract_pki_pb.PkiSignResponse>;
+  ): grpcWeb.ClientReadableStream<contract_pki_pb.PkiSignResponse>
 
   verify(
     request: contract_pki_pb.PkiVerifyRequest,
     metadata: grpcWeb.Metadata | undefined,
     callback: (err: grpcWeb.Error,
                response: contract_pki_pb.PkiVerifyResponse) => void
-  ): grpcWeb.ClientReadableStream<contract_pki_pb.PkiVerifyResponse>;
+  ): grpcWeb.ClientReadableStream<contract_pki_pb.PkiVerifyResponse>
 
 }
 
@@ -32,12 +32,12 @@ export class PkiServicePromiseClient {
   sign(
     request: contract_pki_pb.PkiSignRequest,
     metadata?: grpcWeb.Metadata
-  ): Promise<contract_pki_pb.PkiSignResponse>;
+  ): Promise<contract_pki_pb.PkiSignResponse>
 
   verify(
     request: contract_pki_pb.PkiVerifyRequest,
     metadata?: grpcWeb.Metadata
-  ): Promise<contract_pki_pb.PkiVerifyResponse>;
+  ): Promise<contract_pki_pb.PkiVerifyResponse>
 
 }
 

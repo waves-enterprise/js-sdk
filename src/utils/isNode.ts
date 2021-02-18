@@ -1,1 +1,1 @@
-export default !(typeof window === 'object' && typeof window.document === 'object')
+export default false

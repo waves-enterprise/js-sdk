@@ -1,18 +1,18 @@
-import { TransactionsType } from '../api/transactions/transactionsV2';
-import { WeSdk } from '../index';
-import { IKeyPair } from '../../interfaces';
-import isNode from '../utils/isNode';
+import { TransactionsType } from '../api/transactions/transactionsV2'
+import { WeSdk } from '../index'
+import { IKeyPair } from '../../interfaces'
+import isNode from '../utils/isNode'
 
 // Web
-import { DataEntry as DataEntryWeb } from './compiled-web/data_entry_pb';
-import { Transaction as TransactionWeb } from './compiled-web/managed/transaction_pb';
-import { CallContractTransaction as CallContractTransactionWeb } from './compiled-web/managed/call_contract_transaction_pb';
-import { CreateContractTransaction as CreateContractTransactionWeb } from './compiled-web/managed/create_contract_transaction_pb';
+import { DataEntry as DataEntryWeb } from './compiled-web/data_entry_pb'
+import { Transaction as TransactionWeb } from './compiled-web/managed/transaction_pb'
+import { CallContractTransaction as CallContractTransactionWeb } from './compiled-web/managed/call_contract_transaction_pb'
+import { CreateContractTransaction as CreateContractTransactionWeb } from './compiled-web/managed/create_contract_transaction_pb'
 
-let DataEntry = DataEntryWeb;
-let Transaction = TransactionWeb;
-let CallContractTransaction = CallContractTransactionWeb;
-let CreateContractTransaction = CreateContractTransactionWeb;
+let DataEntry = DataEntryWeb
+let Transaction = TransactionWeb
+let CallContractTransaction = CallContractTransactionWeb
+let CreateContractTransaction = CreateContractTransactionWeb
 
 if (isNode) {
   DataEntry = require('./compiled-node/data_entry_pb').DataEntry
@@ -21,10 +21,10 @@ if (isNode) {
   CreateContractTransaction = require('./compiled-web/managed/create_contract_transaction_pb').CreateContractTransaction
 }
 
-type ReturnType<T> = T extends (...args: any[]) => infer R ? R : any;
+type ReturnType<T> = T extends (...args: any[]) => infer R ? R : any
 
-type DockerCallTx = ReturnType<TransactionsType["CallContract"]["V4"]>;
-type DockerCreateTx = ReturnType<TransactionsType["CreateContract"]["V3"]>;
+type DockerCallTx = ReturnType<TransactionsType["CallContract"]["V4"]>
+type DockerCreateTx = ReturnType<TransactionsType["CreateContract"]["V3"]>
 
 export const mapDataEntry = (param: {
   type: 'string' | 'binary' | 'integer' | 'boolean',
@@ -39,22 +39,22 @@ export const mapDataEntry = (param: {
         throw new Error(`binary format must be like 'base64:{base64String}'`)
       }
       const value = param.value.slice('base64:'.length)
-      dataEntry.setBinaryValue(Uint8Array.from(new Buffer(value, 'base64')));
-      break;
+      dataEntry.setBinaryValue(Uint8Array.from(new Buffer(value, 'base64')))
+      break
     case 'boolean':
       dataEntry.setBoolValue(!!param.value)
-      break;
+      break
     case 'integer':
       dataEntry.setIntValue(parseInt(param.value))
-      break;
+      break
     case 'string':
       dataEntry.setStringValue(param.value + '')
-      break;
+      break
     default:
       throw new Error(`Wrong docker param type: ${param.type}, must be: 'string' | 'binary' | 'integer' | 'boolean'`)
   }
   return dataEntry
-};
+}
 
 
 // @ts-ignore
@@ -63,7 +63,7 @@ export async function callContract(
   api: WeSdk,
   keyPair: IKeyPair
 ) : Promise<TransactionWeb> {
-  const tx = await inputTx.getSignedTx(keyPair);
+  const tx = await inputTx.getSignedTx(keyPair)
 
   const txGrpc = new Transaction()
   const callTx = new CallContractTransaction()
@@ -91,7 +91,7 @@ export async function createContract(
   api: WeSdk,
   keyPair: IKeyPair
 ) : Promise<TransactionWeb> {
-  const tx = await inputTx.getSignedTx(keyPair);
+  const tx = await inputTx.getSignedTx(keyPair)
 
   const txGrpc = new Transaction()
   const createTx = new CreateContractTransaction()

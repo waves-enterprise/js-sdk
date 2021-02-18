@@ -1,6 +1,6 @@
-import * as grpcWeb from 'grpc-web';
+import * as grpcWeb from 'grpc-web'
 
-import * as contract_crypto_pb from '../contract/crypto_pb';
+import * as contract_crypto_pb from '../contract/crypto_pb'
 
 
 export class CryptoServiceClient {
@@ -13,21 +13,21 @@ export class CryptoServiceClient {
     metadata: grpcWeb.Metadata | undefined,
     callback: (err: grpcWeb.Error,
                response: contract_crypto_pb.EncryptSeparateResponse) => void
-  ): grpcWeb.ClientReadableStream<contract_crypto_pb.EncryptSeparateResponse>;
+  ): grpcWeb.ClientReadableStream<contract_crypto_pb.EncryptSeparateResponse>
 
   encryptCommon(
     request: contract_crypto_pb.EncryptDataRequest,
     metadata: grpcWeb.Metadata | undefined,
     callback: (err: grpcWeb.Error,
                response: contract_crypto_pb.EncryptedForManyResponse) => void
-  ): grpcWeb.ClientReadableStream<contract_crypto_pb.EncryptedForManyResponse>;
+  ): grpcWeb.ClientReadableStream<contract_crypto_pb.EncryptedForManyResponse>
 
   decrypt(
     request: contract_crypto_pb.DecryptDataRequest,
     metadata: grpcWeb.Metadata | undefined,
     callback: (err: grpcWeb.Error,
                response: contract_crypto_pb.DecryptDataResponse) => void
-  ): grpcWeb.ClientReadableStream<contract_crypto_pb.DecryptDataResponse>;
+  ): grpcWeb.ClientReadableStream<contract_crypto_pb.DecryptDataResponse>
 
 }
 
@@ -39,17 +39,17 @@ export class CryptoServicePromiseClient {
   encryptSeparate(
     request: contract_crypto_pb.EncryptDataRequest,
     metadata?: grpcWeb.Metadata
-  ): Promise<contract_crypto_pb.EncryptSeparateResponse>;
+  ): Promise<contract_crypto_pb.EncryptSeparateResponse>
 
   encryptCommon(
     request: contract_crypto_pb.EncryptDataRequest,
     metadata?: grpcWeb.Metadata
-  ): Promise<contract_crypto_pb.EncryptedForManyResponse>;
+  ): Promise<contract_crypto_pb.EncryptedForManyResponse>
 
   decrypt(
     request: contract_crypto_pb.DecryptDataRequest,
     metadata?: grpcWeb.Metadata
-  ): Promise<contract_crypto_pb.DecryptDataResponse>;
+  ): Promise<contract_crypto_pb.DecryptDataResponse>
 
 }
 

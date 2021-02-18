@@ -1,7 +1,7 @@
-import { NumberPart, ObjectPart, Schema, StringPart } from "ts-api-validator";
-import schemaFields from "../schemaFields";
-import { createRemapper, precisionCheck } from "../../../utils/remap";
-import config from "../../../config";
+import { NumberPart, ObjectPart, Schema, StringPart } from "ts-api-validator"
+import schemaFields from "../schemaFields"
+import { createRemapper, precisionCheck } from "../../../utils/remap"
+import config from "../../../config"
 
 const issueSchema = new Schema({
   type: ObjectPart,
@@ -40,7 +40,7 @@ const issueSchema = new Schema({
       parseValue: () => config.getNetworkByte()
     }
   }
-});
+})
 
 const preIssue = (data) => issueSchema.parse(data)
 const postIssue = createRemapper({

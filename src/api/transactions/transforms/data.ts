@@ -1,7 +1,7 @@
-import { ArrayPart, ObjectPart, Schema, StringPart } from "ts-api-validator";
-import schemaFields from "../schemaFields";
-import BigNumber from "../../../libs/bignumber";
-import { createRemapper } from "../../../utils/remap";
+import { ArrayPart, ObjectPart, Schema, StringPart } from "ts-api-validator"
+import schemaFields from "../schemaFields"
+import BigNumber from "../../../libs/bignumber"
+import { createRemapper } from "../../../utils/remap"
 import { AnyPart } from './common'
 
 const dataSchema = new Schema({

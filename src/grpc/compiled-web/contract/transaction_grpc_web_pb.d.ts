@@ -1,6 +1,6 @@
-import * as grpcWeb from 'grpc-web';
+import * as grpcWeb from 'grpc-web'
 
-import * as contract_transaction_pb from '../contract/transaction_pb';
+import * as contract_transaction_pb from '../contract/transaction_pb'
 
 
 export class TransactionServiceClient {
@@ -13,14 +13,14 @@ export class TransactionServiceClient {
     metadata: grpcWeb.Metadata | undefined,
     callback: (err: grpcWeb.Error,
                response: contract_transaction_pb.TransactionExistsResponse) => void
-  ): grpcWeb.ClientReadableStream<contract_transaction_pb.TransactionExistsResponse>;
+  ): grpcWeb.ClientReadableStream<contract_transaction_pb.TransactionExistsResponse>
 
   transactionInfo(
     request: contract_transaction_pb.TransactionInfoRequest,
     metadata: grpcWeb.Metadata | undefined,
     callback: (err: grpcWeb.Error,
                response: contract_transaction_pb.TransactionInfoResponse) => void
-  ): grpcWeb.ClientReadableStream<contract_transaction_pb.TransactionInfoResponse>;
+  ): grpcWeb.ClientReadableStream<contract_transaction_pb.TransactionInfoResponse>
 
 }
 
@@ -32,12 +32,12 @@ export class TransactionServicePromiseClient {
   transactionExists(
     request: contract_transaction_pb.TransactionExistsRequest,
     metadata?: grpcWeb.Metadata
-  ): Promise<contract_transaction_pb.TransactionExistsResponse>;
+  ): Promise<contract_transaction_pb.TransactionExistsResponse>
 
   transactionInfo(
     request: contract_transaction_pb.TransactionInfoRequest,
     metadata?: grpcWeb.Metadata
-  ): Promise<contract_transaction_pb.TransactionInfoResponse>;
+  ): Promise<contract_transaction_pb.TransactionInfoResponse>
 
 }
 
