@@ -1,6 +1,6 @@
-import * as grpcWeb from 'grpc-web'
+import * as grpcWeb from 'grpc-web';
 
-import * as util_contract_status_service_pb from '../util/contract_status_service_pb'
+import * as util_contract_status_service_pb from '../util/contract_status_service_pb';
 
 
 export class ContractStatusServiceClient {
@@ -11,7 +11,7 @@ export class ContractStatusServiceClient {
   contractExecutionStatuses(
     request: util_contract_status_service_pb.ContractExecutionRequest,
     metadata?: grpcWeb.Metadata
-  ): grpcWeb.ClientReadableStream<util_contract_status_service_pb.ContractExecutionResponse>
+  ): grpcWeb.ClientReadableStream<util_contract_status_service_pb.ContractExecutionResponse>;
 
 }
 
@@ -23,7 +23,7 @@ export class ContractStatusServicePromiseClient {
   contractExecutionStatuses(
     request: util_contract_status_service_pb.ContractExecutionRequest,
     metadata?: grpcWeb.Metadata
-  ): grpcWeb.ClientReadableStream<util_contract_status_service_pb.ContractExecutionResponse>
+  ): grpcWeb.ClientReadableStream<util_contract_status_service_pb.ContractExecutionResponse>;
 
 }
 

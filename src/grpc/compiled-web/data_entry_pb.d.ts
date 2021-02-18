@@ -3,31 +3,31 @@ import * as jspb from 'google-protobuf'
 
 
 export class DataEntry extends jspb.Message {
-  getKey(): string
-  setKey(value: string): DataEntry
+  getKey(): string;
+  setKey(value: string): DataEntry;
 
-  getIntValue(): number
-  setIntValue(value: number): DataEntry
+  getIntValue(): number;
+  setIntValue(value: number): DataEntry;
 
-  getBoolValue(): boolean
-  setBoolValue(value: boolean): DataEntry
+  getBoolValue(): boolean;
+  setBoolValue(value: boolean): DataEntry;
 
-  getBinaryValue(): Uint8Array | string
-  getBinaryValue_asU8(): Uint8Array
-  getBinaryValue_asB64(): string
-  setBinaryValue(value: Uint8Array | string): DataEntry
+  getBinaryValue(): Uint8Array | string;
+  getBinaryValue_asU8(): Uint8Array;
+  getBinaryValue_asB64(): string;
+  setBinaryValue(value: Uint8Array | string): DataEntry;
 
-  getStringValue(): string
-  setStringValue(value: string): DataEntry
+  getStringValue(): string;
+  setStringValue(value: string): DataEntry;
 
-  getValueCase(): DataEntry.ValueCase
+  getValueCase(): DataEntry.ValueCase;
 
-  serializeBinary(): Uint8Array
-  toObject(includeInstance?: boolean): DataEntry.AsObject
-  static toObject(includeInstance: boolean, msg: DataEntry): DataEntry.AsObject
-  static serializeBinaryToWriter(message: DataEntry, writer: jspb.BinaryWriter): void
-  static deserializeBinary(bytes: Uint8Array): DataEntry
-  static deserializeBinaryFromReader(message: DataEntry, reader: jspb.BinaryReader): DataEntry
+  serializeBinary(): Uint8Array;
+  toObject(includeInstance?: boolean): DataEntry.AsObject;
+  static toObject(includeInstance: boolean, msg: DataEntry): DataEntry.AsObject;
+  static serializeBinaryToWriter(message: DataEntry, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): DataEntry;
+  static deserializeBinaryFromReader(message: DataEntry, reader: jspb.BinaryReader): DataEntry;
 }
 
 export namespace DataEntry {
@@ -39,7 +39,7 @@ export namespace DataEntry {
     stringValue: string,
   }
 
-  export enum ValueCase {
+  export enum ValueCase { 
     VALUE_NOT_SET = 0,
     INT_VALUE = 10,
     BOOL_VALUE = 11,

@@ -1,6 +1,6 @@
-import * as grpcWeb from 'grpc-web'
+import * as grpcWeb from 'grpc-web';
 
-import * as managed_transaction_pb from '../managed/transaction_pb'
+import * as managed_transaction_pb from '../managed/transaction_pb';
 
 
 export class TransactionServiceClient {
@@ -13,7 +13,7 @@ export class TransactionServiceClient {
     metadata: grpcWeb.Metadata | undefined,
     callback: (err: grpcWeb.Error,
                response: managed_transaction_pb.Transaction) => void
-  ): grpcWeb.ClientReadableStream<managed_transaction_pb.Transaction>
+  ): grpcWeb.ClientReadableStream<managed_transaction_pb.Transaction>;
 
 }
 
@@ -25,7 +25,7 @@ export class TransactionServicePromiseClient {
   broadcast(
     request: managed_transaction_pb.Transaction,
     metadata?: grpcWeb.Metadata
-  ): Promise<managed_transaction_pb.Transaction>
+  ): Promise<managed_transaction_pb.Transaction>;
 
 }
 
