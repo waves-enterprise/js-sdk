@@ -9,13 +9,13 @@ import fetch from './libs/fetch'
 import tools from './tools'
 import * as request from "./utils/request"
 import {TransactionsType, Transactions} from './api/transactions/transactionsV2'
-import { TransactionServiceClient as TransactionServiceClientWeb } from './grpc/compiled-web/transaction/transaction_grpc_web_pb'
+import { TransactionPublicServiceClient as TransactionServiceClientWeb } from './grpc/compiled-web/transaction/transaction_public_service_grpc_web_pb'
 import isNode from './utils/isNode'
 
 let TransactionServiceClient = TransactionServiceClientWeb
 
 if (isNode) {
-  TransactionServiceClient = require('./grpc/compiled-node/transaction/transaction_grpc_pb').TransactionServiceClient
+  TransactionServiceClient = require('./grpc/compiled-node/transaction/transaction_public_service_grpc_pb').TransactionPublicServiceClient
 }
 
 
