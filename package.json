@@ -1,6 +1,6 @@
 {
   "name": "@wavesenterprise/js-sdk",
-  "version": "3.1.5",
+  "version": "3.1.6-RC1",
   "description": "Waves Enterprise client-side API library",
   "keywords": [
     "cryptocurrency",
@@ -30,6 +30,7 @@
     "chai": "4.1.2",
     "mocha": "5.2.0",
     "mock-require": "3.0.2",
+    "protoc-gen-grpc-web": "^1.2.1",
     "requirejs": "2.3.6",
     "ts-node": "^7.0.1",
     "tslint": "^6.1.3",
