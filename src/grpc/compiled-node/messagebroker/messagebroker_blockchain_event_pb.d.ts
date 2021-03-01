@@ -5,11 +5,6 @@ import * as jspb from "google-protobuf";
 import * as managed_transaction_pb from "../managed/transaction_pb";
 
 export class BlockchainEvent extends jspb.Message {
-  hasErrorEvent(): boolean;
-  clearErrorEvent(): void;
-  getErrorEvent(): ErrorEvent | undefined;
-  setErrorEvent(value?: ErrorEvent): void;
-
   hasMicroBlockAppended(): boolean;
   clearMicroBlockAppended(): void;
   getMicroBlockAppended(): MicroBlockAppended | undefined;
@@ -43,7 +38,6 @@ export class BlockchainEvent extends jspb.Message {
 
 export namespace BlockchainEvent {
   export type AsObject = {
-    errorEvent?: ErrorEvent.AsObject,
     microBlockAppended?: MicroBlockAppended.AsObject,
     blockAppended?: BlockAppended.AsObject,
     rollbackCompleted?: RollbackCompleted.AsObject,
@@ -52,82 +46,10 @@ export namespace BlockchainEvent {
 
   export enum BlockchainEventCase {
     BLOCKCHAIN_EVENT_NOT_SET = 0,
-    ERROR_EVENT = 1,
     MICRO_BLOCK_APPENDED = 2,
     BLOCK_APPENDED = 3,
     ROLLBACK_COMPLETED = 4,
     APPENDED_BLOCK_HISTORY = 5,
-  }
-}
-
-export class ErrorEvent extends jspb.Message {
-  getId(): number;
-  setId(value: number): void;
-
-  getMessage(): string;
-  setMessage(value: string): void;
-
-  hasGenericError(): boolean;
-  clearGenericError(): void;
-  getGenericError(): GenericError | undefined;
-  setGenericError(value?: GenericError): void;
-
-  hasMissingRequiredRequestField(): boolean;
-  clearMissingRequiredRequestField(): void;
-  getMissingRequiredRequestField(): MissingRequiredRequestField | undefined;
-  setMissingRequiredRequestField(value?: MissingRequiredRequestField): void;
-
-  hasBlockSignatureNotFoundError(): boolean;
-  clearBlockSignatureNotFoundError(): void;
-  getBlockSignatureNotFoundError(): BlockSignatureNotFoundError | undefined;
-  setBlockSignatureNotFoundError(value?: BlockSignatureNotFoundError): void;
-
-  hasMissingAuthorizationMetadata(): boolean;
-  clearMissingAuthorizationMetadata(): void;
-  getMissingAuthorizationMetadata(): MissingAuthorizationMetadata | undefined;
-  setMissingAuthorizationMetadata(value?: MissingAuthorizationMetadata): void;
-
-  hasInvalidApiKey(): boolean;
-  clearInvalidApiKey(): void;
-  getInvalidApiKey(): InvalidApiKey | undefined;
-  setInvalidApiKey(value?: InvalidApiKey): void;
-
-  hasInvalidToken(): boolean;
-  clearInvalidToken(): void;
-  getInvalidToken(): InvalidToken | undefined;
-  setInvalidToken(value?: InvalidToken): void;
-
-  getErrorEventCase(): ErrorEvent.ErrorEventCase;
-  serializeBinary(): Uint8Array;
-  toObject(includeInstance?: boolean): ErrorEvent.AsObject;
-  static toObject(includeInstance: boolean, msg: ErrorEvent): ErrorEvent.AsObject;
-  static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
-  static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
-  static serializeBinaryToWriter(message: ErrorEvent, writer: jspb.BinaryWriter): void;
-  static deserializeBinary(bytes: Uint8Array): ErrorEvent;
-  static deserializeBinaryFromReader(message: ErrorEvent, reader: jspb.BinaryReader): ErrorEvent;
-}
-
-export namespace ErrorEvent {
-  export type AsObject = {
-    id: number,
-    message: string,
-    genericError?: GenericError.AsObject,
-    missingRequiredRequestField?: MissingRequiredRequestField.AsObject,
-    blockSignatureNotFoundError?: BlockSignatureNotFoundError.AsObject,
-    missingAuthorizationMetadata?: MissingAuthorizationMetadata.AsObject,
-    invalidApiKey?: InvalidApiKey.AsObject,
-    invalidToken?: InvalidToken.AsObject,
-  }
-
-  export enum ErrorEventCase {
-    ERROR_EVENT_NOT_SET = 0,
-    GENERIC_ERROR = 1001,
-    MISSING_REQUIRED_REQUEST_FIELD = 1002,
-    BLOCK_SIGNATURE_NOT_FOUND_ERROR = 1003,
-    MISSING_AUTHORIZATION_METADATA = 1004,
-    INVALID_API_KEY = 1005,
-    INVALID_TOKEN = 1006,
   }
 }
 
