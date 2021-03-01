@@ -3,7 +3,7 @@ package wavesenterprise;
 
 option java_package = "com.wavesplatform.protobuf.constants";
 option csharp_namespace = "WavesEnterprise";
-option go_package = "wavesenterprise.com/we-proto";
+option go_package = "wavesenterprise.com/weproto";
 
 enum CryptoAlgo {
   UNKNOWN_CRYPTO_ALGO = 0;

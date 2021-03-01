@@ -3,7 +3,7 @@ package wavesenterprise;
 
 option java_package = "com.wavesplatform.protobuf.service.messagebroker";
 option csharp_namespace = "WavesEnterprise";
-option go_package = "wavesenterprise.com/we-proto";
+option go_package = "wavesenterprise.com/weproto";
 
 import "google/protobuf/wrappers.proto";
 

@@ -1,7 +1,7 @@
 const { create, MAINNET_CONFIG } = require('../..');
 const nodeFetch = require('node-fetch');
 
-const nodeAddress = 'https://obama.welocal.dev/node-0';
+const nodeAddress = 'https://carter.welocal.dev/node-0';
 const seedPhrase = 'examples seed phrase';
 
 const fetch = (url, options = {}) => {
@@ -18,7 +18,7 @@ const fetch = (url, options = {}) => {
         crypto: gostCrypto ? 'gost' : 'waves',
         networkByte: chainId.charCodeAt(0),
         minimumFee,
-        grpcAddress: '51.210.211.109:6865'
+        grpcAddress: '51.178.69.186:6865'
     };
 
     const Waves = create({
@@ -31,7 +31,7 @@ const fetch = (url, options = {}) => {
 
     //body description: https://docs.wavesenterprise.com/en/latest/how-the-platform-works/data-structures/transactions-structure.html#callcontracttransaction
     const txBody = {
-        contractId: '8wpmvsq6fRXPMKbzsKyiEM3nHFaRoR3bpgnUqJymSZXK', // Predefined contract
+        contractId: '3FBCeYER4MoK2rTCwMeJz3D2Y8fngCMq4X7R5x8wwAEo', // Predefined contract
         contractVersion: 1,
         timestamp: Date.now(),
         params: [

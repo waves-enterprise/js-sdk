@@ -4,7 +4,7 @@ package wavesenterprise;
 option java_multiple_files = true;
 option java_package = "com.wavesplatform.protobuf.service.contract";
 option csharp_namespace = "WavesEnterprise";
-option go_package = "wavesenterprise.com/we-proto";
+option go_package = "wavesenterprise.com/weproto";
 
 import "google/protobuf/wrappers.proto";
 import "constants.proto";

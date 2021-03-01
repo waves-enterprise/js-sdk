@@ -1,6 +1,6 @@
 {
   "name": "@wavesenterprise/js-sdk",
-  "version": "3.1.6-RC1",
+  "version": "3.1.7",
   "description": "Waves Enterprise client-side API library",
   "keywords": [
     "cryptocurrency",
@@ -64,7 +64,7 @@
     "bignumber.js": "7.2.1",
     "crypto-js": "3.1.9-1",
     "google-protobuf": "^3.14.0",
-    "grpc-tools": "^1.10.0",
+    "grpc-tools": "1.9.1",
     "grpc-web": "^1.2.1",
     "js-sha256": "^0.9.0",
     "long": "^4.0.0",

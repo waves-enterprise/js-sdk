@@ -16,6 +16,8 @@ const grpc = {};
 grpc.web = require('grpc-web');
 
 
+var google_protobuf_empty_pb = require('google-protobuf/google/protobuf/empty_pb.js')
+
 var managed_transaction_pb = require('../managed/transaction_pb.js')
 const proto = {};
 proto.wavesenterprise = {};
@@ -150,6 +152,81 @@ proto.wavesenterprise.grpc.TransactionPublicServicePromiseClient.prototype.broad
       request,
       metadata || {},
       methodDescriptor_TransactionPublicService_Broadcast);
+};
+
+
+/**
+ * @const
+ * @type {!grpc.web.MethodDescriptor<
+ *   !proto.google.protobuf.Empty,
+ *   !proto.wavesenterprise.grpc.UtxSize>}
+ */
+const methodDescriptor_TransactionPublicService_UtxInfo = new grpc.web.MethodDescriptor(
+  '/wavesenterprise.grpc.TransactionPublicService/UtxInfo',
+  grpc.web.MethodType.SERVER_STREAMING,
+  google_protobuf_empty_pb.Empty,
+  proto.wavesenterprise.grpc.UtxSize,
+  /**
+   * @param {!proto.google.protobuf.Empty} request
+   * @return {!Uint8Array}
+   */
+  function(request) {
+    return request.serializeBinary();
+  },
+  proto.wavesenterprise.grpc.UtxSize.deserializeBinary
+);
+
+
+/**
+ * @const
+ * @type {!grpc.web.AbstractClientBase.MethodInfo<
+ *   !proto.google.protobuf.Empty,
+ *   !proto.wavesenterprise.grpc.UtxSize>}
+ */
+const methodInfo_TransactionPublicService_UtxInfo = new grpc.web.AbstractClientBase.MethodInfo(
+  proto.wavesenterprise.grpc.UtxSize,
+  /**
+   * @param {!proto.google.protobuf.Empty} request
+   * @return {!Uint8Array}
+   */
+  function(request) {
+    return request.serializeBinary();
+  },
+  proto.wavesenterprise.grpc.UtxSize.deserializeBinary
+);
+
+
+/**
+ * @param {!proto.google.protobuf.Empty} request The request proto
+ * @param {?Object<string, string>} metadata User defined
+ *     call metadata
+ * @return {!grpc.web.ClientReadableStream<!proto.wavesenterprise.grpc.UtxSize>}
+ *     The XHR Node Readable Stream
+ */
+proto.wavesenterprise.grpc.TransactionPublicServiceClient.prototype.utxInfo =
+    function(request, metadata) {
+  return this.client_.serverStreaming(this.hostname_ +
+      '/wavesenterprise.grpc.TransactionPublicService/UtxInfo',
+      request,
+      metadata || {},
+      methodDescriptor_TransactionPublicService_UtxInfo);
+};
+
+
+/**
+ * @param {!proto.google.protobuf.Empty} request The request proto
+ * @param {?Object<string, string>} metadata User defined
+ *     call metadata
+ * @return {!grpc.web.ClientReadableStream<!proto.wavesenterprise.grpc.UtxSize>}
+ *     The XHR Node Readable Stream
+ */
+proto.wavesenterprise.grpc.TransactionPublicServicePromiseClient.prototype.utxInfo =
+    function(request, metadata) {
+  return this.client_.serverStreaming(this.hostname_ +
+      '/wavesenterprise.grpc.TransactionPublicService/UtxInfo',
+      request,
+      metadata || {},
+      methodDescriptor_TransactionPublicService_UtxInfo);
 };
 
 
