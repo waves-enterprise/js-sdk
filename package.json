@@ -47,14 +47,14 @@
     "uglify-es": "3.3.9"
   },
   "scripts": {
-    "build-full": "node_modules/.bin/browserify raw/src/index.js -u node-fetch -s WeSdk -o ./dist/we-sdk.js --insert-global-vars='__filename,__dirname' --full-paths",
+    "build-full": "node_modules/.bin/browserify raw/src/index.js -u node-fetch -s WeSdk -o ./dist/we-sdk.js --insert-global-vars='__filename,__dirname,global,process' --full-paths",
     "build": "rm -rf ./raw && rm -rf ./dist && npm run compile && mkdir -p dist && npm run build-full && npm run uglifyjs && cp ./interfaces.d.ts ./raw/interfaces.d.ts",
     "compile": "mkdir -p raw && ./node_modules/.bin/tsc -p ./tsconfig.json --declaration --outDir raw && cp -R ./src/grpc/compiled-node ./raw/src/grpc/compiled-node && cp -R ./src/grpc/compiled-web ./raw/src/grpc/compiled-web",
     "uglifyjs": "node_modules/.bin/uglifyjs ./dist/we-sdk.js -o ./dist/we-sdk.min.js",
     "compile-grpc": "sudo chmod +x ./compile-proto.sh && ./compile-proto.sh",
-    "test": "node examples/grpc-node/call-contract.js",
-    "lint": "tslint --fix src/**/*.ts -t verbose",
-    "test-browser": "npm run build && karma start karma.conf.js"
+    "test-node": "node examples/grpc-node/call-contract.js",
+    "test-browser": "npm run build && karma start karma.conf.js",
+    "lint": "tslint --fix src/**/*.ts -t verbose"
   },
   "dependencies": {
     "@grpc/grpc-js": "^1.2.6",

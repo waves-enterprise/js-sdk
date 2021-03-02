@@ -1,7 +1,7 @@
 import * as grpcWeb from 'grpc-web';
 
-import * as messagebroker_messagebroker_subscribe_on_request_pb from '../messagebroker/messagebroker_subscribe_on_request_pb';
 import * as messagebroker_messagebroker_blockchain_event_pb from '../messagebroker/messagebroker_blockchain_event_pb';
+import * as messagebroker_messagebroker_subscribe_on_request_pb from '../messagebroker/messagebroker_subscribe_on_request_pb';
 
 
 export class BlockchainEventsServiceClient {
