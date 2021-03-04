@@ -21,10 +21,11 @@
     "type": "git",
     "url": "https://github.com/wavesplatform/js-sdk.git"
   },
-  "main": "dist/we-sdk.min.js",
+  "main": "raw/src/index.js",
   "types": "raw/src/index.d.ts",
   "devDependencies": {
     "@types/chai": "4.1.5",
+    "@types/google-protobuf": "^3.7.4",
     "@types/mocha": "5.2.5",
     "browserify": "^17.0.0",
     "chai": "4.1.2",
@@ -49,7 +50,8 @@
   "dependencies": {
     "@grpc/grpc-js": "^1.2.6",
     "@types/long": "^4.0.1",
-    "@wavesenterprise/transactions-factory": "^1.2.1",
+    "@wavesenterprise/signature-generator": "file:../waves-signature-generator",
+    "@wavesenterprise/transactions-factory": "file:../transactions-factory",
     "bignumber.js": "7.2.1",
     "crypto-js": "3.1.9-1",
     "google-protobuf": "^3.14.0",

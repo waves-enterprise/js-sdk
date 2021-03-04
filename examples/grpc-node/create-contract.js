@@ -1,30 +1,9 @@
-const { create: createApiInstance, MAINNET_CONFIG } = require('../..');
-const nodeFetch = require('node-fetch');
-
-const nodeAddress = 'https://carter.welocal.dev/node-0';
+const init = require('./init-api')
 const seedPhrase = 'examples seed phrase';
 
-const fetch = (url, options = {}) => {
-    const headers = options.headers || {}
-    return nodeFetch(url, { ...options, headers: {...headers, 'x-api-key': 'vostok'} });
-}
 
 (async () => {
-    const { chainId, minimumFee, gostCrypto } = await (await fetch(`${nodeAddress}/node/config`)).json();
-
-    const wavesApiConfig = {
-        ...MAINNET_CONFIG,
-        nodeAddress,
-        crypto: gostCrypto ? 'gost' : 'waves',
-        networkByte: chainId.charCodeAt(0),
-        minimumFee,
-        grpcAddress: '51.178.69.186:6865'
-    };
-
-    const Waves = createApiInstance({
-        initialConfiguration: wavesApiConfig,
-        fetchInstance: fetch
-    });
+    const Waves = await init()
 
     // Create Seed object from phrase
     const seed = Waves.Seed.fromExistingPhrase(seedPhrase);
