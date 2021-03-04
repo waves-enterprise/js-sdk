@@ -1,6 +1,6 @@
 import { TransactionsType } from '../api/transactions/transactionsV2'
 import { WeSdk } from '../index'
-import { IKeyPair } from '../../interfaces'
+import { IKeyPair } from '../interfaces'
 import isNode from '../utils/isNode'
 
 // Web

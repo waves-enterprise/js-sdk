@@ -1,4 +1,4 @@
-import {IWavesBasicConfig, IWavesConfig} from '../interfaces'
+import { IWavesBasicConfig, IWavesConfig } from './interfaces'
 export const WAVES = 'WAVES'
 
 export const MAINNET_BYTE: number = 'D'.charCodeAt(0) // todo

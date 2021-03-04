@@ -16,7 +16,7 @@ import {
   TransactionType,
 } from '@wavesenterprise/transactions-factory'
 import config from '../../config'
-import { IKeyPair } from '../../../interfaces'
+import { IKeyPair } from '../../interfaces'
 import logger from "../../utils/logger"
 import { WeSdk } from '../../index'
 import { callContract, createContract, sendGrpcTx } from '../../grpc'
