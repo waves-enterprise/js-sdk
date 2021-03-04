@@ -44,7 +44,7 @@ const seed = Waves.Seed.fromExistingPhrase('examples seed phrase');
 
 const txBody = {
     recipient: seed.address, // Send tokens to the same address
-    assetId: 'WAVES',
+    assetId: '', // optional field for system token
     amount: '10000',
     fee: '1000000',
     attachment: 'Examples transfer attachment',

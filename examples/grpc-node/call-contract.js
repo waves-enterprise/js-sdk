@@ -5,7 +5,6 @@ const seedPhrase = 'examples seed phrase';
 (async () => {
     const Waves = await init()
 
-    // Create Seed object from phrase
     const seed = Waves.Seed.fromExistingPhrase(seedPhrase);
 
     //body description: https://docs.wavesenterprise.com/en/latest/how-the-platform-works/data-structures/transactions-structure.html#callcontracttransaction
