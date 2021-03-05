@@ -73,7 +73,9 @@ export const initGrpcTx = (
   }
 
   if (weTx.feeAssetId) {
-    subGrpcTx.setFeeAssetId(weTx.feeAssetId)
+    const bytesValue = new BytesValue()
+    bytesValue.setValue(weTx.feeAssetId)
+    subGrpcTx.setFeeAssetId(bytesValue)
   }
 
   return txGrpc as txType

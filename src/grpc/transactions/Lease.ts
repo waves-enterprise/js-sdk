@@ -5,20 +5,20 @@ import { initGrpcTx } from '../utils'
 // tslint:disable-next-line:no-submodule-imports
 import { BytesValue } from 'google-protobuf/google/protobuf/wrappers_pb'
 
-const TransferTransaction = isNode
-  ? require('../compiled-node/managed/transfer_transaction_pb').TransferTransaction
-  : require('../compiled-web/managed/transfer_transaction_pb').TransferTransaction
+const LeaseTransaction = isNode
+  ? require('../compiled-node/managed/lease_transaction_pb').LeaseTransaction
+  : require('../compiled-web/managed/lease_transaction_pb').LeaseTransaction
 
 
-type TransferTx = ReturnType<TransactionsType["Transfer"]["V3"]>
+type LeaseTx = ReturnType<TransactionsType["Lease"]["V2"]>
 
-export default async function transfer(
-  inputTx: TransferTx,
+export default async function lease(
+  inputTx: LeaseTx,
   keyPair: IKeyPair,
   isAtomic = false
 ) : Promise<any> {
   const tx = await inputTx.getGrpcTx(keyPair)
-  const callTx = new TransferTransaction()
+  const callTx = new LeaseTransaction()
 
   const txGrpc = initGrpcTx(callTx, tx, isAtomic)
 
@@ -29,12 +29,8 @@ export default async function transfer(
     callTx.setAssetId(bytesValue)
   }
   callTx.setRecipient(tx.recipient)
-  if (tx.attachment) {
-    callTx.setAttachment(tx.attachment)
-  }
 
-  txGrpc.setTransferTransaction(callTx as any)
+  txGrpc.setLeaseTransaction(callTx as any)
 
   return txGrpc
-
 }
