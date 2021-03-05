@@ -15,13 +15,15 @@ import createContract from './transactions/CreateContract'
 import transfer from './transactions/Transfer'
 import createPolicy from './transactions/CreatePolicy'
 import atomic from './transactions/Atomic'
+import permit from './transactions/Permit'
 
 export const TX_PROTO_MAPPING: TX_PROTO_MAPPING_TYPE = {
   CallContract: callContract,
   CreateContract: createContract,
   Transfer: transfer,
   CreatePolicy: createPolicy,
-  Atomic: atomic
+  Atomic: atomic,
+  Permit: permit
 }
 
 export function sendGrpcTx(api: WeSdk, tx: TransactionWeb) {

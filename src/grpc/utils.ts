@@ -20,6 +20,7 @@ const AtomicInnerTransaction = isNode
   ? require('./compiled-node/managed/atomic_inner_transaction_pb').AtomicInnerTransaction
   : require('./compiled-web/managed/atomic_inner_transaction_pb').AtomicInnerTransaction
 
+import {Transaction as txType} from './compiled-web/managed/transaction_pb'
 
 export const mapDataEntry = (param: {
   type: 'string' | 'binary' | 'integer' | 'boolean',
@@ -51,7 +52,7 @@ export const initGrpcTx = (
   subGrpcTx: any,
   weTx: any,
   isAtomic = false
-): typeof Transaction | typeof AtomicInnerTransaction => {
+): txType => {
   const txGrpc = isAtomic ? new AtomicInnerTransaction() : new Transaction()
   subGrpcTx.setSenderPublicKey(weTx.senderPublicKey)
   if (subGrpcTx.setFee) {
@@ -75,5 +76,5 @@ export const initGrpcTx = (
     subGrpcTx.setFeeAssetId(weTx.feeAssetId)
   }
 
-  return txGrpc
+  return txGrpc as txType
 }
