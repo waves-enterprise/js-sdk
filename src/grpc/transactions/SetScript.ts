@@ -1,7 +1,7 @@
 import { IKeyPair } from '../../../interfaces'
 import { TransactionsType } from '../../api/transactions/transactionsV2'
 import isNode from '../../utils/isNode'
-import { initGrpcTx } from '../utils'
+import { initGrpcTx, notEmpty } from '../utils'
 import { BytesValue } from 'google-protobuf/google/protobuf/wrappers_pb'
 
 const SetScriptTransaction = isNode
@@ -21,18 +21,18 @@ export default async function setScript(
 
   const txGrpc = initGrpcTx(callTx, tx, isAtomic)
 
-  if (tx.chainId) {
+  if (notEmpty(tx.chainId)) {
     callTx.setChainId(tx.chainId)
   }
-  if (tx.script) {
+  if (notEmpty(tx.script)) {
     const script = new BytesValue()
     script.setValue(tx.script)
     callTx.setScript(script)
   }
-  if (tx.name) {
+  if (notEmpty(tx.name)) {
     callTx.setName(tx.name)
   }
-  if (tx.description) {
+  if (notEmpty(tx.description)) {
     callTx.setDescription(tx.description)
   }
 

@@ -1,7 +1,7 @@
 import { IKeyPair } from '../../../interfaces'
 import { TransactionsType } from '../../api/transactions/transactionsV2'
 import isNode from '../../utils/isNode'
-import { initGrpcTx } from '../utils'
+import { initGrpcTx, notEmpty } from '../utils'
 
 const ReissueTransaction = isNode
   ? require('../compiled-node/managed/reissue_transaction_pb').ReissueTransaction
@@ -20,16 +20,16 @@ export default async function reissue(
 
   const txGrpc = initGrpcTx(callTx, tx, isAtomic)
 
-  if (tx.chainId) {
+  if (notEmpty(tx.chainId)) {
     callTx.setChainId(tx.chainId)
   }
-  if (tx.assetId) {
+  if (notEmpty(tx.assetId)) {
     callTx.setAssetId(tx.assetId)
   }
-  if (tx.quantity) {
+  if (notEmpty(tx.quantity)) {
     callTx.setQuantity(tx.quantity)
   }
-  if (tx.reissuable) {
+  if (notEmpty(tx.reissuable)) {
     callTx.setReissuable(tx.reissuable)
   }
 

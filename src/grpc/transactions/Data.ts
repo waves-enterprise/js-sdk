@@ -1,7 +1,7 @@
 import { IKeyPair } from '../../../interfaces'
 import { TransactionsType } from '../../api/transactions/transactionsV2'
 import isNode from '../../utils/isNode'
-import { initGrpcTx, mapDataEntry } from '../utils'
+import { initGrpcTx, mapDataEntry, notEmpty } from '../utils'
 
 const DataTransaction = isNode
   ? require('../compiled-node/managed/data_transaction_pb').DataTransaction
@@ -20,11 +20,11 @@ export default async function data(
 
   const txGrpc = initGrpcTx(callTx, tx, isAtomic)
 
-  if (tx.authorPublicKey) {
+  if (notEmpty(tx.authorPublicKey)) {
     callTx.setAuthorPublicKey(tx.authorPublicKey)
   }
 
-  if (tx.data) {
+  if (notEmpty(tx.data)) {
     callTx.setDataList(tx.data.map(mapDataEntry))
   }
 

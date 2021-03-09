@@ -1,7 +1,7 @@
 import { IKeyPair } from '../../../interfaces'
 import { TransactionsType } from '../../api/transactions/transactionsV2'
 import isNode from '../../utils/isNode'
-import { initGrpcTx } from '../utils'
+import { initGrpcTx, notEmpty } from '../utils'
 
 const LeaseCancelTransaction = isNode
   ? require('../compiled-node/managed/lease_cancel_transaction_pb').LeaseCancelTransaction
@@ -20,7 +20,7 @@ export default async function leaseCancel(
 
   const txGrpc = initGrpcTx(callTx, tx, isAtomic)
 
-  if (tx.chainId) {
+  if (notEmpty(tx.chainId)) {
     callTx.setChainId(tx.chainId)
   }
   callTx.setLeaseId(tx.leaseId)

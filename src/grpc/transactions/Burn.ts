@@ -1,7 +1,7 @@
 import { IKeyPair } from '../../../interfaces'
 import { TransactionsType } from '../../api/transactions/transactionsV2'
 import isNode from '../../utils/isNode'
-import { initGrpcTx } from '../utils'
+import { initGrpcTx, notEmpty } from '../utils'
 
 const BurnTransaction = isNode
   ? require('../compiled-node/managed/burn_transaction_pb').BurnTransaction
@@ -21,10 +21,10 @@ export default async function burn(
   const txGrpc = initGrpcTx(callTx, tx, isAtomic)
 
   callTx.setAmount(tx.amount)
-  if (tx.assetId) {
+  if (notEmpty(tx.assetId)) {
     callTx.setAssetId(tx.assetId)
   }
-  if (tx.chainId) {
+  if (notEmpty(tx.chainId)) {
     callTx.setChainId(tx.chainId)
   }
 

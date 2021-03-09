@@ -80,3 +80,6 @@ export const initGrpcTx = (
 
   return txGrpc as txType
 }
+
+// tslint:disable-next-line:triple-equals
+export const notEmpty = (val: any) => (val != undefined) && val !== ''

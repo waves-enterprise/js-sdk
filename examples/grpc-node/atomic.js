@@ -79,4 +79,6 @@ const seedPhrase = 'examples seed phrase';
     console.log('Create atomic error:', err)
   }
 
-})();
+})().catch(err => {
+  console.log('error:', err)
+});

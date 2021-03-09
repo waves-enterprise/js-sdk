@@ -1,7 +1,7 @@
 import { IKeyPair } from '../../../interfaces'
 import { TransactionsType } from '../../api/transactions/transactionsV2'
 import isNode from '../../utils/isNode'
-import { initGrpcTx } from '../utils'
+import { initGrpcTx, notEmpty } from '../utils'
 
 const SponsorFeeTransaction = isNode
   ? require('../compiled-node/managed/sponsor_fee_transaction_pb').SponsorFeeTransaction
@@ -21,7 +21,7 @@ export default async function sponsorFee(
   const txGrpc = initGrpcTx(callTx, tx, isAtomic)
 
   callTx.setAssetId(tx.assetId)
-  if (tx.isEnabled) {
+  if (notEmpty(tx.isEnabled)) {
     callTx.setIsEnabled(tx.isEnabled)
   }
 

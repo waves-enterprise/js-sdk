@@ -1,7 +1,7 @@
 import { IKeyPair } from '../../../interfaces'
 import { TransactionsType } from '../../api/transactions/transactionsV2'
 import isNode from '../../utils/isNode'
-import { initGrpcTx } from '../utils'
+import { initGrpcTx, notEmpty } from '../utils'
 
 const UpdatePolicyTransaction = isNode
   ? require('../compiled-node/managed/update_policy_transaction_pb').UpdatePolicyTransaction
@@ -20,13 +20,13 @@ export default async function updatePolicy(
   const txGrpc = initGrpcTx(callTx, tx, isAtomic)
 
   callTx.setPolicyId(tx.policyId)
-  if (tx.recipients) {
+  if (notEmpty(tx.recipients)) {
     callTx.setRecipientsList(tx.recipients)
   }
-  if (tx.owners) {
+  if (notEmpty(tx.owners)) {
     callTx.setOwnersList(tx.owners)
   }
-  if (tx.opType) {
+  if (notEmpty(tx.opType)) {
     callTx.setOpType(tx.opType)
   }
 

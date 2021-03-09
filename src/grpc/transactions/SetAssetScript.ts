@@ -1,7 +1,7 @@
 import { IKeyPair } from '../../../interfaces'
 import { TransactionsType } from '../../api/transactions/transactionsV2'
 import isNode from '../../utils/isNode'
-import { initGrpcTx } from '../utils'
+import { initGrpcTx, notEmpty } from '../utils'
 // tslint:disable-next-line:no-submodule-imports
 import { BytesValue } from 'google-protobuf/google/protobuf/wrappers_pb'
 
@@ -23,10 +23,10 @@ export default async function setAssetScript(
   const txGrpc = initGrpcTx(callTx, tx, isAtomic)
 
   callTx.setAssetId(tx.assetId)
-  if (tx.chainId) {
+  if (notEmpty(tx.chainId)) {
     callTx.setChainId(tx.chainId)
   }
-  if (tx.script) {
+  if (notEmpty(tx.script)) {
     const script = new BytesValue()
     script.setValue(tx.script)
     callTx.setScript(script)

@@ -1,7 +1,7 @@
 import { IKeyPair } from '../../../interfaces'
 import { TransactionsType } from '../../api/transactions/transactionsV2'
 import isNode from '../../utils/isNode'
-import { initGrpcTx } from '../utils'
+import { initGrpcTx, notEmpty } from '../utils'
 // tslint:disable-next-line:no-submodule-imports
 import { BytesValue } from 'google-protobuf/google/protobuf/wrappers_pb'
 
@@ -22,26 +22,25 @@ export default async function issue(
 
   const txGrpc = initGrpcTx(callTx, tx, isAtomic)
 
-  if (tx.chainId) {
+  if (notEmpty(tx.chainId)) {
     callTx.setChainId(tx.chainId)
   }
-  if (tx.name) {
+  if (notEmpty(tx.name)) {
     callTx.setName(tx.name)
   }
-  if (tx.description) {
+  if (notEmpty(tx.description)) {
     callTx.setDescription(tx.description)
   }
-  if (tx.quantity) {
+  if (notEmpty(tx.quantity)) {
     callTx.setQuantity(tx.quantity)
   }
-  if (tx.decimals) {
+  if (notEmpty(tx.decimals)) {
     callTx.setDecimals(tx.decimals)
   }
-  // tslint:disable-next-line:triple-equals
-  if (tx.reissuable != undefined) {
+  if (notEmpty(tx.reissuable)) {
     callTx.setReissuable(tx.reissuable)
   }
-  if (tx.script) {
+  if (notEmpty(tx.script)) {
     const script = new BytesValue()
     script.setValue(tx.script)
     callTx.setScript(script)

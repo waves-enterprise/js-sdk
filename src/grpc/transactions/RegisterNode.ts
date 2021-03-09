@@ -1,7 +1,7 @@
 import { IKeyPair } from '../../../interfaces'
 import { TransactionsType } from '../../api/transactions/transactionsV2'
 import isNode from '../../utils/isNode'
-import { initGrpcTx } from '../utils'
+import { initGrpcTx, notEmpty } from '../utils'
 // tslint:disable-next-line:no-submodule-imports
 import { StringValue } from 'google-protobuf/google/protobuf/wrappers_pb'
 
@@ -22,18 +22,18 @@ export default async function registerNode(
 
   const txGrpc = initGrpcTx(callTx, tx, isAtomic)
 
-  if (tx.targetPubKey) {
+  if (notEmpty(tx.targetPubKey)) {
     // TODO
     callTx.setTarget(tx.targetPubKey)
   }
 
-  if (tx.nodeName) {
+  if (notEmpty(tx.nodeName)) {
     const nodeName = new StringValue()
     nodeName.setValue(tx.nodeName)
     callTx.setNodeName(nodeName)
   }
 
-  if (tx.opType) {
+  if (notEmpty(tx.opType)) {
     callTx.setOpType(tx.opType)
   }
 

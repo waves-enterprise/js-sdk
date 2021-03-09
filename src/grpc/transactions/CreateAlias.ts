@@ -1,7 +1,7 @@
 import { IKeyPair } from '../../../interfaces'
 import { TransactionsType } from '../../api/transactions/transactionsV2'
 import isNode from '../../utils/isNode'
-import { initGrpcTx } from '../utils'
+import { initGrpcTx, notEmpty } from '../utils'
 
 const CreateAliasTransaction = isNode
   ? require('../compiled-node/managed/create_alias_transaction_pb').CreateAliasTransaction
@@ -20,7 +20,7 @@ export default async function createAlias(
 
   const txGrpc = initGrpcTx(callTx, tx, isAtomic)
 
-  if (tx.alias) {
+  if (notEmpty(tx.alias)) {
     // TODO byte processors
     callTx.setAlias(tx.alias)
   }

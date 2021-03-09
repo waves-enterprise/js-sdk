@@ -1,7 +1,7 @@
 import { IKeyPair } from '../../../interfaces'
 import { TransactionsType } from '../../api/transactions/transactionsV2'
 import isNode from '../../utils/isNode'
-import { initGrpcTx } from '../utils'
+import { initGrpcTx, notEmpty } from '../utils'
 
 const UpdateContractTransaction = isNode
   ? require('../compiled-node/managed/update_contract_transaction_pb').UpdateContractTransaction
@@ -21,10 +21,10 @@ export default async function updateContract(
   const txGrpc = initGrpcTx(callTx, tx, isAtomic)
 
   callTx.setContractId(tx.contractId)
-  if (tx.imageHash) {
+  if (notEmpty(tx.imageHash)) {
     callTx.setImageHash(tx.imageHash)
   }
-  if (tx.image) {
+  if (notEmpty(tx.image)) {
     callTx.setImage(tx.image)
   }
 

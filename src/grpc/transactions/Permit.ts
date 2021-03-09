@@ -1,7 +1,7 @@
 import { IKeyPair } from '../../../interfaces'
 import { TransactionsType } from '../../api/transactions/transactionsV2'
 import isNode from '../../utils/isNode'
-import { initGrpcTx } from '../utils'
+import { initGrpcTx, notEmpty } from '../utils'
 
 const PermitTransaction = isNode
   ? require('../compiled-node/managed/permit_transaction_pb').PermitTransaction
@@ -30,13 +30,13 @@ export default async function permit(
   const permissionOp = new PermissionOp()
 
   permissionOp.setTimestamp(tx.timestamp)
-  if (tx.dueTimestamp) {
+  if (notEmpty(tx.dueTimestamp)) {
     permissionOp.setDueTimestamp(tx.dueTimestamp)
   }
-  if (tx.opType) {
+  if (notEmpty(tx.opType)) {
     permissionOp.setOpType(tx.opType)
   }
-  if (tx.role) {
+  if (notEmpty(tx.role)) {
     const role = new Role()
     role.setId(tx.role)
     permissionOp.setRole(role)
