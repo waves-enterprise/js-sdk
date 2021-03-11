@@ -1,5 +1,5 @@
-import { ArrayPart, ObjectPart, Schema, StringPart } from "ts-api-validator";
-import schemaFields from "../schemaFields";
+import { ArrayPart, ObjectPart, Schema, StringPart } from "ts-api-validator"
+import schemaFields from "../schemaFields"
 
 const policyCreateSchemeBase = {
   type: ObjectPart,

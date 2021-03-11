@@ -1,11 +1,11 @@
-import { libs } from '@wavesenterprise/transactions-factory';
-const { Encryptor, base58, base64, converters } = libs;
+import { libs } from '@wavesenterprise/transactions-factory'
+const { Encryptor, base58, base64, converters } = libs
 
-type encodedResult = Array<{
+type encodedResult = {
   encryptedText: string,
   publicKey: string,
   wrappedKey: string
-}>
+}[]
 
 export function decrypt(
   recipientPrivateKey: string,
@@ -83,4 +83,4 @@ export default {
   encryptCommon,
   encryptSeparate,
   decrypt
-};
+}

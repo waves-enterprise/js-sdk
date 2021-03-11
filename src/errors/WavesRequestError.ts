@@ -1,7 +1,7 @@
-import WavesError from './WavesError';
+import WavesError from './WavesError'
 
 
-const FAILED_TO_FETCH = 'Failed to fetch';
+const FAILED_TO_FETCH = 'Failed to fetch'
 
 
 function normalizeErrorData(data) {
@@ -9,9 +9,9 @@ function normalizeErrorData(data) {
         return {
             error: -1,
             message: 'failed to fetch'
-        };
+        }
     } else {
-        return data;
+        return data
     }
 }
 
@@ -19,8 +19,8 @@ function normalizeErrorData(data) {
 export default class WavesRequestError extends WavesError {
 
     constructor(url, data) {
-        super(`Server request to '${url}' has failed`, normalizeErrorData(data));
-        this.name = 'WavesRequestError';
+        super(`Server request to '${url}' has failed`, normalizeErrorData(data))
+        this.name = 'WavesRequestError'
     }
 
 }

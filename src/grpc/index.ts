@@ -1,110 +1,76 @@
-import { DataEntry } from './compiled/data_entry_pb';
-import { WeSdk } from '../index';
-import { IKeyPair } from '../../interfaces';
-import { Transaction } from './compiled/managed/transaction_pb';
-import { CallContractTransaction } from './compiled/managed/call_contract_transaction_pb';
-import { CreateContractTransaction } from './compiled/managed/create_contract_transaction_pb';
-import { TransactionsType } from '../api/transactions/transactionsV2';
+import { WeSdk } from '../index'
+import { IKeyPair } from '../interfaces'
+import isNode from '../utils/isNode'
+import { Transaction as TransactionWeb } from './compiled-web/managed/transaction_pb'
+import { TRANSACTIONS, TransactionType } from '@wavesenterprise/transactions-factory'
 
-type ReturnType<T> = T extends (...args: any[]) => infer R ? R : any;
-
-type DockerCallTx = ReturnType<TransactionsType["CallContract"]["V4"]>;
-type DockerCreateTx = ReturnType<TransactionsType["CreateContract"]["V3"]>;
-
-export const mapDataEntry = (param: {
-  type: 'string' | 'binary' | 'integer' | 'boolean',
-  value: any,
-  key: string
-}): DataEntry => {
-  const dataEntry = new DataEntry()
-  dataEntry.setKey(param.key)
-  switch (param.type) {
-    case 'binary':
-      if (!param.value.startsWith('base64')) {
-        throw new Error(`binary format must be like 'base64:{base64String}'`)
-      }
-      const value = param.value.slice('base64:'.length)
-      dataEntry.setBinaryValue(Uint8Array.from(new Buffer(value, 'base64')));
-      break;
-    case 'boolean':
-      dataEntry.setBoolValue(!!param.value)
-      break;
-    case 'integer':
-      dataEntry.setIntValue(parseInt(param.value))
-      break;
-    case 'string':
-      dataEntry.setStringValue(param.value + '')
-      break;
-    default:
-      throw new Error(`Wrong docker param type: ${param.type}, must be: 'string' | 'binary' | 'integer' | 'boolean'`)
-  }
-  return dataEntry
-};
-
-
-// @ts-ignore
-export async function callContract(
-  inputTx: DockerCallTx,
-  api: WeSdk,
-  keyPair: IKeyPair
-) : Promise<Transaction> {
-  const tx = await inputTx.getSignedTx(keyPair);
-
-  const txGrpc = new Transaction()
-  const callTx = new CallContractTransaction()
-
-  callTx.setSenderPublicKey(api.tools.base58.decode(tx.senderPublicKey))
-  callTx.setContractId(api.tools.base58.decode(tx.contractId))
-  callTx.setContractVersion(tx.contractVersion)
-  callTx.setFee(tx.fee as number)
-  callTx.setTimestamp(tx.timestamp as number)
-  callTx.addProofs(api.tools.base58.decode(tx.proofs[0]))
-  txGrpc.setVersion(tx.version)
-  if (tx.params.length) {
-    callTx.setParamsList(tx.params.map(mapDataEntry))
-  }
-
-  txGrpc.setCallContractTransaction(callTx)
-
-  return txGrpc
-
+type TX_PROTO_MAPPING_TYPE = {
+  [key in keyof typeof TRANSACTIONS]?:
+    (inputTx: TransactionType<any>, keyPair: IKeyPair, isAtomic?: boolean)
+      => Promise<TransactionWeb>
 }
 
+import callContract from './transactions/CallContract'
+import createContract from './transactions/CreateContract'
+import transfer from './transactions/Transfer'
+import createPolicy from './transactions/CreatePolicy'
+import atomic from './transactions/Atomic'
+import permit from './transactions/Permit'
+import data from './transactions/Data'
+import registerNode from './transactions/RegisterNode'
+import createAlias from './transactions/CreateAlias'
+import issue from './transactions/Issue'
+import reissue from './transactions/Reissue'
+import burn from './transactions/Burn'
+import lease from './transactions/Lease'
+import leaseCancel from './transactions/LeaseCancel'
+import sponsorFee from './transactions/SponsorFee'
+import setAssetScript from './transactions/SetAssetScript'
+import setScript from './transactions/SetScript'
+import massTransfer from './transactions/MassTransfer'
+import updatePolicy from './transactions/UpdatePolicy'
+import policyDataHash from './transactions/PolicyDataHash'
+import disableContract from './transactions/DisableContract'
+import updateContract from './transactions/UpdateContract'
 
-export async function createContract(
-  inputTx: DockerCreateTx,
-  api: WeSdk,
-  keyPair: IKeyPair
-) : Promise<Transaction> {
-  const tx = await inputTx.getSignedTx(keyPair);
-
-  const txGrpc = new Transaction()
-  const createTx = new CreateContractTransaction()
-
-  createTx.setSenderPublicKey(api.tools.base58.decode(tx.senderPublicKey))
-  createTx.setContractName(tx.contractName)
-  createTx.setImage(tx.image)
-  createTx.setFee(tx.fee as number)
-  createTx.setImageHash(tx.imageHash)
-  createTx.setTimestamp(tx.timestamp as number)
-  createTx.addProofs(api.tools.base58.decode(tx.proofs[0]))
-  if (tx.params.length) {
-    createTx.setParamsList(tx.params.map(mapDataEntry))
-  }
-
-  txGrpc.setVersion(tx.version)
-  txGrpc.setCreateContractTransaction(createTx)
-
-  return txGrpc
+export const TX_PROTO_MAPPING: TX_PROTO_MAPPING_TYPE = {
+  CallContract: callContract,
+  CreateContract: createContract,
+  Transfer: transfer,
+  CreatePolicy: createPolicy,
+  Atomic: atomic,
+  Permit: permit,
+  Data: data,
+  RegisterNode: registerNode,
+  CreateAlias: createAlias,
+  Issue: issue,
+  Reissue: reissue,
+  Burn: burn,
+  Lease: lease,
+  LeaseCancel: leaseCancel,
+  SponsorFee: sponsorFee,
+  SetAssetScript: setAssetScript,
+  SetScript: setScript,
+  MassTransfer: massTransfer,
+  UpdatePolicy: updatePolicy,
+  PolicyDataHash: policyDataHash,
+  DisableContract: disableContract,
+  UpdateContract: updateContract
 }
 
-export function sendGrpcTx(api: WeSdk, tx: Transaction) {
+export function sendGrpcTx(api: WeSdk, tx: TransactionWeb) {
   return new Promise(async (resolve, reject) => {
-    api.grpcService.broadcast(tx, (err, res) => {
+    const callback = (err, res) => {
       if (err) {
-        reject(err.metadata)
+        reject((err as any).metadata ? (err as any).metadata : err)
       }
       resolve(res)
-    })
+    }
+    type ArgsType = [typeof tx, null, typeof callback]
+    const args: ArgsType = isNode
+      ? [tx, callback] as unknown as ArgsType
+      : [tx, null, callback]
+
+    api.grpcService.broadcast(...args)
   })
 }

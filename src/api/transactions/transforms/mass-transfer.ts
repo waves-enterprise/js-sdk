@@ -1,6 +1,6 @@
-import { ArrayPart, NumberPart, ObjectPart, Schema, StringPart } from 'ts-api-validator';
-import schemaFields from "../schemaFields";
-import { convertAttachmentToBase58, createRemapper } from "../../../utils/remap";
+import { ArrayPart, NumberPart, ObjectPart, Schema, StringPart } from 'ts-api-validator'
+import schemaFields from "../schemaFields"
+import { convertAttachmentToBase58, createRemapper } from "../../../utils/remap"
 
 
 const massTransferSchemaBase = {

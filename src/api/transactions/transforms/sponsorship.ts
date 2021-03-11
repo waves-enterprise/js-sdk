@@ -1,6 +1,6 @@
-import { NumberPart, ObjectPart, Schema } from "ts-api-validator";
-import schemaFields from "../schemaFields";
-import { createRemapper } from "../../../utils/remap";
+import { NumberPart, ObjectPart, Schema } from "ts-api-validator"
+import schemaFields from "../schemaFields"
+import { createRemapper } from "../../../utils/remap"
 
 const sponsorshipSchema = new Schema({
   type: ObjectPart,

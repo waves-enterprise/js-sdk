@@ -1,5 +1,5 @@
-import {DEFAULT_PAGING_OFFSET, DEFAULT_PAGING_LIMIT} from '../constants';
-import { createFetchWrapper, processJSON, PRODUCTS, VERSIONS } from "../utils/request";
+import {DEFAULT_PAGING_OFFSET, DEFAULT_PAGING_LIMIT} from '../constants'
+import { createFetchWrapper, processJSON, PRODUCTS, VERSIONS } from "../utils/request"
 
 
 export default class Contracts {
@@ -10,21 +10,21 @@ export default class Contracts {
             version: VERSIONS.V1,
             pipe: processJSON,
             fetchInstance
-        });
+        })
     }
 
-    private readonly fetch: typeof fetch;
+    private readonly fetch: typeof fetch
 
     get(id: string, offset: number = DEFAULT_PAGING_OFFSET, limit: number = DEFAULT_PAGING_LIMIT) {
-        return this.fetch(`/contracts/${id}?offset=${offset}&limit=${limit}`);
+        return this.fetch(`/contracts/${id}?offset=${offset}&limit=${limit}`)
     }
 
     getKey(id: string, key: string) {
-        return this.fetch(`/contracts/${id}/${key}`);
+        return this.fetch(`/contracts/${id}/${key}`)
     }
 
     getExecutedTxFor(id: string) {
-        return this.fetch(`/contracts/executed-tx-for/${id}`);
+        return this.fetch(`/contracts/executed-tx-for/${id}`)
     }
 
-};
+}

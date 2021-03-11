@@ -1,6 +1,6 @@
-import { BooleanPart, NumberPart, ObjectPart, StringPart } from 'ts-api-validator';
-import { getTimestamp, removeRecipientPrefix, normalizeAssetId } from '../../utils/remap';
-import * as constants from '../../constants';
+import { BooleanPart, NumberPart, ObjectPart, StringPart } from 'ts-api-validator'
+import { getTimestamp, removeRecipientPrefix, normalizeAssetId } from '../../utils/remap'
+import * as constants from '../../constants'
 
 export default {
 

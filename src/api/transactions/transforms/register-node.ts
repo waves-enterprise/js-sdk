@@ -1,5 +1,5 @@
-import { ObjectPart, Schema, StringPart } from "ts-api-validator";
-import schemaFields from "../schemaFields";
+import { ObjectPart, Schema, StringPart } from "ts-api-validator"
+import schemaFields from "../schemaFields"
 
 const nodeRegistrySchema = new Schema({
   type: ObjectPart,

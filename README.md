@@ -44,7 +44,7 @@ const seed = Waves.Seed.fromExistingPhrase('examples seed phrase');
 
 const txBody = {
     recipient: seed.address, // Send tokens to the same address
-    assetId: 'WAVES',
+    assetId: '', // optional field for system token
     amount: '10000',
     fee: '1000000',
     attachment: 'Examples transfer attachment',
@@ -90,12 +90,17 @@ In addition to broadcasting, the following methods are also available:
 
 ```typescript
 interface Transaction {
+    broadcast(keys: IKeyPair): Promise<object>; // broadcast using REST
+    broadcastGrpc(keys: IKeyPair): Promise<object>; // broadcast using GRPC
     isValid(): boolean; // validate tx body
     getErrors(): string[]; // returns array of errors for invalid fields
     getSignature(privateKey: string): Promise<string>; // returns signature
     getId(): Promise<string>; // calculate tx id
-    getBytes(): Promise<Uint8Array>; // internal method, returns bytes to sign
-    broadcast(): Promise<object>;
+    getSignatureBytes(): Promise<Uint8Array>; // internal method, returns bytes to sign
+    getBody(): object; // returns clear transaction body
+    getSignedTx(keys: IKeyPair): Promise<object>; // returns clear transaction body with proofs
+    getGrpcTx(keys: IKeyPair): Promise<object>; // returns clear transaction body with proofs serialized for grpc protocol
+    getSignedTx(keys: IKeyPair): Promise<Uint8Array>; // returns grpc tx bytes
 }
 ```
 
@@ -252,8 +257,11 @@ Transaction grpc broadcast examples located in directory ./examples/grpc-node.
    `node examples/grpc-node/create-contract`
 + Call docker contract
 
-   `node examples/grpc-node/call-contract`
+   `node examples/grpc-node/call-contract`  
+   
+and other...
 
+In a browser environment, the library uses [grpc-web](https://github.com/grpc/grpc-web) protocol instead of grpc. 
 ## Authors
 
 * [**Mikhail Tokarev**](https://github.com/mtfj) - *Initial refactoring*

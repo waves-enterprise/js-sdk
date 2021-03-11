@@ -1,10 +1,10 @@
-import { TRANSACTIONS } from '@wavesenterprise/transactions-factory';
-import { preReissue, postReissue, postSignReissue } from "./transforms/reissue";
-import { preIssue, postIssue, postSignIssue } from "./transforms/issue";
+import { TRANSACTIONS } from '@wavesenterprise/transactions-factory'
+import { preReissue, postReissue, postSignReissue } from "./transforms/reissue"
+import { preIssue, postIssue, postSignIssue } from "./transforms/issue"
 import {
   preTransfer, postTransfer, postSignTransfer,
   preTransferV3, postTransferV3, postSignTransferV3
-} from "./transforms/transfer";
+} from "./transforms/transfer"
 import { preLease, postLease, postSignLease } from './transforms/lease'
 import { preCancelLeasing, postCancelLeasing } from './transforms/lease-cancel'
 import { preBurn, postBurn, postSignBurn } from './transforms/burn'

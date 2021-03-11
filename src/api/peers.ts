@@ -1,4 +1,4 @@
-import { createFetchWrapper, IFetchWrapper, processJSON, PRODUCTS, VERSIONS } from "../utils/request";
+import { createFetchWrapper, IFetchWrapper, processJSON, PRODUCTS, VERSIONS } from "../utils/request"
 
 export default class Peers {
 
@@ -8,12 +8,12 @@ export default class Peers {
             version: VERSIONS.V1,
             pipe: processJSON,
             fetchInstance
-        });
+        })
     }
 
-    private readonly fetch: IFetchWrapper<any>;
+    private readonly fetch: IFetchWrapper<any>
 
     connected() {
-        return this.fetch('/peers/connected');
+        return this.fetch('/peers/connected')
     }
-};
+}

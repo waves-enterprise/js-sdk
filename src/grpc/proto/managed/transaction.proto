@@ -3,6 +3,7 @@ package wavesenterprise;
 
 option java_package = "com.wavesplatform.transaction.protobuf";
 option csharp_namespace = "WavesEnterprise";
+option go_package = "wavesenterprise.com/weproto";
 
 import "genesis/genesis_transaction.proto";
 import "genesis/genesis_permit_transaction.proto";

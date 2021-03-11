@@ -1,7 +1,7 @@
-import { NumberPart, ObjectPart, Schema, StringPart } from "ts-api-validator";
-import schemaFields from "../schemaFields";
-import config from "../../../config";
-import { createRemapper } from "../../../utils/remap";
+import { NumberPart, ObjectPart, Schema, StringPart } from "ts-api-validator"
+import schemaFields from "../schemaFields"
+import config from "../../../config"
+import { createRemapper } from "../../../utils/remap"
 
 const burnSchema = new Schema({
   type: ObjectPart,

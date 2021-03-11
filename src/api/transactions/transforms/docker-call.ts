@@ -1,7 +1,7 @@
-import { ArrayPart, NumberPart, ObjectPart, Schema, StringPart } from "ts-api-validator";
-import schemaFields from "../schemaFields";
-import BigNumber from "../../../libs/bignumber";
-import { AnyPart } from "./common";
+import { ArrayPart, NumberPart, ObjectPart, Schema, StringPart } from "ts-api-validator"
+import schemaFields from "../schemaFields"
+import BigNumber from "../../../libs/bignumber"
+import { AnyPart } from "./common"
 
 const dockerCallSchemaBase = {
   type: ObjectPart,
