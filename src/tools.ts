@@ -54,7 +54,7 @@ export default {
     convert: utils.convert,
 
     encodePolicyData (uint8array: number[]) {
-        const base64Text = libs.base64.fromByteArray(uint8array)
+        const base64Text = libs.base64.fromByteArray(Uint8Array.from(uint8array))
         const sha = sha256(uint8array)
         const strip = stripInvalidCharacters(sha, hexAlphabet)
         const plain = fromHex(strip)

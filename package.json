@@ -25,6 +25,8 @@
   "types": "raw/src/index.d.ts",
   "devDependencies": {
     "@types/chai": "4.1.5",
+    "@types/google-protobuf": "^3.7.4",
+    "@types/mocha": "5.2.5",
     "@types/jasmine": "^3.6.3",
     "brfs": "^1.4.0",
     "browserify": "^17.0.0",
@@ -47,7 +49,7 @@
     "uglify-es": "3.3.9"
   },
   "scripts": {
-    "build-full": "node_modules/.bin/browserify raw/src/index.js -u node-fetch -s WeSdk -o ./dist/we-sdk.js --insert-global-vars='__filename,__dirname,global,process' --full-paths",
+    "build-full": "node_modules/.bin/browserify raw/src/index.js -u node-fetch -u @grpc/grpc-js -s WeSdk -o ./dist/we-sdk.js --insert-global-vars='__filename,__dirname,global,process' --full-paths",
     "build": "rm -rf ./raw && rm -rf ./dist && npm run compile && mkdir -p dist && npm run build-full && npm run uglifyjs && cp ./interfaces.d.ts ./raw/interfaces.d.ts",
     "compile": "mkdir -p raw && ./node_modules/.bin/tsc -p ./tsconfig.json --declaration --outDir raw && cp -R ./src/grpc/compiled-node ./raw/src/grpc/compiled-node && cp -R ./src/grpc/compiled-web ./raw/src/grpc/compiled-web",
     "uglifyjs": "node_modules/.bin/uglifyjs ./dist/we-sdk.js -o ./dist/we-sdk.min.js",
@@ -60,7 +62,7 @@
     "@grpc/grpc-js": "^1.2.6",
     "@types/long": "^4.0.1",
     "@types/node": "^14.14.30",
-    "@wavesenterprise/transactions-factory": "^1.2.1",
+    "@wavesenterprise/transactions-factory": "1.2.3",
     "bignumber.js": "7.2.1",
     "crypto-js": "3.1.9-1",
     "google-protobuf": "^3.14.0",

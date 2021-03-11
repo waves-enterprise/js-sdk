@@ -19,24 +19,18 @@ import config from '../../config'
 import { IKeyPair } from '../../../interfaces'
 import logger from "../../utils/logger"
 import { WeSdk } from '../../index'
-import { callContract, createContract, sendGrpcTx } from '../../grpc'
+import {
+  sendGrpcTx,
+  TX_PROTO_MAPPING
+} from '../../grpc'
 
 
 // Additional methods for TRANSACTIONS
 type TransactionDecorator<T> = {
   broadcast: (keys: IKeyPair) => Promise<object>,
   broadcastGrpc: (keys: IKeyPair) => Promise<object>,
-  getSignedGrpcTx: (keys: IKeyPair) => Promise<Uint8Array>,
-  getBody: () => {
-    version: number,
-    type: number
-  } & T,
-  getSignedTx: (keys: IKeyPair) => Promise<{
-    senderPublicKey: string,
-    proofs: string[],
-    version: number,
-    type: number
-  } & T>
+  getSignedGrpcTx: (keys: IKeyPair) => Promise<Uint8Array>
+  getGrpcDecorator: (keys: IKeyPair, isAtomic?: boolean) => Promise<any>
 }
 export type TransactionTypeWithDecorator = TransactionDecorator<any> & TransactionType<any>
 type ReturnType<T> = T extends (...args: any[]) => infer R ? R : any
@@ -65,7 +59,8 @@ export function Transactions(api: WeSdk) : TransactionsType {
       txs[name][version] = decorateFactory(
         TRANSACTIONS[name][version],
         txs,
-        api
+        api,
+        name
       )
     })
   })
@@ -76,10 +71,27 @@ export function Transactions(api: WeSdk) : TransactionsType {
 function decorateFactory(
   factory: TransactionFactory<any>,
   txClass: TransactionsCommon,
-  api: WeSdk
+  api: WeSdk,
+  txName: string
 ) {
   return (...args) => {
     const tx = factory(...args)
+
+    const getSignedTxOriginal = tx.getSignedTx
+    tx.getSignedTx = (keys: IKeyPair) => {
+      if (!tx.fee && config.get().minimumFee) {
+        tx.fee = config.getFee(tx.tx_type as number)
+      }
+      return getSignedTxOriginal.call(tx, keys)
+    }
+
+    tx.getGrpcDecorator = (keiPair: IKeyPair, isAtomic = false) => {
+      const grpcTx = TX_PROTO_MAPPING[txName]
+      if (!grpcTx) {
+        throw new Error(`GRPC transaction ${txName} not supported yet`)
+      }
+      return grpcTx(tx, keiPair, isAtomic)
+    }
 
     tx.broadcast = async (keys: IKeyPair) => {
       const postParams = await txRequestV2(tx as TransactionTypeWithDecorator, keys)
@@ -87,61 +99,12 @@ function decorateFactory(
       return txClass.fetch(constants.BROADCAST_PATH, postParams)
     }
 
-    tx.getBody = () => {
-      const data = {} as any
-      Object.keys(tx).forEach(key => {
-        if (typeof tx[key] !== 'function' && key !== 'val') {
-          data[key] = tx[key]
-        }
-      })
-      if (!data.fee && config.get().minimumFee) {
-        tx.fee = config.getFee(tx.tx_type as number)
-        data.fee = config.getFee(tx.tx_type as number)
-      }
-      delete data.tx_type
-      return {
-        ...data,
-        version: tx.version,
-        type: tx.tx_type
-      }
-    }
-
-    tx.getSignedTx = async (keyPair: IKeyPair) => {
-      const data = (tx as any).getBody()
-      tx.senderPublicKey = keyPair.publicKey
-      const signature = await tx.getSignature(keyPair.privateKey)
-      return {
-        ...data,
-        senderPublicKey: keyPair.publicKey,
-        proofs: [signature]
-      }
-    }
-
-    function getGrpcTx(keyPair: IKeyPair) {
-      switch (tx.tx_type) {
-        case 103:
-          return createContract(
-            tx as any,
-            api,
-            keyPair
-          )
-        case 104:
-          return callContract(
-            tx as any,
-            api,
-            keyPair
-          )
-        default:
-          throw new Error('Support only docker call and docker create transactions')
-      }
-    }
-
     tx.getSignedGrpcTx = async (keyPair: IKeyPair) => {
-      return (await getGrpcTx(keyPair)).serializeBinary()
+      return (await (tx as any).getGrpcDecorator(keyPair)).serializeBinary()
     }
 
     tx.broadcastGrpc = async (keyPair: IKeyPair) => {
-      return sendGrpcTx(api, await getGrpcTx(keyPair))
+      return sendGrpcTx(api, await (tx as any).getGrpcDecorator(keyPair))
     }
 
     return tx
@@ -150,7 +113,7 @@ function decorateFactory(
 
 class TransactionsCommon {
   // TODO cut old service
-  private oldTxService: OldTxService
+  private api: WeSdk
   readonly fetch: IFetchWrapper<any>
 
   constructor(api: WeSdk) {
@@ -160,7 +123,7 @@ class TransactionsCommon {
       pipe: processJSON,
       fetchInstance: api.API.Node.fetchInstance
     })
-    this.oldTxService = api.API.Node.transactions
+    this.api = api
   }
 
   static getTxMetaInfo(txType) {
@@ -202,10 +165,10 @@ class TransactionsCommon {
   }
 
   async getTxId (txType: string, data: object, keyPair: IKeyPair) {
-    return this.oldTxService.getTxId(txType, data, keyPair)
+    return this.api.API.Node.transactions.getTxId(txType, data, keyPair)
   }
 
-  async broadcastAtomic(
+  async getAtomicTxBody(
     atomicTx: ReturnType<typeof TRANSACTIONS.Atomic.V1>,
     keyPair: IKeyPair
   ) {
@@ -239,6 +202,21 @@ class TransactionsCommon {
       timestamp: timestamp as number,
       transactions: signedTransactions
     }
-    return (this as unknown as TransactionsType).Atomic.V1(atomicTxBody).broadcast(keyPair)
+
+    return (this as unknown as TransactionsType).Atomic.V1(atomicTxBody)
+  }
+
+  async broadcastAtomicGrpc(
+    atomicTx: ReturnType<typeof TRANSACTIONS.Atomic.V1>,
+    keyPair: IKeyPair
+  ) {
+    return sendGrpcTx(this.api, await TX_PROTO_MAPPING.Atomic(atomicTx, keyPair))
+  }
+
+  async broadcastAtomic(
+    atomicTx: ReturnType<typeof TRANSACTIONS.Atomic.V1>,
+    keyPair: IKeyPair
+  ) {
+    return (await this.getAtomicTxBody(atomicTx, keyPair)).broadcast(keyPair)
   }
 }
