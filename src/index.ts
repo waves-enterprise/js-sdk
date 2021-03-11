@@ -1,5 +1,5 @@
 import { ByteProcessor as byteProcessors, Seed, utils } from '@wavesenterprise/transactions-factory'
-import { IWavesConfig } from '../interfaces'
+import { IWavesConfig, IKeyPair, TCrypto } from './interfaces'
 
 import NodeAPI from './api'
 import config from './config'
@@ -102,3 +102,5 @@ export function create({ initialConfiguration, fetchInstance }: IWeSdkCtr): WeSd
 
 export const MAINNET_CONFIG: IWavesConfig = constants.DEFAULT_MAINNET_CONFIG
 export const TESTNET_CONFIG: IWavesConfig = constants.DEFAULT_TESTNET_CONFIG
+
+export { IKeyPair, TCrypto, IWavesConfig }

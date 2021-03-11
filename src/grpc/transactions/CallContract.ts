@@ -1,4 +1,4 @@
-import { IKeyPair } from '../../../interfaces'
+import { IKeyPair } from '../../interfaces'
 import { TransactionsType } from '../../api/transactions/transactionsV2'
 import { initGrpcTx, mapDataEntry } from '../utils'
 import isNode from '../../utils/isNode'

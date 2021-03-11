@@ -1,7 +1,7 @@
 import { WeSdk } from '../index'
+import { IKeyPair } from '../interfaces'
 import isNode from '../utils/isNode'
 import { Transaction as TransactionWeb } from './compiled-web/managed/transaction_pb'
-import { IKeyPair } from '../../interfaces'
 import { TRANSACTIONS, TransactionType } from '@wavesenterprise/transactions-factory'
 
 type TX_PROTO_MAPPING_TYPE = {

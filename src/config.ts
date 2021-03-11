@@ -1,4 +1,4 @@
-import { IWavesConfig } from '../interfaces'
+import { IWavesConfig } from './interfaces'
 
 import { config as outerConfig} from '@wavesenterprise/transactions-factory'
 

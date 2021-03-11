@@ -1,5 +1,5 @@
 import { TransactionFactory, TransactionType } from '@wavesenterprise/transactions-factory'
-import { IKeyPair } from '../../interfaces'
+import { IKeyPair } from '../interfaces'
 import * as create from 'parse-json-bignumber'
 import { BROADCAST_PATH, SIGN_PATH } from "../constants"
 import WavesRequestError from '../errors/WavesRequestError'
