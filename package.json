@@ -1,6 +1,6 @@
 {
   "name": "@wavesenterprise/js-sdk",
-  "version": "3.1.7",
+  "version": "3.1.8",
   "description": "Waves Enterprise client-side API library",
   "keywords": [
     "cryptocurrency",
