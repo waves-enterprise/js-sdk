@@ -103,4 +103,5 @@ export function create({ initialConfiguration, fetchInstance }: IWeSdkCtr): WeSd
 export const MAINNET_CONFIG: IWavesConfig = constants.DEFAULT_MAINNET_CONFIG
 export const TESTNET_CONFIG: IWavesConfig = constants.DEFAULT_TESTNET_CONFIG
 
-export { IKeyPair, TCrypto, IWavesConfig }
+export * from '@wavesenterprise/transactions-factory'
+export * from './interfaces'
