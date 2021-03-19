@@ -1,11 +1,6 @@
-export type TBuffer = Uint8Array | number[];
-export type TLogLevel = 'none' | 'error' | 'warning' | 'info';
-export type TCrypto = 'waves' | 'gost'
+import { IKeyPair, TBuffer, TCrypto, TLogLevel } from '@wavesenterprise/transactions-factory'
 
-export interface IKeyPair {
-  readonly privateKey: string;
-  readonly publicKey: string;
-}
+export { IKeyPair, TBuffer, TCrypto, TLogLevel }
 
 export interface IWavesBasicConfig {
   minimumSeedLength: number;
