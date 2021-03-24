@@ -105,3 +105,4 @@ export const TESTNET_CONFIG: IWavesConfig = constants.DEFAULT_TESTNET_CONFIG
 
 export * from '@wavesenterprise/transactions-factory'
 export * from './interfaces'
+export * from './grpc/node-transactions-factory/TransactionsFactory'

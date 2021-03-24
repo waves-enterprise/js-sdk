@@ -1,6 +1,6 @@
 {
   "name": "@wavesenterprise/js-sdk",
-  "version": "3.1.9",
+  "version": "3.2.1",
   "description": "Waves Enterprise client-side API library",
   "keywords": [
     "cryptocurrency",
@@ -65,11 +65,11 @@
     "uglify-es": "3.3.9"
   },
   "dependencies": {
-    "@wavesenterprise/transactions-factory": "^1.2.1",
+    "@wavesenterprise/transactions-factory": "1.2.5",
     "@grpc/grpc-js": "^1.2.6",
     "bignumber.js": "7.2.1",
     "crypto-js": "3.1.9-1",
-    "google-protobuf": "^3.14.0",
+    "google-protobuf": "^3.13.0",
     "grpc-web": "^1.2.1",
     "js-sha256": "^0.9.0",
     "long": "^4.0.0",
