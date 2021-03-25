@@ -262,6 +262,67 @@ Transaction grpc broadcast examples located in directory ./examples/grpc-node.
 and other...
 
 In a browser environment, the library uses [grpc-web](https://github.com/grpc/grpc-web) protocol instead of grpc. 
+
+## GRPC transactions broadcast
+Now supports only docker call and docker create transaction in Node.js environment.
+
+Transaction grpc broadcast examples located in directory ./examples/grpc-node.
+
++ Create docker contract
+
+   `node examples/grpc-node/create-contract`
++ Call docker contract
+
+   `node examples/grpc-node/call-contract`  
+   
+and other...
+
+In a browser environment, the library uses [grpc-web](https://github.com/grpc/grpc-web) protocol instead of grpc. 
+
+## GRPC blockchain event listener
+
+Firstly, generate grpc service from proto files (download proto-files here: [releases](https://github.com/waves-enterprise/WE-releases/releases), file name: we-transaction-proto-{version}.zip).  
+
+Use [protoc](https://grpc.io/docs/protoc-installation/) or [grpc-tools](https://www.npmjs.com/package/grpc-tools) to generate code, and [protoc-gen-ts](https://www.npmjs.com/package/protoc-gen-ts)
+to generate typings. Example script:
+```shell script
+#!/usr/bin/env bash
+BASEDIR="."
+
+./node_modules/.bin/grpc_tools_node_protoc ${BASEDIR}/proto/*/*.proto \
+  ${BASEDIR}/proto/*.proto --proto_path=${BASEDIR}/proto \
+  --plugin="protoc-gen-ts=./node_modules/.bin/protoc-gen-ts" \
+  --js_out=import_style=commonjs,binary:${BASEDIR}/compiled \
+  --grpc_out=${BASEDIR}/compiled \
+  --ts_out="service=grpc-node:${BASEDIR}/compiled"
+```
+
+Subscribe to blockchain events using proto scheme in we-transaction-proto/messagebroker/blockchain_events_service.proto
+
+Some transactions fields are encrypted, use library to parse incoming grpc transactions, example:
+```typescript
+import { Transaction } from './compiled/managed/transaction_pb'
+import { WeSdk, ParsedIncomingGrpcTxType, parseIncomingFullTx } from '@wavesenterprise/js-sdk';
+
+function deserializeTxs(transactions: Transaction.AsObject[]): ParsedIncomingGrpcTxType[] {
+  return transactions.map(parseIncomingFullTx)
+}
+```
+
+Use types for parsed transactions:
+
+```typescript
+import { ParsedIncomingFullGrpcTxType, ParsedIncomingGrpcTxType } from '@wavesenterprise/js-sdk';
+
+type TransferTransaction = ParsedIncomingFullGrpcTxType['transferTransaction']
+// type guard
+const isTransferTransaction = (tx: ParsedIncomingGrpcTxType): tx is TransferTransaction => tx.grpcType === 'transferTransaction'
+
+if (isTransferTransaction(transaction)) {
+  console.log('Amount: ', tx.amount)
+}
+```
+
 ## Authors
 
 * [**Mikhail Tokarev**](https://github.com/mtfj) - *Initial refactoring*
