@@ -69,7 +69,7 @@ const Issue = {
   quantity: new Long(true),
   decimals: new Byte(true),
   reissuable: new Bool(true),
-  script: new Base64(false)
+  script: new Base64(false, true)
 }
 
 const Reissue = {
@@ -116,7 +116,7 @@ const SetAssetScript = {
   txType: new TxType(true, TRANSACTION_TYPES.SetAssetScript),
   chainId: new Byte(true),
   assetId: new AssetId(true),
-  script: new Base64(false),
+  script: new Base64(false, true),
 }
 
 const Data = {
@@ -254,7 +254,7 @@ const SetScript = {
   ...commonPart,
   txType: new TxType(true, TRANSACTION_TYPES.SetScript),
   chainId: new Byte(true),
-  script: new Base64(false),
+  script: new Base64(false, true),
   name: new ByteArrayWithSize(true, 128),
   description: new ByteArrayWithSize(true, 32767),
 }
