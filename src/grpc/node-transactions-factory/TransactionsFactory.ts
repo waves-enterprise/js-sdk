@@ -43,10 +43,13 @@ function parseAtomic(tx) : getTxType<typeof NODE_TXS_PARSERS.Atomic> & {version:
   return result
 }
 
-export function parseIncomingFullTx({version, ...tx}) {
+export function parseIncomingFullTx({version, ...tx}, additionalParser?: (key: string, obj: any) => any) {
   let result
   Object.keys(tx).forEach(key => {
     if (tx[key] && IncomingGrpcTxParsers[key]) {
+      if (additionalParser) {
+        additionalParser(key, tx[key])
+      }
       result = IncomingGrpcTxParsers[key](tx[key])
       result.version = version
       result.grpcType = key
