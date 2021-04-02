@@ -36,9 +36,10 @@ export const IncomingGrpcTxParsers = {
   atomicTransaction: parseAtomic,
 }
 
-function parseAtomic(tx) : getTxType<typeof NODE_TXS_PARSERS.Atomic> & {version: number} & {grpcType: GrpcTxKeys} {
+function parseAtomic(tx, additionalParser?: (key: string, obj: any) => any)
+  : getTxType<typeof NODE_TXS_PARSERS.Atomic> & {version: number} & {grpcType: GrpcTxKeys} {
   const {transactionsList, ...atomicTx } = tx
-  const result = parseGRpsTx(NODE_TXS_PARSERS.Atomic, atomicTx)
+  const result = parseGRpsTx(NODE_TXS_PARSERS.Atomic, atomicTx, additionalParser)
   result.transactionsList = transactionsList.map(parseIncomingFullTx)
   return result
 }
@@ -50,7 +51,7 @@ export function parseIncomingFullTx({version, ...tx}, additionalParser?: (key: s
       if (additionalParser) {
         additionalParser(key, tx[key])
       }
-      result = IncomingGrpcTxParsers[key](tx[key])
+      result = IncomingGrpcTxParsers[key](tx[key], additionalParser)
       result.version = version
       result.grpcType = key
     }
@@ -62,15 +63,20 @@ export function parseIncomingFullTx({version, ...tx}, additionalParser?: (key: s
 }
 
 function getParser<T>(txInterface: T)  {
-    return (tx) : getTxType<T> & {version: number} & {grpcType: GrpcTxKeys}  => parseGRpsTx<T>(txInterface, tx)
+    return (tx, additionalParser?: (key: string, obj: any) => any)
+      : getTxType<T> & {version: number} & {grpcType: GrpcTxKeys} =>
+        parseGRpsTx<T>(txInterface, tx, additionalParser)
 }
 
-function parseGRpsTx<T>(txInterface: T, tx: object) {
+function parseGRpsTx<T>(txInterface: T, tx: object, additionalParser?: (key: string, obj: any) => any) {
   const result = {}
   if (!tx || typeof tx !== 'object' || typeof txInterface !== 'object') {
     return
   }
   Object.keys(txInterface).forEach(key => {
+    if (additionalParser) {
+      additionalParser(key, tx[key])
+    }
     result[key] = txInterface[key] instanceof ByteProcessor
       ? (txInterface[key] as any).parseGrpc(tx[key])
       : parseGRpsTx(txInterface[key], tx[key])
