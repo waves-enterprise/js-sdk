@@ -43,7 +43,7 @@ export const IncomingGrpcTxParsers = {
 function parseAtomic(tx)
   : getTxType<typeof NODE_TXS_PARSERS.Atomic> & {version: number} & {grpcType: GrpcTxKeys} {
   const {transactionsList, ...atomicTx } = tx
-  const result = parseGRpsTx(NODE_TXS_PARSERS.Atomic, atomicTx)
+  const result = parseGrpcTx(NODE_TXS_PARSERS.Atomic, atomicTx)
   result.transactionsList = transactionsList.map(parseIncomingFullTx)
   return result
 }
@@ -66,10 +66,10 @@ export function parseIncomingFullTx({version, ...tx}) {
 
 function getParser<T>(txInterface: T)  {
   return (tx): getTxType<T> & {version: number} & {grpcType: GrpcTxKeys} =>
-    parseGRpsTx<T>(txInterface, tx)
+    parseGrpcTx<T>(txInterface, tx)
 }
 
-function parseGRpsTx<T>(txInterface: T, tx: object) {
+function parseGrpcTx<T>(txInterface: T, tx: object) {
   const result = {}
   if (!tx || typeof tx !== 'object' || typeof txInterface !== 'object') {
     return
@@ -78,7 +78,7 @@ function parseGRpsTx<T>(txInterface: T, tx: object) {
     additionalParser(key, tx[key])
     result[key] = txInterface[key] instanceof ByteProcessor
       ? (txInterface[key] as any).parseGrpc(tx[key])
-      : parseGRpsTx(txInterface[key], tx[key])
+      : parseGrpcTx(txInterface[key], tx[key])
   })
   return result as any
 }
