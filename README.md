@@ -289,8 +289,8 @@ Some transaction fields are encrypted, use the library to parse incoming gRPC tr
 import { Transaction } from './compiled/managed/transaction_pb'
 import { WeSdk, ParsedIncomingGrpcTxType, parseIncomingFullTx } from '@wavesenterprise/js-sdk';
 
-function deserializeTxs(transactions: Transaction.AsObject[]): ParsedIncomingGrpcTxType[] {
-  return transactions.map(parseIncomingFullTx)
+function deserializeTxs(transactions: Transaction[]): ParsedIncomingGrpcTxType[] {
+  return transactions.map(tx => parseIncomingFullTx(tx.toObject(true)))
 }
 ```
 
