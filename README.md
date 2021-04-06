@@ -1,6 +1,6 @@
 # JS SDK [![npm version](https://badge.fury.io/js/%40wavesenterprise%2Fjs-sdk.svg)](https://www.npmjs.com/package/@wavesenterprise/js-sdk)
 
-WE Js Sdk is a javascript library for signing and broadcasting transactions on the Waves Enterprise network.
+WE JS SDK is a JavaScript library for transactions signing and broadcasting in the Waves Enterprise network.
 
 * Works both in browser and in the Node.js environment
 * Supports [GOST](https://en.wikipedia.org/wiki/GOST) standards
@@ -10,20 +10,20 @@ WE Js Sdk is a javascript library for signing and broadcasting transactions on t
 
 ##### 1. Download and install Node.js (LTS) from the [official website](https://nodejs.org/en/download/)
 
-##### 2. Install js sdk package using npm:
+##### 2. Install JS SDK package using npm:
 ```
 npm install @wavesenterprise/js-sdk --save
 ```
 
-##### 3. Import js-sdk package:
+##### 3. Import the js-sdk package:
 ```
 import WeSdk from '@wavesenterprise/js-sdk'
 ```
-or use require:
+or use the require method:
 
 `const WeSdk = require('@wavesenterprise/js-sdk');`
 
-##### 4. Initialize library:
+##### 4. Initialize the library:
 ```
 const config = {
     ...WeSdk.MAINNET_CONFIG,
@@ -38,7 +38,7 @@ const Waves = WeSdk.create({
 });
 ```
 
-##### 5. Create and broadcast transaction:
+##### 5. Create and broadcast a transaction:
 ```
 const seed = Waves.Seed.fromExistingPhrase('examples seed phrase');
 
@@ -58,13 +58,13 @@ await tx.broadcast(seed.keyPair)
 
 ## Transactions
 #### Description
-All types of transaction available by calling a function like Waves.API.Transactions.<TX_NAME>.<TX_VERSION>   
-For example:
+All types of transactions are available by calling a function Waves.API.Transactions.<TX_NAME>.<TX_VERSION>   
+Example:
 ```
 const tx = Waves.API.Transactions.Transfer.V3(txBody);
 ```
 
-txBody - object with initial transaction body, you can init with empty body and set fields later, for example:
+txBody - object with initial transaction body. You can initialize it with an empty body and fill the fields later. Example:
 
 ```
 const tx = Waves.API.Transactions.Transfer.V3({});
@@ -73,20 +73,20 @@ tx.amount = 10000;
 ...
 ```
 
-For successful transaction broadcast you must set all required fields,
+For successful transaction broadcasting you have to set all required fields,
 except 'type', 'version', 'id', 'proofs' and 'senderPublicKey'(automatically taken from keyPair).  
 
-Full description of transaction body see in the documentation: https://docs.wavesenterprise.com/en/latest/how-the-platform-works/data-structures/transactions-structure.html  
+See full description all transaction bodies in the documentation: https://docs.wavesenterprise.com/en/latest/how-the-platform-works/data-structures/transactions-structure.html  
 
-Transaction broadcast examples located in directory ./examples.  
+Examples of transaction broadcasting are located in the directory ./examples.  
 
-To broadcast transaction - use method broadcast:
+In order to broadcast a transaction, use the broadcast method:
 ```
 await tx.broadcast(seed.keyPair);
 ```
 
 #### Transaction interface
-In addition to broadcasting, the following methods are also available:
+In addition to broadcasting, the following methods are available:
 
 ```typescript
 interface Transaction {
@@ -105,7 +105,7 @@ interface Transaction {
 ```
 
 #### Transaction types
-Transaction name and its type id:
+Transaction names and their corresponding IDs:
 ```typescript
 const TRANSACTION_TYPES = {
   Issue: 3,
@@ -141,14 +141,14 @@ Waves.tools.base58.encode('Examples transfer attachment');
 Waves.tools.base58.decode('123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz');
 ```
 ## More examples
-In the /examples folder you can find complete examples of sending the most popular transactions.
+In the ./examples folder, you can find complete examples for broadcasting of the most popular transactions.
 
 
-To run examples:
-1. Once install requirements and make a project build:
+In order to run the examples:
+1. Install all required packages and make a project build:
 
     `npm i && npm run build`
-2. Broadcast following transactions:
+2. Broadcast an example transaction:
      + Tokens transfer:
         
         `node examples/transfer`
@@ -171,12 +171,12 @@ To run examples:
      
         `node examples/atomic`
 
-Using this examples, you can sign any other type of transaction using the transaction structure from [docs](https://docs.wavesenterprise.com/en/1.3.0/how-the-platform-works/data-structures/transactions-structure.html#id26).
+With the use of this examples, you can sign any other type of transaction using its structure from [docs](https://docs.wavesenterprise.com/en/1.3.0/how-the-platform-works/data-structures/transactions-structure.html#id26).
 
 ## Using with oAuth
-If blockchain Node using oAuth authorization, waves-api should be initialized with auth headers provided to fetch.
+If a blockchain node uses the oAuth authorization, waves-api should be initialized with authorization headers provided to fetch.
 
-In our projects we use library api-token-refresher, provides automatic tokens refresh if access token is became expired.
+In our projects, we use the api-token-refresher library which provides automatic tokens refresh if an access token expires.
 
 Initialization is pretty simple:
 ```
@@ -195,7 +195,7 @@ const Waves = WeSdk.create({
 });
 ```
 
-You can also use custom solution for integration with oAuth.
+You can also use any custom solution you prefer for integration with oAuth.
 
 ### Seed
 
@@ -209,7 +209,7 @@ console.log(seed.address); // '3Mr5af3Y7r7gQej3tRtugYbKaPr5qYps2ei'
 console.log(seed.keyPair); // { privateKey: 'HkFCbtBHX1ZUF42aNE4av52JvdDPWth2jbP88HPTDyp4', publicKey: 'AF9HLq2Rsv2fVfLPtsWxT7Y3S9ZTv6Mw4ZTp8K8LNdEp' }
 ```
 
-That seed may be encrypted with a password:
+A seed you create may be encrypted with a password:
 
 ```
 const password = '0123456789';
@@ -237,31 +237,77 @@ console.log(seed.keyPair); // { privateKey: '2gSboTPsiQfi1i3zNtFppVJVgjoCA9P4HE9
 ```
 
 ### Crypto Tool
-Duplicate methods from blockchain node REST api: 
+The Crypto Tool uses the same methods as the node REST API: 
 - crypto/encryptCommon
 - crypto/encryptSeparate
 - crypto/decrypt
   
  ```js
-// example of usage in ./test/libs/data-encryption.spec.ts
-// run test via command: mocha -r ts-node/register ./test/libs/data-encryption.spec.ts
+// an example is located at ./test/libs/data-encryption.spec.ts
+// to run a test, type the following command: mocha -r ts-node/register ./test/libs/data-encryption.spec.ts
 ```
 
 ## GRPC transactions broadcast
-Now supports only docker call and docker create transaction in Node.js environment.
+For now, only docker call and docker create transactions are supported in the Node.js environment.
 
-Transaction grpc broadcast examples located in directory ./examples/grpc-node.
+Examples of transaction broadcasting with the use of gRPC are located in directory ./examples/grpc-node.
 
-+ Create docker contract
++ Creating of a docker contract
 
    `node examples/grpc-node/create-contract`
-+ Call docker contract
++ Calling of a docker contract
 
    `node examples/grpc-node/call-contract`  
    
-and other...
+In a browser environment, the library uses the [grpc-web](https://github.com/grpc/grpc-web) protocol instead of gRPC. 
 
-In a browser environment, the library uses [grpc-web](https://github.com/grpc/grpc-web) protocol instead of grpc. 
+## GRPC blockchain event listener
+
+Firstly, generate the gRPC service from the proto files (download the proto-files here: [releases](https://github.com/waves-enterprise/WE-releases/releases), file name: we-transaction-proto-{version}.zip).  
+
+After that, use the [protoc](https://grpc.io/docs/protoc-installation/) or [grpc-tools](https://www.npmjs.com/package/grpc-tools) packages to generate code, and the [protoc-gen-ts](https://www.npmjs.com/package/protoc-gen-ts)
+package to generate typings. 
+
+Example script:
+
+```shell script
+#!/usr/bin/env bash
+BASEDIR="."
+
+./node_modules/.bin/grpc_tools_node_protoc ${BASEDIR}/proto/*/*.proto \
+  ${BASEDIR}/proto/*.proto --proto_path=${BASEDIR}/proto \
+  --plugin="protoc-gen-ts=./node_modules/.bin/protoc-gen-ts" \
+  --js_out=import_style=commonjs,binary:${BASEDIR}/compiled \
+  --grpc_out=${BASEDIR}/compiled \
+  --ts_out="service=grpc-node:${BASEDIR}/compiled"
+```
+
+Subscribe to blockchain events using proto the scheme in we-transaction-proto/messagebroker/blockchain_events_service.proto
+
+Some transaction fields are encrypted, use the library to parse incoming gRPC transactions. Example:
+```typescript
+import { Transaction } from './compiled/managed/transaction_pb'
+import { WeSdk, ParsedIncomingGrpcTxType, parseIncomingFullTx } from '@wavesenterprise/js-sdk';
+
+function deserializeTxs(transactions: Transaction[]): ParsedIncomingGrpcTxType[] {
+  return transactions.map(tx => parseIncomingFullTx(tx.toObject(true)))
+}
+```
+
+Use types for parsed transactions:
+
+```typescript
+import { ParsedIncomingFullGrpcTxType, ParsedIncomingGrpcTxType } from '@wavesenterprise/js-sdk';
+
+type TransferTransaction = ParsedIncomingFullGrpcTxType['transferTransaction']
+// type guard
+const isTransferTransaction = (tx: ParsedIncomingGrpcTxType): tx is TransferTransaction => tx.grpcType === 'transferTransaction'
+
+if (isTransferTransaction(transaction)) {
+  console.log('Amount: ', tx.amount)
+}
+```
+
 ## Authors
 
 * [**Mikhail Tokarev**](https://github.com/mtfj) - *Initial refactoring*

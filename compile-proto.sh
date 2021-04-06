@@ -3,11 +3,6 @@
   --js_out=import_style=commonjs,binary:./src/grpc/compiled-web \
   --grpc-web_out=import_style=commonjs+dts,mode=grpcweb:./src/grpc/compiled-web
 
-#./node_modules/.bin/grpc_tools_node_protoc ./src/grpc/proto/*/*.proto \
-#  ./src/grpc/proto/*.proto --proto_path=./src/grpc/proto \
-#  --js_out=import_style=commonjs,binary:./src/grpc/compiled-node \
-#  --grpc_out=grpc_js:./src/grpc/compiled-node
-
 ./node_modules/.bin/grpc_tools_node_protoc ./src/grpc/proto/*/*.proto \
   ./src/grpc/proto/*.proto --proto_path=./src/grpc/proto \
   --plugin="protoc-gen-ts=./node_modules/.bin/protoc-gen-ts" \
