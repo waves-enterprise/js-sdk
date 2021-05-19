@@ -1,6 +1,6 @@
 {
   "name": "@wavesenterprise/js-sdk",
-  "version": "3.3.1",
+  "version": "3.3.5",
   "description": "Waves Enterprise client-side API library",
   "keywords": [
     "cryptocurrency",
@@ -28,7 +28,7 @@
     "/raw"
   ],
   "scripts": {
-    "build-full": "node_modules/.bin/browserify raw/src/index.js -u node-fetch -u @grpc/grpc-js -s WeSdk -o ./dist/we-sdk.js --insert-global-vars='__filename,__dirname,global,process' --full-paths",
+    "build-full": "node_modules/.bin/browserify raw/src/index.js -u node-fetch -u @grpc/grpc-js -s WeSdk -o ./dist/we-sdk.js --insert-global-vars='__filename,__dirname,global,process'",
     "build": "rm -rf ./raw && rm -rf ./dist && npm run compile && mkdir -p dist && npm run build-full && npm run uglifyjs",
     "compile": "mkdir -p raw && ./node_modules/.bin/tsc -p ./tsconfig.json --declaration --outDir raw && cp -R ./src/grpc/compiled-node ./raw/src/grpc/compiled-node && cp -R ./src/grpc/compiled-web ./raw/src/grpc/compiled-web",
     "uglifyjs": "node_modules/.bin/uglifyjs ./dist/we-sdk.js -o ./dist/we-sdk.min.js",
@@ -65,12 +65,12 @@
     "uglify-es": "3.3.9"
   },
   "dependencies": {
-    "@wavesenterprise/transactions-factory": "1.2.7",
-    "@types/google-protobuf": "^3.7.4",
     "@grpc/grpc-js": "^1.2.6",
+    "@types/google-protobuf": "^3.15.0",
+    "@wavesenterprise/transactions-factory": "1.2.7",
     "bignumber.js": "7.2.1",
     "crypto-js": "3.1.9-1",
-    "google-protobuf": "^3.13.0",
+    "google-protobuf": "^3.15.8",
     "grpc-web": "^1.2.1",
     "js-sha256": "^0.9.0",
     "long": "^4.0.0",

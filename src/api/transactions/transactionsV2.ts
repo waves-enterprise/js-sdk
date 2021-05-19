@@ -79,7 +79,7 @@ function decorateFactory(
 
     const getSignedTxOriginal = tx.getSignedTx
     tx.getSignedTx = (keys: IKeyPair) => {
-      if (!tx.fee && config.get().minimumFee) {
+      if (tx.fee == undefined && config.get().minimumFee) {
         tx.fee = config.getFee(tx.tx_type as number)
       }
       return getSignedTxOriginal.call(tx, keys)

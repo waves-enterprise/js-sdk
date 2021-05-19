@@ -1,6 +1,6 @@
-const { create: createApiInstance, MAINNET_CONFIG } = require('..')
+const { create: createApiInstance, MAINNET_CONFIG } = require('../..')
 const nodeFetch = require('node-fetch')
-console.log('!!!!')
+
 const nodeAddress = 'https://carter.welocal.dev/node-0'
 const seedPhrase = 'test test test1';
 
@@ -42,7 +42,7 @@ const sleep = sec => new Promise(resolve => setTimeout(resolve, sec));
         key: 'initial_streams',
         value: JSON.stringify([
           {
-            stream_id: '000001',
+            stream_id: '000010',
             description: 'Currency quotes: EUR_USD',
             oracle_services_pub_keys: [
               '4qUrxWm53P3yCBikW96j8dNFBBxudbM3aaFfDPMUM8V1'
@@ -94,7 +94,7 @@ const sleep = sec => new Promise(resolve => setTimeout(resolve, sec));
       },
       {
         'type' : 'string',
-        'value' : '000001',
+        'value' : '000010',
         'key' : 'stream_id'
       },
       {
@@ -105,7 +105,7 @@ const sleep = sec => new Promise(resolve => setTimeout(resolve, sec));
       {
         'type': 'string',
         'key': 'update_interval',
-        'value': '10s'
+        'value': '1m'
       },
       {
         'type': 'integer',
@@ -151,7 +151,7 @@ const sleep = sec => new Promise(resolve => setTimeout(resolve, sec));
       {
         'type': 'string',
         'key': 'update_interval',
-        'value': '10s'
+        'value': '1m'
       },
       {
         'type': 'integer',

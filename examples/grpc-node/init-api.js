@@ -1,7 +1,7 @@
 const { create, MAINNET_CONFIG } = require('../..');
 const nodeFetch = require('node-fetch');
 
-const nodeAddress = 'https://carter.welocal.dev/node-0';
+const nodeAddress = 'https://carter.welocal.dev/node-1';
 
 const fetch = (url, options = {}) => {
   const headers = options.headers || {}

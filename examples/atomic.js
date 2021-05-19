@@ -1,7 +1,7 @@
 const { create: createApiInstance, MAINNET_CONFIG } = require('..');
 const nodeFetch = require('node-fetch');
 
-const nodeAddress = 'https://hoover.welocal.dev/node-0';
+const nodeAddress = 'https://carter.welocal.dev/node-1';
 const seedPhrase = 'examples seed phrase';
 
 const fetch = (url, options = {}) => {
