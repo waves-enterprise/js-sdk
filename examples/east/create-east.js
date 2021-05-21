@@ -30,9 +30,9 @@ const seedPhrase = 'test test test1';
 
   //body description: https://docs.wavesenterprise.com/en/latest/how-the-platform-works/data-structures/transactions-structure.html#createcontracttransaction
   const txBody = {
-    image: 'vostok-sc/east-contract:0.3-RC1',
-    imageHash: '116bb7cbd0cbfdd9f2c938995ec1e9c5568e99a8b08e8aa618bef92585953f8e',
-    contractName: 'East init',
+    image: 'vostok-sc/east-contract:0.4-RC4',
+    imageHash: '6a0bb6a26b9d67d25ce0159f0fb1abbaa4179f700c6483d12fdfad7dca88a687',
+    contractName: 'EAST 0.4',
     timestamp,
     fee: 0,
     params: [
@@ -40,12 +40,14 @@ const seedPhrase = 'test test test1';
         type: 'string',
         key: 'config',
         value: JSON.stringify({
-          oracleContractId: 'Afnky7ZBdpXomouyFoCB59GFfWHHKd5rvapm8MyYn3dV',
-          oracleTimestampMaxDiff: 1000 * 60 * 1.5,
+          oracleContractId: 'Ac2x9Wv9SsPwPksigBL1F7Tx3r6xMMiWpsDcqijihfVw',
+          oracleTimestampMaxDiff: 1000 * 60 * 60 * 60,
           usdpPart:  0.5,
           westCollateral: 2.5,
           liquidationCollateral: 1.3,
-          minHoldTime: 1000 * 60 * 60
+          minHoldTime: 1000 * 60 * 1,
+          USDapTokenId: '6Cc3dePRVFwn4VX6NZuwS2R9wDHU6z2eoKhZ7MdJ1fkR',
+          issueEnabled: true,
         })
       }
     ],

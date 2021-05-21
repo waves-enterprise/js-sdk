@@ -4,6 +4,9 @@ const nodeFetch = require('node-fetch')
 const nodeAddress = 'https://carter.welocal.dev/node-0';
 const seedPhrase = 'test test test1';
 
+const contractId = 'xqBnrHAjkQ5aoowtBEwgcqGv1TFabudGp1A4TVTRqEG';
+
+
 (async () => {
   const res = await nodeFetch(`${nodeAddress}/node/config`)
   const { chainId, minimumFee, gostCrypto } = await res.json()
@@ -23,12 +26,11 @@ const seedPhrase = 'test test test1';
   })
 
   const ownerSeed = Waves.Seed.fromExistingPhrase(seedPhrase)
-  const contractId = '67aGfTHM1yXAgcPRPHzFE2QAbR2Y8XMPZevBPM88hVWB';
   const user1Seed = Waves.Seed.fromExistingPhrase('examples seed phrase another one');
   
   const mintTransfer = Waves.API.Transactions.Transfer.V3({
     recipient: ownerSeed.address,
-    assetId: 'ApCMJUUKHqVXVqRYhMczHpM7Ks3CrHcFgbt76qwf92jM',
+    assetId: '',
     amount: 50 * 100000000,
     timestamp: Date.now(),
     attachment: '',
@@ -65,6 +67,7 @@ const seedPhrase = 'test test test1';
       user1Seed.keyPair
     )
     console.log('Docker call: ', await mintCall.getId())
+    console.log('transfer: ', await mintTransfer.getId())
   } catch (err) {
     console.log('Broadcast error:', err)
   }
