@@ -9,8 +9,7 @@ const nodeAddress = 'https://carter.welocal.dev/node-0';
 
 const seedPhrase = 'test test test1';
 
-const contractId = 'xqBnrHAjkQ5aoowtBEwgcqGv1TFabudGp1A4TVTRqEG';
-const vault = '2RiWqeqF9FtKLD6rukky4yRoAd7Ugmv1jY78KUQb75TG';
+const contractId = '7G7iG5f97yhAGA22m7zxWMowZpPHjjcfEBbRdhePhQE7';
 const USDapTokenId = '6Cc3dePRVFwn4VX6NZuwS2R9wDHU6z2eoKhZ7MdJ1fkR';
 
 (async () => {
@@ -35,7 +34,7 @@ const USDapTokenId = '6Cc3dePRVFwn4VX6NZuwS2R9wDHU6z2eoKhZ7MdJ1fkR';
   const ownerSeed = Waves.Seed.fromExistingPhrase(seedPhrase)
   const user1Seed = Waves.Seed.fromExistingPhrase('examples seed phrase another one');
 
-  const { value } = await Waves.API.Node.contracts.getKey(contractId, `vault_${vault}`)
+  const { value } = await Waves.API.Node.contracts.getKey(contractId, `vault_${user1Seed.address}`)
   const vaultObj = JSON.parse(value);
 
   const westTransfer = Waves.API.Transactions.Transfer.V3({
@@ -72,9 +71,9 @@ const USDapTokenId = '6Cc3dePRVFwn4VX6NZuwS2R9wDHU6z2eoKhZ7MdJ1fkR';
     timestamp: Date.now(),
     params: [{
       type: 'string',
-      key: 'burn',
+      key: 'close',
       value: JSON.stringify({
-        vaultId: vault,
+        address: user1Seed.address,
         westTransferId: await westTransfer.getId(),
         usdpTransferId: await usdpTransfer.getId(),
       })
