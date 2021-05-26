@@ -25,49 +25,52 @@ const contractId = 'HMgJkCBx5fXU5vi5EeDZ9Ec6yLbUVZdSwYGVEyYhoxpS';
     }
   })
 
+  const requestId = '1234'
   const ownerSeed = Waves.Seed.fromExistingPhrase(seedPhrase)
   const user1Seed = Waves.Seed.fromExistingPhrase('examples seed phrase another one');
   
-  const mintTransfer = Waves.API.Transactions.Transfer.V3({
-    recipient: ownerSeed.address,
+  const overpayTransfer = Waves.API.Transactions.Transfer.V3({
+    recipient: user1Seed.address,
     assetId: '',
-    amount: 50 * 100000000,
+    amount: 10 * 100000000,
     timestamp: Date.now(),
-    attachment: '',
+    attachment: requestId,
     fee: minimumFee[4],
-    senderPublicKey: user1Seed.keyPair.publicKey,
+    senderPublicKey: ownerSeed.keyPair.publicKey,
     atomicBadge: {
-      trustedSender: user1Seed.address
+      trustedSender: ownerSeed.address
     }
   });
   
-  const mintCall = Waves.API.Transactions.CallContract.V4({
+  const overpayCall = Waves.API.Transactions.CallContract.V4({
     contractId,
     contractVersion: 1,
     fee: minimumFee[104],
-    senderPublicKey: user1Seed.keyPair.publicKey,
+    senderPublicKey: ownerSeed.keyPair.publicKey,
     timestamp: Date.now(),
     params: [{
       type: 'string',
-      key: 'mint',
+      key: 'claim_overpay',
       value: JSON.stringify({
-        transferId: await mintTransfer.getId()
+        transferId: await overpayTransfer.getId(),
+        address: user1Seed.address,
+        requestId
       })
     }],
     atomicBadge: {
-      trustedSender: user1Seed.address
+      trustedSender: ownerSeed.address
     }
   });
   
-  const transactions = [mintTransfer, mintCall]
+  const transactions = [overpayTransfer, overpayCall]
 
   try {
     await Waves.API.Transactions.broadcastAtomic(
       Waves.API.Transactions.Atomic.V1({transactions}),
-      user1Seed.keyPair
+      ownerSeed.keyPair
     )
-    console.log('Docker call: ', await mintCall.getId())
-    console.log('transfer: ', await mintTransfer.getId())
+    console.log('Docker call: ', await overpayCall.getId())
+    console.log('transfer: ', await overpayTransfer.getId())
   } catch (err) {
     console.log('Broadcast error:', err)
   }
