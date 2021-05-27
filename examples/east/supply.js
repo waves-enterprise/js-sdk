@@ -25,52 +25,49 @@ const contractId = 'EtVQ6PGJZeteTepJeTu4nbYpj3nfd3gcseoY9WfQg8QF';
     }
   })
 
-  const requestId = '1234'
   const ownerSeed = Waves.Seed.fromExistingPhrase(seedPhrase)
   const user1Seed = Waves.Seed.fromExistingPhrase('examples seed phrase another one');
   
-  const overpayTransfer = Waves.API.Transactions.Transfer.V3({
-    recipient: user1Seed.address,
+  const supplyTransfer = Waves.API.Transactions.Transfer.V3({
+    recipient: ownerSeed.address,
     assetId: '',
-    amount: 10 * 100000000,
+    amount: 50 * 100000000,
     timestamp: Date.now(),
-    attachment: requestId,
+    attachment: '',
     fee: minimumFee[4],
-    senderPublicKey: ownerSeed.keyPair.publicKey,
+    senderPublicKey: user1Seed.keyPair.publicKey,
     atomicBadge: {
-      trustedSender: ownerSeed.address
+      trustedSender: user1Seed.address
     }
   });
   
-  const overpayCall = Waves.API.Transactions.CallContract.V4({
+  const supplyCall = Waves.API.Transactions.CallContract.V4({
     contractId,
     contractVersion: 1,
     fee: minimumFee[104],
-    senderPublicKey: ownerSeed.keyPair.publicKey,
+    senderPublicKey: user1Seed.keyPair.publicKey,
     timestamp: Date.now(),
     params: [{
       type: 'string',
-      key: 'claim_overpay',
+      key: 'supply',
       value: JSON.stringify({
-        transferId: await overpayTransfer.getId(),
-        address: user1Seed.address,
-        requestId
+        transferId: await supplyTransfer.getId()
       })
     }],
     atomicBadge: {
-      trustedSender: ownerSeed.address
+      trustedSender: user1Seed.address
     }
   });
   
-  const transactions = [overpayTransfer, overpayCall]
+  const transactions = [supplyTransfer, supplyCall]
 
   try {
     await Waves.API.Transactions.broadcastAtomic(
       Waves.API.Transactions.Atomic.V1({transactions}),
-      ownerSeed.keyPair
+      user1Seed.keyPair
     )
-    console.log('Docker call: ', await overpayCall.getId())
-    console.log('transfer: ', await overpayTransfer.getId())
+    console.log('Docker call: ', await supplyCall.getId())
+    console.log('transfer: ', await supplyTransfer.getId())
   } catch (err) {
     console.log('Broadcast error:', err)
   }

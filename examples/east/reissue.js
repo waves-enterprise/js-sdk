@@ -25,23 +25,9 @@ const contractId = 'EtVQ6PGJZeteTepJeTu4nbYpj3nfd3gcseoY9WfQg8QF';
     }
   })
 
-  const ownerSeed = Waves.Seed.fromExistingPhrase(seedPhrase)
   const user1Seed = Waves.Seed.fromExistingPhrase('examples seed phrase another one');
-  
-  const mintTransfer = Waves.API.Transactions.Transfer.V3({
-    recipient: ownerSeed.address,
-    assetId: '',
-    amount: 50 * 100000000,
-    timestamp: Date.now(),
-    attachment: '',
-    fee: minimumFee[4],
-    senderPublicKey: user1Seed.keyPair.publicKey,
-    atomicBadge: {
-      trustedSender: user1Seed.address
-    }
-  });
-  
-  const mintCall = Waves.API.Transactions.CallContract.V4({
+    
+  const reissueCall = Waves.API.Transactions.CallContract.V4({
     contractId,
     contractVersion: 1,
     fee: minimumFee[104],
@@ -49,25 +35,15 @@ const contractId = 'EtVQ6PGJZeteTepJeTu4nbYpj3nfd3gcseoY9WfQg8QF';
     timestamp: Date.now(),
     params: [{
       type: 'string',
-      key: 'mint',
-      value: JSON.stringify({
-        transferId: await mintTransfer.getId()
-      })
-    }],
-    atomicBadge: {
-      trustedSender: user1Seed.address
-    }
+      key: 'reissue',
+      value: ''
+    }]
   });
   
-  const transactions = [mintTransfer, mintCall]
 
   try {
-    await Waves.API.Transactions.broadcastAtomic(
-      Waves.API.Transactions.Atomic.V1({transactions}),
-      user1Seed.keyPair
-    )
-    console.log('Docker call: ', await mintCall.getId())
-    console.log('transfer: ', await mintTransfer.getId())
+    await reissueCall.broadcastGrpc(user1Seed.keyPair)
+    console.log('Docker call: ', await reissueCall.getId())
   } catch (err) {
     console.log('Broadcast error:', err)
   }
