@@ -8,7 +8,7 @@
     ],
     "module": "commonjs",
     "sourceMap": true,
-    "target": "es5",
+    "target": "es2018",
     "types": [
       "long"
     ]

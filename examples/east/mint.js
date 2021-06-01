@@ -4,7 +4,7 @@ const nodeFetch = require('node-fetch')
 const nodeAddress = 'https://carter.welocal.dev/node-0';
 const seedPhrase = 'test test test1';
 
-const contractId = 'EtVQ6PGJZeteTepJeTu4nbYpj3nfd3gcseoY9WfQg8QF';
+const contractId = '7rSeGCeJbosRBuY6dYkV3zKESUbA7YDUyCHc67jUnFno';
 
 
 (async () => {

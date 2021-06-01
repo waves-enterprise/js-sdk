@@ -4,7 +4,7 @@ const nodeFetch = require('node-fetch')
 const nodeAddress = 'https://carter.welocal.dev/node-0';
 const seedPhrase = 'test test test1';
 
-const contractId = 'EtVQ6PGJZeteTepJeTu4nbYpj3nfd3gcseoY9WfQg8QF';
+const contractId = '7rSeGCeJbosRBuY6dYkV3zKESUbA7YDUyCHc67jUnFno';
 
 
 (async () => {
@@ -30,12 +30,9 @@ const contractId = 'EtVQ6PGJZeteTepJeTu4nbYpj3nfd3gcseoY9WfQg8QF';
   
   const supplyTransfer = Waves.API.Transactions.Transfer.V3({
     recipient: ownerSeed.address,
-    assetId: '',
     amount: 50 * 100000000,
     timestamp: Date.now(),
     attachment: '',
-    fee: minimumFee[4],
-    senderPublicKey: user1Seed.keyPair.publicKey,
     atomicBadge: {
       trustedSender: user1Seed.address
     }
@@ -44,14 +41,12 @@ const contractId = 'EtVQ6PGJZeteTepJeTu4nbYpj3nfd3gcseoY9WfQg8QF';
   const supplyCall = Waves.API.Transactions.CallContract.V4({
     contractId,
     contractVersion: 1,
-    fee: minimumFee[104],
-    senderPublicKey: user1Seed.keyPair.publicKey,
     timestamp: Date.now(),
     params: [{
       type: 'string',
       key: 'supply',
       value: JSON.stringify({
-        transferId: await supplyTransfer.getId()
+        transferId: await supplyTransfer.getId(user1Seed.keyPair.publicKey)
       })
     }],
     atomicBadge: {

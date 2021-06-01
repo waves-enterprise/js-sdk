@@ -8,7 +8,6 @@ import {
   VERSIONS,
   txRequestV2,
 } from '../../utils/request'
-import OldTxService from './index'
 import {
   TransactionFactory,
   TRANSACTION_TYPES,
@@ -77,12 +76,22 @@ function decorateFactory(
   return (...args) => {
     const tx = factory(...args)
 
-    const getSignedTxOriginal = tx.getSignedTx
-    tx.getSignedTx = (keys: IKeyPair) => {
+    function setFee() {
       if (tx.fee == undefined && config.get().minimumFee) {
         tx.fee = config.getFee(tx.tx_type as number)
       }
+    }
+
+    // Decorate functions, TODO ?
+    const getSignedTxOriginal = tx.getSignedTx
+    tx.getSignedTx = (keys: IKeyPair) => {
+      setFee()
       return getSignedTxOriginal.call(tx, keys)
+    }
+    const getIdOriginal = tx.getId
+    tx.getId = (publicKey?: string) => {
+      setFee()
+      return getIdOriginal.call(tx, publicKey)
     }
 
     tx.getGrpcDecorator = (keiPair: IKeyPair, isAtomic = false) => {

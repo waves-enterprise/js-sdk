@@ -30,8 +30,8 @@ const seedPhrase = 'test test test1';
 
   //body description: https://docs.wavesenterprise.com/en/latest/how-the-platform-works/data-structures/transactions-structure.html#createcontracttransaction
   const txBody = {
-    image: 'vostok-sc/east-contract:0.5-RC2',
-    imageHash: '2a5179af706168c3a9d218fb94dffa9af5f63c64c1bae7d128559d5b5f042a61',
+    image: 'vostok-sc/east-contract:0.5-RC3',
+    imageHash: '2a43fa404aee0e391bc7fe35cae3103897d84eaec11448e6353d9ab744dca428',
     contractName: 'EAST 0.5',
     timestamp,
     fee: 0,
